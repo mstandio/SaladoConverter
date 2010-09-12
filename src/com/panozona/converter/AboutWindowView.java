@@ -4,6 +4,8 @@
 
 package com.panozona.converter;
 
+import java.io.IOException;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
 public class AboutWindowView extends javax.swing.JDialog {
@@ -32,8 +34,7 @@ public class AboutWindowView extends javax.swing.JDialog {
         javax.swing.JLabel appVersionLabel = new javax.swing.JLabel();
         javax.swing.JLabel vendorLabel = new javax.swing.JLabel();
         javax.swing.JLabel appVendorLabel = new javax.swing.JLabel();
-        javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
-        javax.swing.JLabel imageLabel = new javax.swing.JLabel();
+        imageLabel = new javax.swing.JLabel();
         javax.swing.JLabel homepageLabel = new javax.swing.JLabel();
         javax.swing.JLabel appHomepageLabel = new javax.swing.JLabel();
 
@@ -66,9 +67,6 @@ public class AboutWindowView extends javax.swing.JDialog {
         appVendorLabel.setText(resourceMap.getString("Application.vendor")); // NOI18N
         appVendorLabel.setName("appVendorLabel"); // NOI18N
 
-        appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
-        appDescLabel.setName("appDescLabel"); // NOI18N
-
         imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
         imageLabel.setName("imageLabel"); // NOI18N
 
@@ -76,8 +74,15 @@ public class AboutWindowView extends javax.swing.JDialog {
         homepageLabel.setText(resourceMap.getString("homepageLabel.text")); // NOI18N
         homepageLabel.setName("homepageLabel"); // NOI18N
 
+        appHomepageLabel.setFont(resourceMap.getFont("appHomepageLabel.font")); // NOI18N
+        appHomepageLabel.setForeground(resourceMap.getColor("appHomepageLabel.foreground")); // NOI18N
         appHomepageLabel.setText(resourceMap.getString("appHomepageLabel.text")); // NOI18N
         appHomepageLabel.setName("appHomepageLabel"); // NOI18N
+        appHomepageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                appHomepageLabelMousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,23 +90,23 @@ public class AboutWindowView extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(imageLabel)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(appTitleLabel)
-                    .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                    .addComponent(closeButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(versionLabel)
-                            .addComponent(vendorLabel)
-                            .addComponent(homepageLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(appHomepageLabel)
-                            .addComponent(appVersionLabel)
-                            .addComponent(appVendorLabel))
-                        .addGap(36, 36, 36)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(appTitleLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(versionLabel)
+                                .addComponent(vendorLabel)
+                                .addComponent(homepageLabel))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(appHomepageLabel)
+                                .addComponent(appVersionLabel)
+                                .addComponent(appVendorLabel))
+                            .addGap(36, 36, 36)))
+                    .addComponent(closeButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,9 +114,7 @@ public class AboutWindowView extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(appTitleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(appDescLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(versionLabel)
                     .addComponent(appVersionLabel))
@@ -130,9 +133,19 @@ public class AboutWindowView extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void appHomepageLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMousePressed
+        String url = "http://panozona.com/";
+        try {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Could not openurl: "+url);
+        }
+    }//GEN-LAST:event_appHomepageLabelMousePressed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JLabel imageLabel;
     // End of variables declaration//GEN-END:variables
     
 }

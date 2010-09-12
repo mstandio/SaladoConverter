@@ -3,26 +3,19 @@ package com.panozona.converter.table;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-
 /**
  *
  * @author Marek
  */
-public class TaskTableModel extends AbstractTableModel{
+public class TaskTableModel extends AbstractTableModel {
 
-    public String[] columnNames = {"R","Status","Directory"};
+    public String[] columnNames = {"R", "Status", "Directory"};
+    public ArrayList<TaskData> rows;
 
-    public ArrayList<TaskData> rows;    
-
-    public TaskTableModel(ArrayList<TaskData> rows){
+    public TaskTableModel(ArrayList<TaskData> rows) {
         super();
         this.rows = rows;
-    }
-
-    @Override
-    public Class getColumnClass(int column){
-       return getValueAt(0, column).getClass();
-    }
+    }    
 
     @Override
     public int getRowCount() {
@@ -31,26 +24,35 @@ public class TaskTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-         return columnNames.length;
+        return columnNames.length;
     }
 
     @Override
-     public String getColumnName(int col) {
-      return columnNames[col];
+    public String getColumnName(int col) {
+        return columnNames[col];
     }
 
     @Override
-    public TaskData getValueAt(int rowIndex, int columnIndex) {
-        return rows.get(rowIndex);
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return rows.get(rowIndex);
+            case 1:
+                return rows.get(rowIndex).taskState;
+            case 2:
+                return rows.get(rowIndex).getTaskPaths();
+            default:
+                return null;
+        }
     }
 
-    public void addRow(TaskData newTaskData){
-        rows.add(newTaskData);        
+    public void addRow(TaskData newTaskData) {
+        rows.add(newTaskData);
         fireTableDataChanged();
     }
 
-    public void removeItem(TaskData taskData){
-        rows.remove(taskData);        
+    public void removeItem(TaskData taskData) {
+        rows.remove(taskData);
         fireTableDataChanged();
     }
 
@@ -61,7 +63,7 @@ public class TaskTableModel extends AbstractTableModel{
 
     @Override
     public void setValueAt(Object value, int row, int col) {
-        rows.set(row, (TaskData)value);
+        rows.set(row, (TaskData) value);
         fireTableCellUpdated(row, col);
     }
 }

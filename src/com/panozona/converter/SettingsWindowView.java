@@ -9,6 +9,7 @@ import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.utils.FileFilterDir;
 import com.panozona.converter.utils.InfoException;
 import com.panozona.converter.utils.FileFilterJar;
+import com.panozona.converter.utils.Info;
 import java.awt.Toolkit;
 import java.io.File;
 import javax.swing.DefaultComboBoxModel;
@@ -20,6 +21,8 @@ import javax.swing.JOptionPane;
  * @author Marek Standio
  */
 public class SettingsWindowView extends javax.swing.JFrame {
+
+    private String initialmemoryLimitValue = "-1";
 
     /** Creates new form SettingsWindowView */
     public SettingsWindowView() {
@@ -50,6 +53,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jTextFieldGEDirectory = new javax.swing.JTextField();
         jButtonGEBrowseDirectory = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldMemoryLimit = new javax.swing.JTextField();
         DeepZoomTilerTab = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -82,6 +87,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("Form"); // NOI18N
+        setResizable(false);
 
         TabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.panozona.converter.SaladoConverter.class).getContext().getResourceMap(SettingsWindowView.class);
@@ -125,6 +131,12 @@ public class SettingsWindowView extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        jTextFieldMemoryLimit.setText(resourceMap.getString("jTextFieldMemoryLimit.text")); // NOI18N
+        jTextFieldMemoryLimit.setName("jTextFieldMemoryLimit"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -137,9 +149,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel13)
-                            .addComponent(jLabel15))
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel2))
                         .addGap(10, 10, 10)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -152,7 +166,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
@@ -166,7 +180,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jLabel15)
                     .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonGEBrowseDirectory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jButtonGERestoreDefault)
                 .addContainerGap())
         );
@@ -244,7 +262,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(45, 45, 45)
                         .addComponent(jTextFieldECQuality, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
-                    .addComponent(jButtonECRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -257,7 +274,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
                                 .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonECBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)))
+                    .addComponent(jButtonECRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -280,7 +298,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonECBrowseDirectory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jButtonECRestoreDefault)
                 .addContainerGap())
         );
@@ -392,7 +410,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonDZTBrowseDirectory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(jButtonDZTRestoreDefault)
                 .addContainerGap())
         );
@@ -436,22 +454,22 @@ public class SettingsWindowView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonOK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCancel))
-                    .addComponent(TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE))
+                        .addComponent(jButtonCancel)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonOK))
@@ -464,6 +482,9 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
         collectAllData();
         if (allowCloseFlag) {
+            if (!initialmemoryLimitValue.equals(jTextFieldMemoryLimit.getText())){
+                JOptionPane.showMessageDialog(this, Info.GE_MEM_LIMIT_WARNING);
+            }
             this.dispose();
         }
         allowCloseFlag = true;
@@ -477,6 +498,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jComboBoxGESearchSub.setSelectedItem(aggstngs.ge.getDefaultSearchSubDirs());
         jTextFieldGESearchDepth.setText(aggstngs.ge.getDefaultSearchDepth());
         jTextFieldGEDirectory.setText(aggstngs.ge.getDefaultTmpDir());
+        jTextFieldMemoryLimit.setText(aggstngs.ge.getDefaultMemoryLimit());
     }//GEN-LAST:event_jButtonGERestoreDefaultActionPerformed
 
     private void jButtonECRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECRestoreDefaultActionPerformed
@@ -552,6 +574,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jComboBoxGESearchSub.setSelectedItem(aggstngs.ge.getSearchSubDirs());
         jTextFieldGESearchDepth.setText(aggstngs.ge.getSearchDepth());
         jTextFieldGEDirectory.setText(aggstngs.ge.getTmpDir());
+        jTextFieldMemoryLimit.setText(aggstngs.ge.getMemoryLimit());
+        initialmemoryLimitValue = aggstngs.ge.getMemoryLimit();
 
         jTextFieldDZTOverlap.setText(aggstngs.dzt.getOverlap());
         jTextFieldDZTTileSize.setText(aggstngs.dzt.getTileSize());
@@ -569,6 +593,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
             aggstngs.ge.setSearchSubDirs(jComboBoxGESearchSub.getSelectedItem().toString());
             aggstngs.ge.setSearchDepth(jTextFieldGESearchDepth.getText());
             aggstngs.ge.setTmpDir(jTextFieldGEDirectory.getText());
+            aggstngs.ge.setMemoryLimit(jTextFieldMemoryLimit.getText());
 
             aggstngs.dzt.setOverlap(jTextFieldDZTOverlap.getText());
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());
@@ -609,6 +634,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -627,6 +653,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldECQuality;
     private javax.swing.JTextField jTextFieldGEDirectory;
     private javax.swing.JTextField jTextFieldGESearchDepth;
+    private javax.swing.JTextField jTextFieldMemoryLimit;
     // End of variables declaration//GEN-END:variables
     private AggregatedSettings aggstngs;
     private boolean allowCloseFlag;

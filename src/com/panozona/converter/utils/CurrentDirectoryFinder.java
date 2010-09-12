@@ -1,7 +1,7 @@
 package com.panozona.converter.utils;
 
 import java.io.File;
-
+import com.panozona.converter.Starter;
 
 /**
  *
@@ -12,14 +12,10 @@ public class CurrentDirectoryFinder {
     public String currentDir;   
     
     public CurrentDirectoryFinder() {
-
-        hey check this out before compiling
-
-        currentDir = System.getProperty("user.dir"); // release
-
-        //currentDir = System.getProperty("user.dir")+File.separator+"external"; // development
-        
-        // second version uses "external" folder in project directory
-
+        if (Starter.developmentMode)
+            currentDir = System.getProperty("user.dir")+File.separator+"external";
+        else{
+            currentDir = System.getProperty("user.dir");
+        }
     }
 }

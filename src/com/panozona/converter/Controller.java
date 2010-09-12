@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Pattern;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.Task;
 import org.jdesktop.application.TaskMonitor;
@@ -85,11 +86,11 @@ public class Controller {
 
     private void addTaskR(File selectedFile, HashMap m, int currentDepth) {
         int[] dim;
-        // if it is single image 
-        if (selectedFile.isFile() && (selectedFile.getName().toLowerCase().endsWith(".jpg") || 
+        // if it is single image
+        if (selectedFile.isFile() && (selectedFile.getName().toLowerCase().endsWith(".jpg") ||
                 selectedFile.getName().toLowerCase().endsWith(".jpeg"))) {
             dim = ImageInfo.getImageDimensions(selectedFile.getAbsolutePath());
-            // if image is equirectagular            
+            // if image is equirectagular
             if (dim[0] == 2 * dim[1]) {
                 TaskData newTask = new TaskData();
                 newTask.taskPaths.add(selectedFile.getAbsolutePath());
@@ -121,8 +122,8 @@ public class Controller {
 
     private void appendTask(TaskData newTask) {
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
-            if (taskTableModel.getValueAt(i, 0).getTaskPaths().equals(newTask.getTaskPaths())) {
-                taskTableModel.getValueAt(i, 0).taskState = TaskData.STATE_READY;
+            if (taskTableModel.rows.get(i).getTaskPaths().equals(newTask.getTaskPaths())) {
+                taskTableModel.rows.get(i).taskState = TaskData.STATE_READY;
                 return;
             }
         }
@@ -135,19 +136,18 @@ public class Controller {
         }
     }
 
-    public void clearTasks() {
-        while (taskTableModel.getRowCount() > 0) {
-            taskTableModel.removeItem(taskTableModel.getValueAt(0, 0));
-        }
+    public void clearTasks() {        
+        taskTableModel.rows.clear();
+        taskTableModel.fireTableDataChanged();
     }
 
     public void applyCommand() {
         boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.CUBIC_TO_DEEPZOOM_CUBIC);
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
-            if (taskTableModel.getValueAt(i, 0).taskPaths.size() == 1) {
-                taskTableModel.getValueAt(i, 0).checkBoxEnabled = !cubic;
+            if (taskTableModel.rows.get(i).taskPaths.size() == 1) {
+                taskTableModel.rows.get(i).checkBoxEnabled = !cubic;
             } else {
-                taskTableModel.getValueAt(i, 0).checkBoxEnabled = cubic;
+                taskTableModel.rows.get(i).checkBoxEnabled = cubic;
             }
         }
         taskTableModel.fireTableDataChanged();
@@ -159,7 +159,7 @@ public class Controller {
         TaskData taskData;
         String selection = aggstngs.ge.getSelectedCommand();
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
-            taskData = taskTableModel.getValueAt(i, 0);
+            taskData = taskTableModel.rows.get(i);
             taskData.operations.clear();
             if (taskData.checkBoxEnabled && taskData.checkBoxSelected) {
                 if (selection.equals(GESettings.CUBIC_TO_DEEPZOOM_CUBIC)) {
@@ -168,86 +168,83 @@ public class Controller {
                     taskData.operations = generateOpETC(taskData.taskPaths);
                 } else if (selection.equals(GESettings.EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC)) {
                     taskData.operations = generateOpETDZC(taskData.taskPaths);
-                } else if (selection.equals(GESettings.EQUIRECTANGULAR_TO_DEEPZOOM_EQUIRECTANGULAR)) {
-                    taskData.operations = generateOpETDZE(taskData.taskPaths);
                 }
             }
         }
     }
 
+    //Cubic to DeepZoom cubic
     private Vector<TaskOperation> generateOpCTDZC(Vector<String> taskPaths) {
-        Vector<TaskOperation> operations = new Vector<TaskOperation>();
+        Vector<TaskOperation> operations = new Vector<TaskOperation>();        
+           String parentFolderName;
         for (String path : taskPaths) {
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(path, aggstngs.ge.getOutputDir())));
+            String[] tmp = path.split(Pattern.quote(File.separator));
+            parentFolderName = tmp[tmp.length-2]; // huh
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(path, aggstngs.ge.getOutputDir()+File.separator+"dz_"+parentFolderName,false)));
         }
         return operations;
     }
 
+    //Equirectangular to cubic
     private Vector<TaskOperation> generateOpETC(Vector<String> taskPaths) {
         Vector<TaskOperation> operations = new Vector<TaskOperation>();
         for (String path : taskPaths) {
-            operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(path, aggstngs.ge.getOutputDir())));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(path, aggstngs.ge.getOutputDir(),false)));
         }
         return operations;
     }
 
-    private Vector<TaskOperation> generateOpETDZE(Vector<String> taskPaths) {
-        Vector<TaskOperation> operations = new Vector<TaskOperation>();
-        for (String path : taskPaths) {
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(path, aggstngs.ge.getOutputDir())));
-        }
-        return operations;
-    }
-
+    //Equirectangular to DeepZoom cubic
     private Vector<TaskOperation> generateOpETDZC(Vector<String> taskPaths) {
-        Vector<TaskOperation> operations = new Vector<TaskOperation>();
-
+        Vector<TaskOperation> operations = new Vector<TaskOperation>();        
 
         String nameWithoutExtension;
         String generatedFile;
+        String outputDir;
 
         for (String path : taskPaths) {
             nameWithoutExtension = path.substring(path.lastIndexOf(File.separator) + 1, path.lastIndexOf('.'));
 
-            generatedFile = aggstngs.ge.getTmpDir() +
-                    File.separator +
-                    "cubic_" +
-                    nameWithoutExtension +
+            generatedFile = aggstngs.ge.getTmpDir() +                    
                     File.separator +
                     nameWithoutExtension;
+            
+            outputDir=aggstngs.ge.getOutputDir()+File.separator+"dz_"+nameWithoutExtension;
 
-            operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(path, aggstngs.ge.getTmpDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_b.jpg", aggstngs.ge.getOutputDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_d.jpg", aggstngs.ge.getOutputDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_f.jpg", aggstngs.ge.getOutputDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_l.jpg", aggstngs.ge.getOutputDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_r.jpg", aggstngs.ge.getOutputDir())));
-            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_u.jpg", aggstngs.ge.getOutputDir())));
-
-            //TODO: delete cube walls from tmp
+            operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(path, aggstngs.ge.getTmpDir(),true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_b.jpg", outputDir, true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_d.jpg", outputDir, true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_f.jpg", outputDir, true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_l.jpg", outputDir, true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_r.jpg", outputDir, true)));
+            operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(generatedFile + "_u.jpg", outputDir, true)));
         }
         return operations;
-    }
+    }   
 
-    private String[] generateArgsDZT(String input, String output) {
+    private String[] generateArgsDZT(String input, String output, boolean delFiles) {
         String argsDZT[] = {
             "-verbose",
+            "-simpleoutput",
             "-overlap", aggstngs.dzt.getOverlap(),
             "-quality", aggstngs.dzt.getQuality(),
             "-tilesize", aggstngs.dzt.getTileSize(),
             "-outputdir", output,
+            (delFiles ? "-delsrc" : "-verbose"),
             input
-        };
+        };       
+
         return argsDZT;
     }
 
-    private String[] generateArgsEC(String input, String output) {
+    private String[] generateArgsEC(String input, String output, boolean simpleOutput) {
         String argsEC[] = {
             "-verbose",
             "-overlap", aggstngs.ec.getOverlap(),
             "-quality", aggstngs.ec.getQuality(),
             "-interpolation", aggstngs.ec.getInterpolation(),
             "-outputdir", output,
+            (simpleOutput ? "-simpleoutput":"-verbose"),
             input
         };
         return argsEC;
@@ -291,6 +288,7 @@ public class Controller {
                 aggstngs.ge.setSearchSubDirs(prop.getProperty(GESettings.VALUE_SEARCH_SUBDIR));
                 aggstngs.ge.setSearchDepth(prop.getProperty(GESettings.VALUE_SEARCH_DEPTH));
                 aggstngs.ge.setTmpDir(prop.getProperty(GESettings.VALUE_TMP_DIR));
+                aggstngs.ge.setMemoryLimit(prop.getProperty(GESettings.VALUE_MEM_LIMIT));
                 aggstngs.ge.setInputDir(prop.getProperty(GESettings.VALUE_INPUT_DIR));
                 aggstngs.ge.setOutputDir(prop.getProperty(GESettings.VALUE_OUTPUT_DIR));
                 aggstngs.ge.setSelectedCommand(prop.getProperty(GESettings.VALUE_SELECTED_COMMAND));
@@ -342,6 +340,9 @@ public class Controller {
         }
         if (aggstngs.ge.tmpDirChanged()) {
             prop.put(GESettings.VALUE_TMP_DIR, aggstngs.ge.getTmpDir());
+        }        
+        if (aggstngs.ge.memoryLimitChanged()) {
+            prop.put(GESettings.VALUE_MEM_LIMIT, aggstngs.ge.getMemoryLimit());
         }
         if (aggstngs.ge.outputDirChanged()) {
             prop.put(GESettings.VALUE_OUTPUT_DIR, aggstngs.ge.getOutputDir());

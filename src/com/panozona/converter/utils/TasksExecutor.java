@@ -31,21 +31,22 @@ public class TasksExecutor extends Task<Void, Void> {
     @Override
     protected Void doInBackground() throws Exception {
         int numTasksToRun = 0;
+        int numTasksDone = 0;
 
         TaskData taskData;
 
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
-            taskData = taskTableModel.getValueAt(i, 0);
+            taskData = taskTableModel.rows.get(i);
             if(taskData.checkBoxEnabled && taskData.checkBoxSelected){
                 numTasksToRun++;
             }
-        }        
+        }
         
         for (int j = 0; j < taskTableModel.getRowCount(); j++) {
             
-            setProgress(j, 0, numTasksToRun);
+            setProgress(numTasksDone, 0, numTasksToRun);
 
-            taskData = taskTableModel.getValueAt(j, 0);
+            taskData = taskTableModel.rows.get(j);
             for (TaskOperation operation : taskData.operations) {
                 if (!super.isCancelled()) {
                     taskData.taskState = TaskData.STATE_PROCESSING;
@@ -60,6 +61,7 @@ public class TasksExecutor extends Task<Void, Void> {
                         System.out.println("ERROR: "+ex.getMessage());
                         taskData.taskState = TaskData.STATE_ERROR;
                         taskTableModel.fireTableDataChanged();
+                        numTasksDone++;
                     }
                 } else {
                     taskData.taskState = TaskData.STATE_CANCELED;
@@ -72,6 +74,7 @@ public class TasksExecutor extends Task<Void, Void> {
                 System.out.println("DONE");
                 taskData.taskState = TaskData.STATE_DONE;
                 taskTableModel.fireTableDataChanged();
+                numTasksDone++;
             }
         }
         return null;

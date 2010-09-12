@@ -28,27 +28,28 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="imageLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="appTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="appDescLabel" alignment="0" pref="281" max="32767" attributes="0"/>
-                  <Component id="closeButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="appHomepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="appVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="appVendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="appTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="vendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="homepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="appHomepageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="appVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="appVendorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="closeButton" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -58,9 +59,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="appTitleLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="appDescLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="appVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -156,16 +155,6 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="appDescLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="appDescLabel.text"/>
-        <Property name="name" type="java.lang.String" value="appDescLabel" noResource="true"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
-        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JLabel" name="imageLabel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" resourceKey="imageLabel.icon"/>
@@ -193,9 +182,14 @@
     </Component>
     <Component class="javax.swing.JLabel" name="appHomepageLabel">
       <Properties>
+        <Property name="font" type="java.awt.Font" resourceKey="appHomepageLabel.font"/>
+        <Property name="foreground" type="java.awt.Color" resourceKey="appHomepageLabel.foreground"/>
         <Property name="text" type="java.lang.String" resourceKey="appHomepageLabel.text"/>
         <Property name="name" type="java.lang.String" value="appHomepageLabel" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="appHomepageLabelMousePressed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>

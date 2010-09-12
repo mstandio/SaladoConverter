@@ -13,24 +13,26 @@ public class GESettings {
     public static final String VALUE_SEARCH_SUBDIR = "GE_search_sub";
     public static final String VALUE_SEARCH_DEPTH = "GE_depth";
     public static final String VALUE_TMP_DIR = "GE_tmpdir";
+    public static final String VALUE_MEM_LIMIT = "GE_memlimit";
     public static final String VALUE_INPUT_DIR = "GE_inputdir";
     public static final String VALUE_OUTPUT_DIR = "GE_outputdir";
-    public static final String VALUE_SELECTED_COMMAND = "GE_sel_comm";
+    public static final String VALUE_SELECTED_COMMAND = "GE_sel_comm";   
     
-    public static final String EQUIRECTANGULAR_TO_DEEPZOOM_EQUIRECTANGULAR = "Equirectangular to DeepZoom equirectangular";
-    public static final String EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC = "Equirectangular to DeepZoom cubic";
-    public static final String CUBIC_TO_DEEPZOOM_CUBIC = "Cubic to DeepZoom cubic";
+    public static final String EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC = "Equirectangular to Deep Zoom cubic";
+    public static final String CUBIC_TO_DEEPZOOM_CUBIC = "Cubic to Deep Zoom cubic";
     public static final String EQUIRECTANGULAR_TO_CUBIC = "Equirectangular to cubic";
 
     private Boolean searchSubDir;
-    private Integer searchDepth;
+    private int searchDepth;
     private String tmpDir;
+    private int memoryLimit;
     private String outputDir;
     private String inputDir;
     private String selectedCommand;
     private final Boolean defaultSearchSubDir = true;
     private final Integer defaultSearchDepth = 3;
     private String defaultTmpDir = "";
+    private int defaultMemoryLimit = 1024;
     private String defaultOutputDir = "";
     private String defaultInputDir ="";
     private final String defaultSelectedCommand = EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC;
@@ -48,6 +50,7 @@ public class GESettings {
         searchSubDir = defaultSearchSubDir;
         searchDepth = defaultSearchDepth;
         tmpDir = defaultTmpDir;
+        memoryLimit = defaultMemoryLimit;
         outputDir = defaultOutputDir;
         inputDir = defaultInputDir;
         selectedCommand = defaultSelectedCommand;
@@ -56,9 +59,8 @@ public class GESettings {
     public String[] getCommandNames() {
         return new String[]{
                     EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC,
-                    EQUIRECTANGULAR_TO_DEEPZOOM_EQUIRECTANGULAR,
-                    EQUIRECTANGULAR_TO_CUBIC,
-                    CUBIC_TO_DEEPZOOM_CUBIC
+                    CUBIC_TO_DEEPZOOM_CUBIC,
+                    EQUIRECTANGULAR_TO_CUBIC                    
                 };
     }
 
@@ -95,13 +97,13 @@ public class GESettings {
         }
     }
     public String getSearchDepth() {
-        return searchDepth.toString();
+        return Integer.toString(searchDepth);
     }
     public String getDefaultSearchDepth() {
         return defaultSearchDepth.toString();
     }
     public boolean searchDepthChanged() {
-        return !(searchDepth.equals(defaultSearchDepth));
+        return !(searchDepth == defaultSearchDepth);
     }
 
     public void setTmpDir(String value) throws InfoException {
@@ -123,6 +125,32 @@ public class GESettings {
 
     public boolean tmpDirChanged() {
         return !(tmpDir.equals(defaultTmpDir));
+    }
+
+    public void setMemoryLimit(String value) throws InfoException {
+        if (value != null) {
+            try {
+                if (Integer.parseInt(value) > 253 ) {
+                    memoryLimit = Integer.parseInt(value);
+                } else {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                throw new InfoException(Info.GE_MEM_LIMIT_ERROR);
+            }
+        }
+    }
+
+    public String getMemoryLimit() {
+        return Integer.toString(memoryLimit);
+    }
+
+    public String getDefaultMemoryLimit() {
+        return Integer.toString(defaultMemoryLimit);
+    }
+
+    public boolean memoryLimitChanged() {
+        return !(memoryLimit == defaultMemoryLimit);
     }
 
     public void setOutputDir(String value) throws InfoException {
@@ -168,10 +196,9 @@ public class GESettings {
 
     public void setSelectedCommand(String value) throws InfoException {
         if (value != null) {
-            if (value.equals(EQUIRECTANGULAR_TO_DEEPZOOM_EQUIRECTANGULAR) ||
-                    value.equals(EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC) ||
-                    value.equals(CUBIC_TO_DEEPZOOM_CUBIC) ||
-                    value.equals(EQUIRECTANGULAR_TO_CUBIC)) {
+            if (value.equals(EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC) ||
+                value.equals(CUBIC_TO_DEEPZOOM_CUBIC) ||
+                value.equals(EQUIRECTANGULAR_TO_CUBIC)) {
                 selectedCommand = value;
             } else {
                 throw new InfoException(Info.GE_COMMAND_ERROR);

@@ -66,6 +66,7 @@
         <Component class="javax.swing.JTextArea" name="jTextAreaLog">
           <Properties>
             <Property name="columns" type="int" value="20"/>
+            <Property name="font" type="java.awt.Font" resourceKey="jTextAreaLog.font"/>
             <Property name="rows" type="int" value="5"/>
             <Property name="name" type="java.lang.String" value="jTextAreaLog" noResource="true"/>
           </Properties>

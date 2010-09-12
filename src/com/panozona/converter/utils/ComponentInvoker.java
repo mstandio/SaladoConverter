@@ -1,6 +1,7 @@
 package com.panozona.converter.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -23,24 +24,24 @@ public class ComponentInvoker {
     public static final String INTERRUPTED_EXCEPTION = "INTERRUPTED_EXCEPTION";
 
     public ComponentInvoker(){
-        
-    }
 
+    }
+    
     public void run(String path, String name, String[] args) throws InfoException{
         try {
             invokeClass(path, name, args);
         } catch (IllegalAccessException ex) {
-            throw new InfoException(ILLEGAL_ACCESS_EXCEPTION);            
+            throw new InfoException(ILLEGAL_ACCESS_EXCEPTION);
         } catch (ClassNotFoundException ex) {
             throw new InfoException(CLASS_NOT_FOUND_EXCEPTION);
         } catch (NoSuchMethodException ex) {
             throw new InfoException(NO_SUCH_METHOD_EXCEPTION);
-        } catch (InvocationTargetException ex) {
+        } catch (InvocationTargetException ex) {            
             throw new InfoException(INVOCATION_TARGET_EXCEPTION);
         } catch (MalformedURLException ex) {
             throw new InfoException(MALFORMED_URL_EXCEPTION);
         } catch (InterruptedException ex) {
-            throw new InfoException(INTERRUPTED_EXCEPTION);                        
+            throw new InfoException(INTERRUPTED_EXCEPTION);
         }
     }
 
@@ -50,7 +51,7 @@ public class ComponentInvoker {
             InvocationTargetException,
             MalformedURLException,
             InterruptedException,
-            IllegalAccessException {        
+            IllegalAccessException {
         File f = new File(path);
         URLClassLoader u = new URLClassLoader(new URL[]{f.toURI().toURL()});
         Class c = u.loadClass(name);
@@ -61,5 +62,7 @@ public class ComponentInvoker {
             throw new NoSuchMethodException("main");
         }
         m.invoke(null, new Object[]{args});
+        m = null;
+        System.gc();
     }
 }

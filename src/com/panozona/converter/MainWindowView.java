@@ -7,8 +7,6 @@ import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.table.TaskTableCheckBoxCellEditor;
 import com.panozona.converter.table.TaskTableCheckBoxRenderer;
 import com.panozona.converter.table.TaskTableModel;
-import com.panozona.converter.table.TaskDataStatusCellRenderer;
-import com.panozona.converter.table.TaskDataDirectoryCellRenderer;
 import com.panozona.converter.table.TaskData;
 import com.panozona.converter.utils.CurrentDirectoryFinder;
 import com.panozona.converter.utils.FileFilterAddTask;
@@ -48,9 +46,9 @@ public class MainWindowView extends FrameView {
         initComponents();
 
         CurrentDirectoryFinder finder = new CurrentDirectoryFinder();
-        
+
         aggstngs = new AggregatedSettings(finder.currentDir);
-                       
+
         taskTableModel = new TaskTableModel(new ArrayList<TaskData>());
         jTableTasks.getTableHeader().setReorderingAllowed(false);
         jTableTasks.setModel(taskTableModel);
@@ -59,11 +57,9 @@ public class MainWindowView extends FrameView {
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMaxWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMinWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setResizable(false);
-        jTableTasks.getColumn(taskTableModel.columnNames[1]).setCellRenderer(new TaskDataStatusCellRenderer());
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setMinWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
-        jTableTasks.getColumn(taskTableModel.columnNames[2]).setCellRenderer(new TaskDataDirectoryCellRenderer());
 
         controller = Controller.getInstance();
         controller.setAggregatedSettings(aggstngs);
@@ -143,10 +139,11 @@ public class MainWindowView extends FrameView {
                     statusAnimationLabel.setIcon(idleIcon);
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
-                    InterfaceEnable();                    
+                    InterfaceEnable();
                     if (saladoConverterLog != null) {
                         saladoConverterLog.setRunning(false);
-                    }                                        
+                        saladoConverterLog.dispose();
+                    }
                 } else if ("message".equals(propertyName)) {
                     String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
@@ -199,7 +196,8 @@ public class MainWindowView extends FrameView {
         fileMenuSeparator = new javax.swing.JSeparator();
         javax.swing.JMenuItem fileMenuExit = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
-        javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
+        jMenuItemOnlineHelp = new javax.swing.JMenuItem();
+        javax.swing.JMenuItem jMenuItemAbout = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
         statusMessageLabel = new javax.swing.JLabel();
@@ -320,9 +318,9 @@ public class MainWindowView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-                    .addComponent(jComboBoxCommand, 0, 440, Short.MAX_VALUE)
-                    .addComponent(jTextFieldOutputDir, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                    .addComponent(jComboBoxCommand, 0, 423, Short.MAX_VALUE)
+                    .addComponent(jTextFieldOutputDir, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -382,9 +380,18 @@ public class MainWindowView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
-        aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
-        aboutMenuItem.setName("aboutMenuItem"); // NOI18N
-        helpMenu.add(aboutMenuItem);
+        jMenuItemOnlineHelp.setText(resourceMap.getString("jMenuItemOnlineHelp.text")); // NOI18N
+        jMenuItemOnlineHelp.setName("jMenuItemOnlineHelp"); // NOI18N
+        jMenuItemOnlineHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemOnlineHelpActionPerformed(evt);
+            }
+        });
+        helpMenu.add(jMenuItemOnlineHelp);
+
+        jMenuItemAbout.setAction(actionMap.get("showAboutBox")); // NOI18N
+        jMenuItemAbout.setName("jMenuItemAbout"); // NOI18N
+        helpMenu.add(jMenuItemAbout);
 
         menuBar.add(helpMenu);
 
@@ -403,11 +410,11 @@ public class MainWindowView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 385, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 368, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -466,7 +473,7 @@ public class MainWindowView extends FrameView {
         int[] selectedRows = jTableTasks.getSelectedRows();
         TaskData[] tasksToRemove = new TaskData[selectedRows.length];
         for (int i = 0; i < selectedRows.length; i++) {
-            tasksToRemove[i] = (TaskData) jTableTasks.getValueAt(i, 0);
+            tasksToRemove[i] = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(selectedRows[i]));
         }
         controller.removeTasks(tasksToRemove);
     }//GEN-LAST:event_jButtonRemoveTaskActionPerformed
@@ -496,11 +503,11 @@ public class MainWindowView extends FrameView {
     private void jComboBoxCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCommandActionPerformed
         try {
             aggstngs.ge.setSelectedCommand(jComboBoxCommand.getSelectedItem().toString());
-        } catch (InfoException ex) {            
+        } catch (InfoException ex) {
             JOptionPane.showMessageDialog(this.getFrame(), ex.getMessage());
         }
         jTableTasks.removeEditor();
-        controller.applyCommand();        
+        controller.applyCommand();
     }//GEN-LAST:event_jComboBoxCommandActionPerformed
 
     private void jButtonSelectOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectOutputActionPerformed
@@ -535,6 +542,15 @@ public class MainWindowView extends FrameView {
         controller.generateOperations();
         controller.executeTasks();
     }//GEN-LAST:event_jButtonRunTasksActionPerformed
+
+    private void jMenuItemOnlineHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOnlineHelpActionPerformed
+        String url = "http://panozona.com/wiki/SaladoConverter";
+        try {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this.getFrame(), "Could not openurl: "+url);
+        }
+    }//GEN-LAST:event_jMenuItemOnlineHelpActionPerformed
 
     public void cancelRunningTasks() {
         controller.cancelRunningTasks();
@@ -615,6 +631,7 @@ public class MainWindowView extends FrameView {
     private javax.swing.JButton jButtonSelectOutput;
     private javax.swing.JComboBox jComboBoxCommand;
     private javax.swing.JFileChooser jFileChooser;
+    private javax.swing.JMenuItem jMenuItemOnlineHelp;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableTasks;
@@ -636,5 +653,5 @@ public class MainWindowView extends FrameView {
     private LogWindowView saladoConverterLog;
     private TaskTableModel taskTableModel;
     private Controller controller;
-    private AggregatedSettings aggstngs;    
+    private AggregatedSettings aggstngs;
 }

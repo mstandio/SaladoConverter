@@ -45,11 +45,12 @@ public class LogWindowView extends javax.swing.JFrame {
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         jTextAreaLog.setColumns(20);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.panozona.converter.SaladoConverter.class).getContext().getResourceMap(LogWindowView.class);
+        jTextAreaLog.setFont(resourceMap.getFont("jTextAreaLog.font")); // NOI18N
         jTextAreaLog.setRows(5);
         jTextAreaLog.setName("jTextAreaLog"); // NOI18N
         jScrollPane1.setViewportView(jTextAreaLog);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.panozona.converter.SaladoConverter.class).getContext().getResourceMap(LogWindowView.class);
         jButtonCancel.setText(resourceMap.getString("jButtonCancel.text")); // NOI18N
         jButtonCancel.setName("jButtonCancel"); // NOI18N
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -103,8 +104,7 @@ public class LogWindowView extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
-        this.setVisible(false);
-        
+        this.setVisible(false);        
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
     public void append(String text){
@@ -115,8 +115,10 @@ public class LogWindowView extends javax.swing.JFrame {
     public void setRunning(Boolean value){
         isRunning = value;        
         jButtonCancel.setEnabled(isRunning);
-        if (isRunning)
+        if (isRunning){
             setCanceled(false);
+            jTextAreaLog.setText("");
+        }
     }
 
     public Boolean getRunning(){
