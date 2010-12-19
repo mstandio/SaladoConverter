@@ -194,7 +194,11 @@ public class TaskSettingsView extends javax.swing.JFrame {
 
     private void collectAllData() {
         try {
-            taskSettings.setCubeNewSize(jTextFieldTaskResize.getText(), Info.TSK_RESIZE_ERROR);
+            if (jTextFieldTaskResize.getText().isEmpty()){
+                taskSettings.setCubeNewSize(taskSettings.getDefaultCubeNewSize(), Info.TSK_RESIZE_ERROR);
+            }else{
+                taskSettings.setCubeNewSize(jTextFieldTaskResize.getText(), Info.TSK_RESIZE_ERROR);
+            }
         } catch (InfoException ex) {
             showOptionPane(ex.getMessage());
         }

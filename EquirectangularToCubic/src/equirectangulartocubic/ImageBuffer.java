@@ -37,9 +37,8 @@ public class ImageBuffer {
 
         rectIter = RectIterFactory.create(planarImage, null);
         pixel = new int[planarImage.getSampleModel().getNumBands()];
-        if (pixel.length != 3) {
-            throw new IllegalArgumentException("This color scheme is not suppported"
-                    + "use RGB uncompressed tif images");
+        if (pixel.length < 3  || pixel.length > 4 ) {
+            throw new IllegalArgumentException("Image color scheme is not suppported!");                    
         }
     }
 
@@ -68,12 +67,18 @@ public class ImageBuffer {
             String seconds = String.format(format, elapsedTime % 60);
             String minutes = String.format(format, (elapsedTime % 3600) / 60);
             String hours = String.format(format, elapsedTime / 3600);
-            if (seconds.equals("00")) {
-                System.out.println(" in "+(System.currentTimeMillis() - startTime)+"ms");
-            }else if (!hours.equals("00")) {
+            if (hours.equals("00")) {
+                if(minutes.equals("00")){
+                    if(seconds.equals("00")){
+                       System.out.println(" in "+(System.currentTimeMillis() - startTime)+"ms");
+                    }else{
+                        System.out.println(" in " + seconds+"s ");
+                    }
+                }else{
+                    System.out.println(" in "+minutes + "m " + seconds+"s ");
+                }
+            }else{
                 System.out.println(" in "+hours + "h " + minutes + "m " + seconds+"s");
-            } else {
-                System.out.println(" in "+minutes + "m " + seconds+"s ");
             }
         }
     }
@@ -93,7 +98,7 @@ public class ImageBuffer {
             currentRow = rowNumber;
             rectIter.startPixels();
             for (int i = 0; i < planarImage.getWidth(); i++) {
-                rectIter.getPixel(pixel);
+                rectIter.getPixel(pixel);               
                 result[i] = (pixel[0] << 16) + (pixel[1] << 8) + pixel[2];
                 rectIter.nextPixel();
             }
@@ -114,21 +119,5 @@ public class ImageBuffer {
 
     public int getPanoHeight() {
         return planarImage.getHeight();
-    }
-
-    public String formatTime(long elapsedTime) {
-        String format = String.format("%%0%dd", 2);
-        elapsedTime = elapsedTime / 1000;
-        String seconds = String.format(format, elapsedTime % 60);
-        String minutes = String.format(format, (elapsedTime % 3600) / 60);
-        String hours = String.format(format, elapsedTime / 3600);
-        if (seconds.equals("00")) {
-            return "";
-        }
-        if (!hours.equals("00")) {
-            return hours + ":" + minutes + ":" + seconds;
-        } else {
-            return minutes + ":" + seconds;
-        }
-    }
+    }    
 }

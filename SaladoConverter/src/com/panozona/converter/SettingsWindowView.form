@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.JFileChooser" name="jFileChooser">
       <Properties>
@@ -36,7 +36,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="TabbedPane" alignment="0" pref="368" max="32767" attributes="0"/>
+                  <Component id="TabbedPane" alignment="0" pref="397" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jButtonOK" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -128,11 +128,11 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="jTextFieldGEDirectory" pref="178" max="32767" attributes="0"/>
+                                          <Component id="jTextFieldGEDirectory" pref="207" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButtonGEBrowseDirectory" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jTextFieldMemoryLimit" alignment="0" pref="215" max="32767" attributes="0"/>
+                                      <Component id="jTextFieldMemoryLimit" alignment="0" pref="244" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -262,12 +262,12 @@
                                   <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jTextFieldECDirectory" pref="183" max="32767" attributes="0"/>
+                                          <Component id="jTextFieldECDirectory" pref="212" max="32767" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="jButtonECBrowseDirectory" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jTextFieldECOverlap" alignment="0" pref="224" max="32767" attributes="0"/>
-                                      <Component id="jComboBoxECInterpolation" alignment="0" pref="224" max="32767" attributes="0"/>
+                                      <Component id="jTextFieldECOverlap" alignment="0" pref="253" max="32767" attributes="0"/>
+                                      <Component id="jComboBoxECInterpolation" alignment="0" pref="253" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -414,20 +414,20 @@
                                       <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="11" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <EmptySpace pref="10" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="1" attributes="1">
-                                          <Component id="jTextFieldDZTDirectory" max="32767" attributes="0"/>
+                                          <Component id="jTextFieldDZTDirectory" pref="227" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButtonDZTBrowseDirectory" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="1">
-                                          <Component id="jComboBoxTilePart" max="32767" attributes="0"/>
+                                          <Component id="jComboBoxTilePart" pref="189" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jTextFieldDZTTileSize" min="-2" pref="69" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jTextFieldDZTOverlap" alignment="1" pref="218" max="32767" attributes="1"/>
-                                      <Component id="jTextFieldDZTQuality" alignment="1" min="-2" pref="234" max="-2" attributes="1"/>
+                                      <Component id="jTextFieldDZTOverlap" alignment="1" pref="264" max="32767" attributes="1"/>
+                                      <Component id="jTextFieldDZTQuality" alignment="1" pref="264" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -594,7 +594,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldRESDirectory" pref="207" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldRESDirectory" pref="236" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonRESBrowseDirectory" min="-2" pref="31" max="-2" attributes="0"/>
                               </Group>

@@ -6,6 +6,7 @@ package com.panozona.converter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Toolkit;
+import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -53,7 +54,7 @@ public class MainWindowView extends FrameView {
 
         aggstngs = new AggregatedSettings(finder.currentDir);
 
-        taskTableModel = new TaskTableModel(new ArrayList<TaskData>());
+        taskTableModel = new TaskTableModel(new ArrayList<TaskData>(), aggstngs);
         jTableTasks.getTableHeader().setReorderingAllowed(false);
         jTableTasks.setModel(taskTableModel);
 
@@ -67,13 +68,15 @@ public class MainWindowView extends FrameView {
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMinWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setResizable(false);
 
-        jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
+        //jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setMinWidth(60);
-        jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
+        //jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
 
-        jTableTasks.getColumn(taskTableModel.columnNames[2]).setMaxWidth(100);
+        //jTableTasks.getColumn(taskTableModel.columnNames[2]).setMaxWidth(100);
         jTableTasks.getColumn(taskTableModel.columnNames[2]).setMinWidth(100);
         //jTableTasks.getColumn(taskTableModel.columnNames[2]).setResizable(false);
+
+        jTableTasks.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
         jTableTasks.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 

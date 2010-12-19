@@ -8,6 +8,7 @@ import com.panozona.converter.task.TaskData;
 import com.panozona.converter.task.TaskOperation;
 import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.RESSettings;
+import java.io.File;
 
 import org.jdesktop.application.Task;
 
@@ -32,8 +33,7 @@ public class TasksExecutor extends Task<Void, Void> {
     @Override
     protected Void doInBackground() throws Exception {
         int numTasksToRun = 0;
-        int numTasksDone = 0;
-
+        int numTasksDone = 0;        
         TaskData taskData;
 
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
@@ -59,6 +59,8 @@ public class TasksExecutor extends Task<Void, Void> {
                             componentInvoker.run(aggstngs.ec.getJarDir(), ECSettings.JAR_CLASSNAME, operation.args);
                         } else if(operation.operationType.equals(TaskOperation.OPERATION_RES)){
                             componentInvoker.run(aggstngs.res.getJarDir(), RESSettings.JAR_CLASSNAME, operation.args);
+                        } else if(operation.operationType.equals(TaskOperation.OPERATION_DEL)){
+                            new File(operation.args[0]).delete();                            
                         }
                     } catch (InfoException ex) {
                         System.out.println("ERROR: "+ex.getMessage());

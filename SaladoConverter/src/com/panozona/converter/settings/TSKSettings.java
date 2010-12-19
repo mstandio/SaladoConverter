@@ -24,11 +24,14 @@ public class TSKSettings {
     public void setCubeNewSize(String value, String errorMsg) throws InfoException {
         if (value != null) {
             try {
-                cubeNewSize = Integer.parseInt(value);
+                if (Integer.parseInt(value) > 0) {
+                    cubeNewSize = Integer.parseInt(value);
+                } else {
+                    throw new NumberFormatException();
+                }
             } catch (NumberFormatException ex) {
                 throw new InfoException(errorMsg);
             }
-
         }
     }
 
@@ -44,10 +47,10 @@ public class TSKSettings {
         return cubeNewSize != taskImages.getCubeSize();
     }
 
-    public String cubeSizeDescription(){
-        if(CubeNewSizeChanged()){
+    public String cubeSizeDescription() {
+        if (CubeNewSizeChanged()) {
             return getDefaultCubeNewSize() + " to " + getCubeNewSize();
-        }else{
+        } else {
             return getDefaultCubeNewSize();
         }
     }

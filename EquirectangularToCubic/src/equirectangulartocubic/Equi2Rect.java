@@ -64,7 +64,7 @@ public class Equi2Rect {
         math_init();
     }
 
-    static public void initForNewBuffer(ImageBuffer2 imgBuf) {
+    static public void initForNewBuffer(ImageBuffer imgBuf) {
         math_setLookUp(imgBuf.getPanoWidth());
     }
 
@@ -72,7 +72,7 @@ public class Equi2Rect {
             double yaw,
             double pitch,
             double fov,
-            ImageBuffer2 imgBuf,
+            ImageBuffer imgBuf,
             int rectSize,
             int equiWidth,
             Boolean bilinear,
@@ -144,7 +144,7 @@ public class Equi2Rect {
     }
 
     private static void math_extractview(
-            ImageBuffer2 imgBuf,
+            ImageBuffer imgBuf,
             int v[],
             //byte hv[],
             int rectWidth,
@@ -213,7 +213,7 @@ public class Equi2Rect {
 // 	 */
 
     private static void math_transform(
-            ImageBuffer2 imgBuf, //panoData? viz im_loadPano
+            ImageBuffer imgBuf, //panoData? viz im_loadPano
             int pw, //panoWidth viz extractView: pd[0].length,
             int ph, //panoHeight viz extractView: pd.length + deltaYHorizonPosition,
             int v[], // viewData: viz paint: vdata = new int[vwidth * vheight];
@@ -861,7 +861,7 @@ public class Equi2Rect {
 // 	// interpolates one pixel
 
     static int lanczos2_interp_pixel(
-            ImageBuffer2 imgBuf,
+            ImageBuffer imgBuf,
             int pw,
             int ph,
             int xs,

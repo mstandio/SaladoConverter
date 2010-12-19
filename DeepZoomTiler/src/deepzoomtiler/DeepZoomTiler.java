@@ -6,7 +6,6 @@ This file is part of EquirectangulartoCubic.java.
 EquirectangulartoCubic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 EquirectangulartoCubic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with EquirectangulartoCubic. If not, see http://www.gnu.org/licenses/.
-
 This code is modified from DeepJZoom, courtesy of Glenn Lawrence, which is also licensed under the GPL.  Thank you!
  */
 import java.io.File;
@@ -31,75 +30,19 @@ import com.sun.media.jai.codec.FileSeekableStream;
  */
 public class DeepZoomTiler {
 
-    static String help = "\nDeepZoomTiler v1.3 \n\n Usage: \n\n"
-            + "java [-java_options] -jar path/to/DeepZoomTiler.jar [-options] [args...]\n"
-            + "For a list of java options try: java -help or java -X for a list of less\n"
-            + "common options. Loading large images for conversion takes a lot of RAM so\n"
-            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
-            + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
-            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
-            + "If you see an error about heap size, then you will need to increase this \n"
-            + "value.\n\n"
-            + " Basic usage example for the jar file:\n\n"
-            + "java -Xmx1024m -jar path/to/DeepZoomTiler.jar path/to/directory/of/images/\n"
-            + "This will generate a folder of tiles beside the input directory or file \n"
-            + "with 'tiles_' prepended onto the name. So in the basic example above, \n"
-            + "the output files would be in path/to/directory/of/tiles_images/.\n"
-            + "\n"
-            + " Options:\n\n"
-            + "-overlap: number of pixels of overlap added around the tiles. A value\n"
-            + "\tof 1 causes the tiles to be as the size of the tileSize para-\n"
-            + "\t-meter plus 1. The tiles around the edge of the input image\n"
-            + "\twill NOT have overlap added to their outside edge or edges in\n"
-            + "\tthe case of corner tiles.\n"
-            + "\tDefault is 1. \n\n"
-            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
-            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
-            + "\t1.0 is least compression, highest quality, tlargest file.\n"
-            + "\tDefault is 0.8.\n\n"
-            + "-tilesize: target pixel tile size. Tiling starts at the top left \n"
-            + "\tof an image, so tiles at the right and bottom to the image\n"
-            + "\tmay not be this width or height, respectively, unless the\n"
-            + "\tinput image's size is divisible by the tileSize. The tileSize\n"
-            + "\tdoes NOT include the overlap. Overlap pixels are add to the\n"
-            + "\tdimensions of the tile.\n"
-            + "\tDefault is 256.\n\n"
-            + "-tilepart: taget tile size expressed as division of cube size. If set\n"
-            + "\tto value other then 0 overwrites tileSize value. For instance,\n"
-            + "\twhen value is set to 4, for cube with size of 1000px, tiles\n"
-            + "\thave size of 250px.\n"
-            + "\tDefault is 0.\n\n"
-            + "-outputdir or -o: the output directory for the converted images. It\n"
-            + "\tneed not exist. Default is a folder next to the input folder\n"
-            + "\tor file, with 'tiles_' prepended to the name of the input\n"
-            + "\t(input files will have the extension removed). \n\n"
-            + "-delsource: if source image is to be removed after processing.\n\n"
-            + "-simpleoutput or -s: _tiles parent directory for output files is not\n"
-            + "\tis not created. Both .xml file and folder containing tiles are \n"
-            + "\tsaved directly into output folder.\n\n"
-            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
-            + "-debug: print various debugging messages during processing. \n\n"
-            + " Arguments:\n\n"
-            + "The arguments following any options are the input images or folders.\n"
-            + "(or both) If there are multiple input folders or images, each should\n"
-            + "be separated by a space. Input folders will not be NOT be recursed.\n"
-            + "Only .bmp, .jpg, and .tif images immediately inside the folder will be\n"
-            + "processed. All inputs will be processed into the one output directory,\n"
-            + "so general usage is to process one folder containing multiples images\n"
-            + "or to process one singe image file. \n";
+    static final String help = "\nDeepZoomTiler v1.3 \n\n Usage: \n\n" + "java [-java_options] -jar path/to/DeepZoomTiler.jar [-options] [args...]\n" + "For a list of java options try: java -help or java -X for a list of less\n" + "common options. Loading large images for conversion takes a lot of RAM so\n" + "you will find the -Xmx option useful to raise Java's maximum heap size.\n" + "The -Xmx command is followed immediately by an integer specifying RAM size\n" + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n" + "If you see an error about heap size, then you will need to increase this \n" + "value.\n\n" + " Basic usage example for the jar file:\n\n" + "java -Xmx1024m -jar path/to/DeepZoomTiler.jar path/to/directory/of/images/\n" + "This will generate a folder of tiles beside the input directory or file \n" + "with 'tiles_' prepended onto the name. So in the basic example above, \n" + "the output files would be in path/to/directory/of/tiles_images/.\n" + "\n" + " Options:\n\n" + "-overlap: number of pixels of overlap added around the tiles. A value\n" + "\tof 1 causes the tiles to be as the size of the tileSize para-\n" + "\t-meter plus 1. The tiles around the edge of the input image\n" + "\twill NOT have overlap added to their outside edge or edges in\n" + "\tthe case of corner tiles.\n" + "\tDefault is 1. \n\n" + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n" + "\t0.0 is maximum compression, lowest quality, smallest file.\n" + "\t1.0 is least compression, highest quality, tlargest file.\n" + "\tDefault is 0.8.\n\n" + "-tilesize: target pixel tile size. Tiling starts at the top left \n" + "\tof an image, so tiles at the right and bottom to the image\n" + "\tmay not be this width or height, respectively, unless the\n" + "\tinput image's size is divisible by the tileSize. The tileSize\n" + "\tdoes NOT include the overlap. Overlap pixels are add to the\n" + "\tdimensions of the tile.\n" + "\tDefault is 256.\n\n" + "-tilepart: taget tile size expressed as division of cube size. If set\n" + "\tto value other then 0 overwrites tileSize value. For instance,\n" + "\twhen value is set to 4, for cube with size of 1000px, tiles\n" + "\thave size of 250px.\n" + "\tDefault is 0.\n\n" + "-outputdir or -o: the output directory for the converted images. It\n" + "\tneed not exist. Default is a folder next to the input folder\n" + "\tor file, with 'tiles_' prepended to the name of the input\n" + "\t(input files will have the extension removed). \n\n" + "-simpleoutput or -s: '_tiles' parent directory for output files is not\n" + "\tcreated. Both .xml file and folder containing tiles are saved\n" + "\tdirectly into output folder.\n\n" + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" + "-debug: print various debugging messages during processing. \n\n" + " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" + "(or both) If there are multiple input folders or images, each should\n" + "be separated by a space. Input folders will not be NOT be recursed.\n" + "Only images immediately inside the folder will be processed.\n" + "All inputs will be processed into the one output directory,\n" + "so general usage is to process one folder containing multiples images\n" + "or to process one singe image file. \n";
 
     private enum CmdParseState {
 
         DEFAULT, OUTPUTDIR, TILESIZE, TILEPART, OVERLAP, QUALITY, INPUTFILE
-    };
+    }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
     static int tileSize = 256;                     // -tilesize
     static int tilePart = 0;                       // -tilepart
     static int tileOverlap = 1;                    // -overlap
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
-    static File outputDir = null;                  // -outputdir | -o
-    static boolean deleteOriginalFiles = false;    // -delsource
+    static File outputDir = null;                  // -outputdir | -o    
     static boolean simpleoutput = false;           // -simpleoutput | -s
     static boolean verboseMode = false;            // -verbose
     static boolean debugMode = false;              // -debug
@@ -172,7 +115,7 @@ public class DeepZoomTiler {
             }
             System.setProperty("com.sun.media.jai.disableMediaLib", "true");
             // it probably can be problematic in non-admin accounts
-            // java -Dcom.sun.media.jai.disableMediaLib=true YourApp
+            // java -D com.sun.media.jai.disableMediaLib=true YourApp
             for (int i = 0; i < inputFiles.size(); i++) {
                 processImageFile(inputFiles.get(i), outputFiles.get(i));
             }
@@ -201,8 +144,6 @@ public class DeepZoomTiler {
                         debugMode = true;
                     } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
                         simpleoutput = true;
-                    } else if (arg.equals("-delsrc")) {
-                        deleteOriginalFiles = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-tilesize")) {
@@ -358,18 +299,6 @@ public class DeepZoomTiler {
             image = resizeImage(image, width, height);
         }
 
-        if (deleteOriginalFiles) {
-            try {
-                if (verboseMode) {
-                    System.out.printf("Deleting file: %s\n", inFile);
-                }
-                deleteFile(inFile);
-            } catch (IOException ex) {
-                if (verboseMode) {
-                    System.out.printf("Failed to delete file: %s\n", inFile);
-                }
-            }
-        }
         saveImageDescriptor(originalWidth, originalHeight, descriptor);
     }
 
@@ -537,9 +466,7 @@ public class DeepZoomTiler {
         String schemaName = "http://schemas.microsoft.com/deepzoom/2009";
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(xmlHeader);
-        lines.add("<Image TileSize=\"" + tileSize + "\" Overlap=\"" + tileOverlap
-                + "\" Format=\"jpg\" ServerFormat=\"Default\" xmnls=\""
-                + schemaName + "\">");
+        lines.add("<Image TileSize=\"" + tileSize + "\" Overlap=\"" + tileOverlap + "\" Format=\"jpg\" ServerFormat=\"Default\" xmnls=\"" + schemaName + "\">");
         lines.add("<Size Width=\"" + width + "\" Height=\"" + height + "\" />");
         lines.add("</Image>");
         saveText(lines, file);
