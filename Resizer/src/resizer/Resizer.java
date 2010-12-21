@@ -17,37 +17,57 @@ import javax.media.jai.InterpolationNearest;
  */
 public class Resizer {
 
-    
-    static final String help = "\nResizer v0.1 \n\n Usage: \n\n" + "java [-java_options] -jar path/to/Resizer.jar [-options] [args...]\n" + "For a list of java options try: java -help or java -X for a list of less\n" + "common options. Loading large images for conversion takes a lot of RAM so\n" + "you will find the -Xmx option useful to raise Java's maximum heap size.\n" + "The -Xmx command is followed immediately by an integer specifying RAM size\n" + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n" + "If you see an error about heap size, then you will need to increase this \n" + "value.\n\n" + " Basic usage example for the jar file:\n\n" + "java -Xmx1024m -jar path/to/Resizer.jar path/to/directory/of/images/\n" + "This will generate a folder of resized images beside the input directory\n" + "or file with 'resized_' prepended onto the name. So in the basic example\n" + "above, the output files would be in path/to/directory/of/tiles_images/.\n" + "\n" + " Options:\n\n" 
+    static final String help = "\nResizer v0.1 \n\n Usage: \n\n"
+            + "java [-java_options] -jar path/to/Resizer.jar [-options] [args...]\n"
+            + "For a list of java options try: java -help or java -X for a list of less\n"
+            + "common options. Loading large images for conversion takes a lot of RAM so\n"
+            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
+            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an error about heap size, then you will need to increase this \n"
+            + "value.\n\n" + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/Resizer.jar path/to/directory/of/images/\n"
+            + "This will generate a folder of resized images beside the input directory\n"
+            + "or file with 'resized_' prepended onto the name. So in the basic example\n"
+            + "above, the output files would be in path/to/directory/of/tiles_images/.\n"
+            + "\n"
+            + " Options:\n\n"
             + "-width: width of output image. If only width is set, aspect ratio\n"
             + "\tof result image will be preserved.\n"
             + "\tDefault is 0\n\n"
             + "-height: height of output image. If only height is set, aspect ratio\n"
             + "\tof result image will be preserved.\n\n"
-            + "-outputtype or -t: format of output image (tif, jpg, bmp, gif, png)\n"
-            + "\tCurrently only output format supported is tif.\n"
+            + "-outputformat or -f: format of output image (tif, jpg, bmp, gif, png)\n"
+            + "\tCurrently only output format supported is \"tif\".\n"
             + "\tDefault is extension of input image.\n\n"
-            + "-outputdir or -o: the output directory for the converted images. It\n" 
-            + "\tneed not exist. Default is a folder next to the input folder\n" 
-            + "\tor file, with 'resized_' prepended to the name of the input\n" 
-            + "\t(input files will have the extension removed). \n\n" 
-            + "-simpleoutput or -s: '_resized' parent directory for output files is not\n" 
+            + "-outputdir or -o: the output directory for the converted images. It\n"
+            + "\tneed not exist. Default is a folder next to the input folder\n"
+            + "\tor file, with 'resized_' prepended to the name of the input\n"
+            + "\t(input files will have the extension removed). \n\n"
+            + "-simpleoutput or -s: '_resized' parent directory for output files is not\n"
             + "\tcreated. Resized files are saved directly into output folder.\n\n"
-            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" 
-            + "-debug: print various debugging messages during processing. \n\n" 
-            + " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" + "(or both) If there are multiple input folders or images, each should\n" + "be separated by a space. Input folders will not be NOT be recursed.\n" + "Only images immediately inside the folder will be processed.\n" + "All inputs will be processed into the one output directory,\n" + "so general usage is to process one folder containing multiples images\n" + "or to process one singe image file. \n";
+            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
+            + "-debug: print various debugging messages during processing. \n\n"
+            + " Arguments:\n\n"
+            + "The arguments following any options are the input images or folders.\n"
+            + "(or both) If there are multiple input folders or images, each should\n"
+            + "be separated by a space. Input folders will not be NOT be recursed.\n"
+            + "Only images immediately inside the folder will be processed.\n"
+            + "All inputs will be processed into the one output directory,\n"
+            + "so general usage is to process one folder containing multiples images\n"
+            + "or to process one singe image file. \n";
+
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, OUTPUTTYPE, JPGQUALITY, INPUTFILE, WIDTH, HEIGHT
+        DEFAULT, OUTPUTDIR, OUTPUTFORMAT, JPGQUALITY, INPUTFILE, WIDTH, HEIGHT
     }
     // The following can be overriden/set by the indicated command line arguments    
     static boolean showHelp = false;              // -help | -h
     static int width = 0;                         // -width
     static int height = 0;                        // -height
     static File outputDir = null;                 // -outputdir | -o
-    static String outputType = null;              // -outputtype | -t
-    static boolean simpleOutput = false;          // -simpleoutput | -s
-    static float jpgQuality = 0.8f;	          // -jpgQuality (0.1 to 1.0)    
+    static String outputFormat = null;            // -outputformat | -f
+    static boolean simpleOutput = false;          // -simpleoutput | -s    
     static boolean verboseMode = false;           // -verbose
     static boolean debugMode = false;             // -debug
     static ArrayList<File> inputFiles = new ArrayList<File>();  // must follow all other args
@@ -151,10 +171,8 @@ public class Resizer {
                         simpleOutput = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
-                    } else if (arg.equals("-outputtype") || arg.equals("-t")) {
-                        state = CmdParseState.OUTPUTTYPE;
-                    } else if (arg.equals("-quality")) {
-                        state = CmdParseState.JPGQUALITY;
+                    } else if (arg.equals("-outputformat") || arg.equals("-f")) {
+                        state = CmdParseState.OUTPUTFORMAT;                    
                     } else if (arg.equals("-width")) {
                         state = CmdParseState.WIDTH;
                     } else if (arg.equals("-height")) {
@@ -183,23 +201,16 @@ public class Resizer {
                     outputFiles.add(new File(args[count]));
                     state = CmdParseState.DEFAULT;
                     break;
-                case OUTPUTTYPE:
+                case OUTPUTFORMAT:
                     String ttmp = args[count].toLowerCase();
-                    if (ttmp.equals("jpg") || ttmp.equals("jpeg") || ttmp.equals("tif") || ttmp.equals("tiff") || ttmp.equals("bmp") || ttmp.equals("png") || ttmp.equals("bmp") || ttmp.equals("gif")) {
-                        outputType = ttmp;
+                    //if (ttmp.equals("jpg") || ttmp.equals("jpeg") || ttmp.equals("tif") || ttmp.equals("tiff") || ttmp.equals("bmp") || ttmp.equals("png") || ttmp.equals("bmp") || ttmp.equals("gif")) {
+                    if (ttmp.equals("tif") || ttmp.equals("tiff")) {
+                        outputFormat = ttmp;
                     } else {
-                        throw new Exception("-outputtype");
+                        throw new Exception("-outputformat");
                     }
                     state = CmdParseState.DEFAULT;
-                    break;
-                case JPGQUALITY:
-                    float qtmp = Float.parseFloat(args[count]);
-                    if (qtmp < 0.1 || qtmp > 1) {
-                        throw new Exception("-quality");
-                    }
-                    jpgQuality = qtmp;
-                    state = CmdParseState.DEFAULT;
-                    break;
+                    break;                
             }
             if (state == CmdParseState.INPUTFILE) {
                 File inputFile = new File(arg);
@@ -249,8 +260,9 @@ public class Resizer {
             System.out.printf("Resizing image: %s\n", inFile);
         }
 
-        if (outputType == null) {
-            outputType = inFile.getAbsolutePath().substring(inFile.getAbsolutePath().lastIndexOf(".") + 1).toLowerCase();
+        if (outputFormat == null) {
+            //outputFormat = inFile.getAbsolutePath().substring(inFile.getAbsolutePath().lastIndexOf(".") + 1).toLowerCase();
+            outputFormat = "tif";
         }
 
         FileSeekableStream stream = null;
@@ -276,15 +288,15 @@ public class Resizer {
 
             String outputFileName = outputDir.getAbsolutePath() + File.separator + inFile.getName().substring(0, inFile.getName().lastIndexOf('.'));
 
-            if (outputType.equals("tif") || outputType.equals("tiff")) {
+            if (outputFormat.equals("tif") || outputFormat.equals("tiff")) {
                 JAI.create("filestore", planarImage, outputFileName + ".tif", "TIFF");
-            } else if (outputType.equals("jpg") || outputType.equals("jpeg")) {
+            } else if (outputFormat.equals("jpg") || outputFormat.equals("jpeg")) {
                 throw new UnsupportedOperationException("cant save as jpg yet");
-            } else if (outputType.equals("png")) {
+            } else if (outputFormat.equals("png")) {
                 throw new UnsupportedOperationException("cant save as png yet");
-            } else if (outputType.equals("bmp")) {
+            } else if (outputFormat.equals("bmp")) {
                 throw new UnsupportedOperationException("cant save as bmp yet");
-            } else if (outputType.equals("gif")) {
+            } else if (outputFormat.equals("gif")) {
                 throw new UnsupportedOperationException("cant save as gif yet");
             }
 

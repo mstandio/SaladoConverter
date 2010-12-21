@@ -30,16 +30,62 @@ import com.sun.media.jai.codec.FileSeekableStream;
  */
 public class DeepZoomTiler {
 
-    static final String help = "\nDeepZoomTiler v1.3 \n\n Usage: \n\n" + "java [-java_options] -jar path/to/DeepZoomTiler.jar [-options] [args...]\n" + "For a list of java options try: java -help or java -X for a list of less\n" + "common options. Loading large images for conversion takes a lot of RAM so\n" + "you will find the -Xmx option useful to raise Java's maximum heap size.\n" + "The -Xmx command is followed immediately by an integer specifying RAM size\n" + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n" + "If you see an error about heap size, then you will need to increase this \n" + "value.\n\n" + " Basic usage example for the jar file:\n\n" + "java -Xmx1024m -jar path/to/DeepZoomTiler.jar path/to/directory/of/images/\n" + "This will generate a folder of tiles beside the input directory or file \n" + "with 'tiles_' prepended onto the name. So in the basic example above, \n" + "the output files would be in path/to/directory/of/tiles_images/.\n" + "\n" + " Options:\n\n" + "-overlap: number of pixels of overlap added around the tiles. A value\n" + "\tof 1 causes the tiles to be as the size of the tileSize para-\n" + "\t-meter plus 1. The tiles around the edge of the input image\n" + "\twill NOT have overlap added to their outside edge or edges in\n" + "\tthe case of corner tiles.\n" + "\tDefault is 1. \n\n" + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n" + "\t0.0 is maximum compression, lowest quality, smallest file.\n" + "\t1.0 is least compression, highest quality, tlargest file.\n" + "\tDefault is 0.8.\n\n" + "-tilesize: target pixel tile size. Tiling starts at the top left \n" + "\tof an image, so tiles at the right and bottom to the image\n" + "\tmay not be this width or height, respectively, unless the\n" + "\tinput image's size is divisible by the tileSize. The tileSize\n" + "\tdoes NOT include the overlap. Overlap pixels are add to the\n" + "\tdimensions of the tile.\n" + "\tDefault is 256.\n\n" + "-tilepart: taget tile size expressed as division of cube size. If set\n" + "\tto value other then 0 overwrites tileSize value. For instance,\n" + "\twhen value is set to 4, for cube with size of 1000px, tiles\n" + "\thave size of 250px.\n" + "\tDefault is 0.\n\n" + "-outputdir or -o: the output directory for the converted images. It\n" + "\tneed not exist. Default is a folder next to the input folder\n" + "\tor file, with 'tiles_' prepended to the name of the input\n" + "\t(input files will have the extension removed). \n\n" + "-simpleoutput or -s: '_tiles' parent directory for output files is not\n" + "\tcreated. Both .xml file and folder containing tiles are saved\n" + "\tdirectly into output folder.\n\n" + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" + "-debug: print various debugging messages during processing. \n\n" + " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" + "(or both) If there are multiple input folders or images, each should\n" + "be separated by a space. Input folders will not be NOT be recursed.\n" + "Only images immediately inside the folder will be processed.\n" + "All inputs will be processed into the one output directory,\n" + "so general usage is to process one folder containing multiples images\n" + "or to process one singe image file. \n";
+    static final String help = "\nDeepZoomTiler v1.3 \n\n Usage: \n\n"
+            + "java [-java_options] -jar path/to/DeepZoomTiler.jar [-options] [args...]\n"
+            + "For a list of java options try: java -help or java -X for a list of less\n"
+            + "common options. Loading large images for conversion takes a lot of RAM so\n"
+            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
+            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an error about heap size, then you will need to increase this \n"
+            + "value.\n\n" + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/DeepZoomTiler.jar path/to/directory/of/images/\n"
+            + "This will generate a folder of tiles beside the input directory or file \n"
+            + "with 'tiles_' prepended onto the name. So in the basic example above, \n"
+            + "the output files would be in path/to/directory/of/tiles_images/.\n"
+            + "\n"
+            + " Options:\n\n"
+            + "-overlap: number of pixels of overlap added around the tiles. A value\n"
+            + "\tof 1 causes the tiles to be as the size of the tileSize para-\n"
+            + "\t-meter plus 1. The tiles around the edge of the input image\n"
+            + "\twill NOT have overlap added to their outside edge or edges in\n"
+            + "\tthe case of corner tiles.\n"
+            + "\tDefault is 1. \n\n"
+            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
+            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
+            + "\t1.0 is least compression, highest quality, tlargest file.\n"
+            + "\tDefault is 0.8.\n\n"
+            + "-tilesize: target pixel tile size. Tiling starts at the top left \n"
+            + "\tof an image, so tiles at the right and bottom to the image\n"
+            + "\tmay not be this width or height, respectively, unless the\n"
+            + "\tinput image's size is divisible by the tileSize. The tileSize\n"
+            + "\tdoes NOT include the overlap. Overlap pixels are add to the\n"
+            + "\tdimensions of the tile.\n" + "\tDefault is 256.\n\n"
+            + "-outputdir or -o: the output directory for the converted images. It\n"
+            + "\tneed not exist. Default is a folder next to the input folder\n"
+            + "\tor file, with 'tiles_' prepended to the name of the input\n"
+            + "\t(input files will have the extension removed). \n\n"
+            + "-simpleoutput or -s: '_tiles' parent directory for output files is not\n"
+            + "\tcreated. Both .xml file and folder containing tiles are saved\n"
+            + "\tdirectly into output folder.\n\n"
+            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
+            + "-debug: print various debugging messages during processing. \n\n"
+            + " Arguments:\n\n"
+            + "The arguments following any options are the input images or folders.\n"
+            + "(or both) If there are multiple input folders or images, each should\n"
+            + "be separated by a space. Input folders will not be NOT be recursed.\n"
+            + "Only images immediately inside the folder will be processed.\n"
+            + "All inputs will be processed into the one output directory,\n"
+            + "so general usage is to process one folder containing multiples images\n"
+            + "or to process one singe image file. \n";
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, TILESIZE, TILEPART, OVERLAP, QUALITY, INPUTFILE
+        DEFAULT, OUTPUTDIR, TILESIZE, OVERLAP, QUALITY, INPUTFILE
     }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
-    static int tileSize = 256;                     // -tilesize
-    static int tilePart = 0;                       // -tilepart
+    static int tileSize = 256;                     // -tilesize    
     static int tileOverlap = 1;                    // -overlap
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
     static File outputDir = null;                  // -outputdir | -o    
@@ -104,7 +150,6 @@ public class DeepZoomTiler {
 
                 if (debugMode) {
                     System.out.printf("tileSize=%d ", tileSize);
-                    System.out.printf("tilePart=%d ", tilePart);
                     System.out.printf("tileOverlap=%d ", tileOverlap);
                     System.out.printf("quality=%.2f ", quality);
                 }
@@ -148,8 +193,6 @@ public class DeepZoomTiler {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-tilesize")) {
                         state = CmdParseState.TILESIZE;
-                    } else if (arg.equals("-tilepart")) {
-                        state = CmdParseState.TILEPART;
                     } else if (arg.equals("-overlap")) {
                         state = CmdParseState.OVERLAP;
                     } else if (arg.equals("-quality")) {
@@ -164,10 +207,6 @@ public class DeepZoomTiler {
                     break;
                 case TILESIZE:
                     tileSize = Integer.parseInt(args[count]);
-                    state = CmdParseState.DEFAULT;
-                    break;
-                case TILEPART:
-                    tilePart = Integer.parseInt(args[count]);
                     state = CmdParseState.DEFAULT;
                     break;
                 case OVERLAP:
@@ -293,8 +332,8 @@ public class DeepZoomTiler {
             height = Math.ceil(height / 2);
             if (width > 10 && height > 10) {
                 // resize in stages to improve quality
-                image = resizeImage(image, width * 1.66, height * 1.66);
-                image = resizeImage(image, width * 1.33, height * 1.33);
+                image = resizeImage(image, width * 1.66d, height * 1.66d);
+                image = resizeImage(image, width * 1.33d, height * 1.33d);
             }
             image = resizeImage(image, width, height);
         }
@@ -357,10 +396,7 @@ public class DeepZoomTiler {
         try {
             stream = new FileSeekableStream(file);
             PlanarImage planarImage = JAI.create("stream", stream);
-            //PlanarImage planarImage = JAI.create("fileload", file.getAbsolutePath());
-            if (tilePart != 0) {
-                tileSize = (int) Math.ceil((double) (planarImage.getWidth()) / (double) tilePart);
-            }
+            //PlanarImage planarImage = JAI.create("fileload", file.getAbsolutePath());            
             result = planarImage.getAsBufferedImage();
         } catch (Exception e) {
             e.printStackTrace();
@@ -413,15 +449,15 @@ public class DeepZoomTiler {
      * @param img the image to be resized
      */
     private static BufferedImage resizeImage(BufferedImage img, double width, double height) {
-        //int w = (int) width;
-        //int h = (int) height;
-        //BufferedImage result = new BufferedImage(w, h, img.getType());
-        //Graphics2D g = result.createGraphics();
-        //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-        //        RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        //g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
-        RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        BufferedImage result = JAI.create("SubsampleAverage", img, width / (double) img.getWidth(), height / (double) img.getHeight(), qualityHints).getAsBufferedImage();
+        int w = (int) width;
+        int h = (int) height;
+        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = result.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
+        //surprisingly this gives worse results
+        //RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        //BufferedImage result = JAI.create("SubsampleAverage", img, width / (double) img.getWidth(), height / (double) img.getHeight(), qualityHints).getAsBufferedImage();
         return result;
     }
 

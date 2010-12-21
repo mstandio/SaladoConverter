@@ -13,23 +13,14 @@ public class DZTSettings {
     public static final String JAR_FILENAME = "DeepZoomTiler.jar";
     public static final String VALUE_OVERLAP = "DZT_overlap";
     public static final String VALUE_TILE_SIZE = "DZT_tileSize";
-    public static final String VALUE_TILE_PART = "DZT_tilePart";
     public static final String VALUE_QUALITY = "DZT_quality";
     public static final String VALUE_JAR_DIR = "DZT_jarDir";
-    private static final String TILE_PART_1 = "1/1";
-    private static final String TILE_PART_2 = "1/2";
-    private static final String TILE_PART_3 = "1/3";
-    private static final String TILE_PART_4 = "1/4";
-    private static final String TILE_PART_5 = "1/5";
-    private static final String TILE_PART_C = "custom";
     private int overlap;
     private int tileSize;
-    private int tilePart;
     private float quality;
     private String jarDir;
     private final int defaultOverlap = 1;
     private final int defaultTileSize = 256;
-    private final int defaultTilePart = 4;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
 
@@ -43,14 +34,8 @@ public class DZTSettings {
         }
         overlap = defaultOverlap;
         tileSize = defaultTileSize;
-        tilePart = defaultTilePart;
         quality = defaultQuality;
         jarDir = defaultJarDir;
-    }
-
-    public String[] getTilePartNames() {
-        return new String[]{TILE_PART_1, TILE_PART_2, TILE_PART_3,
-                    TILE_PART_4, TILE_PART_5, TILE_PART_C};
     }
 
     public void setOverlap(String value, String errorMsg) throws InfoException {
@@ -101,68 +86,6 @@ public class DZTSettings {
         return (tileSize != defaultTileSize);
     }
 
-    public void setTilePart(String value, String errorMsg) throws InfoException {
-        if (value != null) {
-            if (value.equals(TILE_PART_1)) {
-                tilePart = 1;
-            } else if (value.equals(TILE_PART_2)) {
-                tilePart = 2;
-            } else if (value.equals(TILE_PART_3)) {
-                tilePart = 3;
-            } else if (value.equals(TILE_PART_4)) {
-                tilePart = 4;
-            } else if (value.equals(TILE_PART_5)) {
-                tilePart = 5;
-            } else if (value.equals(TILE_PART_C)) {
-                tilePart = 0;
-            } else {
-                throw new InfoException(errorMsg);
-            }
-        }
-    }
-
-    public String getTilePart() {
-        switch (tilePart) {
-            case 1:
-                return TILE_PART_1;
-            case 2:
-                return TILE_PART_2;
-            case 3:
-                return TILE_PART_3;
-            case 4:
-                return TILE_PART_4;
-            case 5:
-                return TILE_PART_5;
-            default:
-                return TILE_PART_C;
-        }
-    }
-
-    public String getDefaultTilePart() {
-        switch (defaultTilePart) {
-            case 1:
-                return TILE_PART_1;
-            case 2:
-                return TILE_PART_2;
-            case 3:
-                return TILE_PART_3;
-            case 4:
-                return TILE_PART_4;
-            case 5:
-                return TILE_PART_5;
-            default:
-                return TILE_PART_C;
-        }
-    }
-
-    public boolean tilePartChanged() {
-        return (tilePart != defaultTilePart);
-    }
-
-    public boolean tilePartDisabled(String value) {
-        return value.equals(TILE_PART_C);
-    }
-
     public void setQuality(String value, String errorMsg) throws InfoException {
         if (value != null) {
             try {
@@ -210,9 +133,5 @@ public class DZTSettings {
 
     public boolean jarDirChanged() {
         return !(jarDir.equals(defaultJarDir));
-    }
-
-    public String getTilePartValue(){
-        return Integer.toString(tilePart);
     }
 }

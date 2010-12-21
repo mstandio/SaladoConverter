@@ -17,25 +17,32 @@ import java.util.Properties;
  */
 public class Starter {
 
-    //hey you change developmentMode value
+    hey change developmentMode value
+    public final static boolean developmentMode = false;
 
-    public final static boolean developmentMode = true;
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         Properties prop = new Properties();
 
         // TODO: DO SOMETHING WIT THIS MESS
         AggregatedSettings aggstngs = new AggregatedSettings((new CurrentDirectoryFinder()).currentDir);
-        prop.load(new FileInputStream(aggstngs.getCurrentDirectory() + File.separator + AggregatedSettings.FILE_PROPERTIES));
-        aggstngs.ge.setMemoryLimit(prop.getProperty(GESettings.VALUE_MEM_LIMIT),"on strat: corrupted file");
+        try {
+            prop.load(new FileInputStream(aggstngs.getCurrentDirectory() + File.separator + AggregatedSettings.FILE_PROPERTIES));
+            aggstngs.ge.setMemoryLimit(prop.getProperty(GESettings.VALUE_MEM_LIMIT), "on start: corrupted file");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         if (developmentMode) {
             SaladoConverter.main(args);
         } else {
-            String pathToJar = SaladoConverter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            ProcessBuilder pb = new ProcessBuilder("java", "-Xmx" + aggstngs.ge.getMemoryLimit() + "m", "-classpath", pathToJar, "com.panozona.converter.SaladoConverter");
-            pb.start();
+            try {
+                String pathToJar = SaladoConverter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                ProcessBuilder pb = new ProcessBuilder("java", "-Xmx" + aggstngs.ge.getMemoryLimit() + "m", "-classpath", pathToJar, "com.panozona.converter.SaladoConverter");
+                pb.start();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

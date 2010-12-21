@@ -1,5 +1,6 @@
 package com.panozona.converter.task;
 
+import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.settings.TSKSettings;
 import java.util.ArrayList;
 
@@ -20,11 +21,11 @@ public class TaskData {
     public ArrayList<TaskOperation> operations;
     public TSKSettings taskSettings;
 
-    public TaskData(TaskImages taskImages) {
+    public TaskData(TaskImages taskImages, AggregatedSettings aggstsngs) {
         checkBoxSelected = true;
         checkBoxEnabled = false;
         taskState = STATE_ERROR;
-        taskSettings = new TSKSettings(taskImages);
+        taskSettings = new TSKSettings(taskImages, aggstsngs);
         operations = new ArrayList<TaskOperation>();
     }
     

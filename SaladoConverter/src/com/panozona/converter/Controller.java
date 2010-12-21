@@ -84,7 +84,7 @@ public class Controller {
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
             if (((ArrayList<ImageData>) pairs.getValue()).size() == 6) {
-                TaskData newTask = new TaskData(new TaskImages((ArrayList<ImageData>) pairs.getValue()));
+                TaskData newTask = new TaskData(new TaskImages((ArrayList<ImageData>) pairs.getValue()), aggstngs);
                 newTask.taskState = TaskData.STATE_READY;
                 appendTask(newTask);
             }
@@ -102,12 +102,12 @@ public class Controller {
 
             // equirectangular file
             if (imageData.width == imageData.height * 2) {
-                TaskData newTask = new TaskData(new TaskImages(imageData));
+                TaskData newTask = new TaskData(new TaskImages(imageData), aggstngs);
                 newTask.taskState = TaskData.STATE_READY;
                 appendTask(newTask);
                 return;
 
-            // possibly cube wall
+                // possibly cube wall
             } else if (imageData.width == imageData.height) {
                 ArrayList<ImageData> contents = (ArrayList<ImageData>) m.get(selectedFile.getParent());
                 if (contents == null) {
@@ -120,7 +120,7 @@ public class Controller {
                 return;
             }
 
-        // file is directory, so it needs to iterate through its content
+            // file is directory, so it needs to iterate through its content
         } else if (searchSubDirectories) {
             File files[] = selectedFile.listFiles((FileFilter) new FileFilterAddTask());
             for (int i = 0; i < files.length; i++) {
@@ -211,7 +211,7 @@ public class Controller {
         String parentFolderName;
         String nameWithExtension;
         String[] tmp;
-        int newSize;        
+        int newSize;
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
             tmp = imagedata.path.split(Pattern.quote(File.separator));
@@ -222,12 +222,12 @@ public class Controller {
 
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, resDir + File.separator + nameWithExtension, newSize, true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + nameWithExtension, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, false)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + nameWithExtension, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), false)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] { resDir + nameWithExtension } ));
-                
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resDir + nameWithExtension}));
+
             } else {
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, false)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), false)));
             }
         }
     }
@@ -237,7 +237,7 @@ public class Controller {
         String nameWithoutExtension;
         String cubeFile;
         String outputDir;
-        String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";        
+        String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
         int newSize;
         // there is only one imagedata
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
@@ -248,7 +248,7 @@ public class Controller {
                 newSize = Integer.parseInt(taskData.getTaskSettings().getCubeNewSize());
 
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, resDir, true)));
-                
+
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_b.tif", outputDir, newSize, true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_d.tif", outputDir, newSize, true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_f.tif", outputDir, newSize, true)));
@@ -256,12 +256,12 @@ public class Controller {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_r.tif", outputDir, newSize, true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_u.tif", outputDir, newSize, true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_b.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_d.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_f.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_l.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_r.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_u.tif"} ));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_b.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_d.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_f.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_l.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_r.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
 
             } else {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, aggstngs.ge.getOutputDir(), false)));
@@ -275,7 +275,7 @@ public class Controller {
         String cubeFile;
         String outputDir;
         String resizedFile;
-        int newSize;        
+        int newSize;
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
 
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
@@ -297,41 +297,41 @@ public class Controller {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_r.tif", resDir, newSize, true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_u.tif", resDir, newSize, true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_b.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_d.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_f.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_l.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_r.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_u.tif"} ));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_b.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_d.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_f.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_l.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_r.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_b.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_d.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_f.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_l.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_r.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_u.tif", outputDir, true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_b.tif", outputDir, taskData.taskSettings.getTileNewSize(),true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_d.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_f.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_l.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_r.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_u.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_b.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_d.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_f.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_l.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_r.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {resizedFile + "_u.tif"} ));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_b.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_d.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_f.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_l.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_r.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resizedFile + "_u.tif"}));
 
             } else {
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_b.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_d.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_f.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_l.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_r.tif", outputDir, true)));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_u.tif", outputDir, true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_b.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_d.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_f.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_l.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_r.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(cubeFile + "_u.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_b.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_d.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_f.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_l.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_r.tif"} ));
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[] {cubeFile + "_u.tif"} ));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_b.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_d.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_f.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_l.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_r.tif"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
             }
         }
     }
@@ -344,7 +344,7 @@ public class Controller {
         }
         tmpArgsRES.add("-width");
         tmpArgsRES.add(Integer.toString(width));
-        tmpArgsRES.add("-outputtype");
+        tmpArgsRES.add("-outputformat");
         tmpArgsRES.add("tif");
         tmpArgsRES.add("-outputdir");
         tmpArgsRES.add(output);
@@ -355,7 +355,7 @@ public class Controller {
         return argsRES;
     }
 
-    private String[] generateArgsDZT(String input, String output, boolean simpleOutput) {
+    private String[] generateArgsDZT(String input, String output, String tileSize, boolean simpleOutput) {
         ArrayList tmpArgsDZT = new ArrayList();
         tmpArgsDZT.add("-verbose");
         if (simpleOutput) {
@@ -366,9 +366,7 @@ public class Controller {
         tmpArgsDZT.add("-quality");
         tmpArgsDZT.add(aggstngs.dzt.getQuality());
         tmpArgsDZT.add("-tilesize");
-        tmpArgsDZT.add(aggstngs.dzt.getTileSize());
-        tmpArgsDZT.add("-tilepart");
-        tmpArgsDZT.add(aggstngs.dzt.getTilePartValue());
+        tmpArgsDZT.add(tileSize);
         tmpArgsDZT.add("-outputdir");
         tmpArgsDZT.add(output);
         tmpArgsDZT.add(input);
@@ -425,7 +423,6 @@ public class Controller {
 
                 aggstngs.dzt.setOverlap(prop.getProperty(DZTSettings.VALUE_OVERLAP), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.dzt.setTileSize(prop.getProperty(DZTSettings.VALUE_TILE_SIZE), Info.CONFIGURATIN_READ_ERROR);
-                aggstngs.dzt.setTilePart(prop.getProperty(DZTSettings.VALUE_TILE_PART), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.dzt.setQuality(prop.getProperty(DZTSettings.VALUE_QUALITY), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.dzt.setJarDir(prop.getProperty(DZTSettings.VALUE_JAR_DIR), Info.CONFIGURATIN_READ_ERROR);
 
@@ -462,9 +459,6 @@ public class Controller {
         }
         if (aggstngs.dzt.tileSizeChanged()) {
             prop.put(DZTSettings.VALUE_TILE_SIZE, aggstngs.dzt.getTileSize());
-        }
-        if (aggstngs.dzt.tilePartChanged()) {
-            prop.put(DZTSettings.VALUE_TILE_PART, aggstngs.dzt.getTilePart());
         }
         if (aggstngs.dzt.qualityChanged()) {
             prop.put(DZTSettings.VALUE_QUALITY, aggstngs.dzt.getQuality());

@@ -1,14 +1,12 @@
 package com.panozona.converter.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 
 
 /**
@@ -33,25 +31,25 @@ public class ComponentInvoker {
 
         try {
             invokeClass(path, name, args);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        /*
         } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
             throw new InfoException(ILLEGAL_ACCESS_EXCEPTION);
-        } catch (ClassNotFoundException ex) {            
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
             throw new InfoException(CLASS_NOT_FOUND_EXCEPTION);            
         } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
             throw new InfoException(NO_SUCH_METHOD_EXCEPTION);
-        } catch (InvocationTargetException ex) {            
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
             throw new InfoException(INVOCATION_TARGET_EXCEPTION);
         } catch (MalformedURLException ex) {
+            ex.printStackTrace();
             throw new InfoException(MALFORMED_URL_EXCEPTION);
         } catch (InterruptedException ex) {
+            ex.printStackTrace();
             throw new InfoException(INTERRUPTED_EXCEPTION);
         }
-
-        */
     }
 
     private void invokeClass(String path, String name, String[] args) throws
@@ -72,6 +70,6 @@ public class ComponentInvoker {
         }
         m.invoke(null, new Object[]{args});
         m = null;
-        System.gc();
+        System.gc(); // uh-oh
     }
 }

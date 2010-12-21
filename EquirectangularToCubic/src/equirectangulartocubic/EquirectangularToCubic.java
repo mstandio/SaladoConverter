@@ -19,15 +19,51 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import javax.media.jai.JAI;
-//import javax.media.jai.RenderedOp;
-//import java.awt.RenderingHints;
+
 /**
  *
  * @author Zephyr Renner
  */
 public class EquirectangularToCubic {
 
-    static final String help = "\nEquirectangularToCubic v1.4\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n" + "[args...] For a list of java options try: java -help or java -X for a\n" + "list of less comon options. Loading large images for conversion takes a\n" + "lot of RAM so you will find the -Xmx option useful to raise Java's maximum\n" + "heap size. The -Xmx command is followed immediately by an integer specifying\n" + "RAM size and a unit indicator. For example, -Xmx1024m means to use 1024\n" + "megabytes.If you see an error about heapsize, then you will need to increase\n" + "this value. \n\n" + " Basic usage example for the jar file:\n\n" + "java -Xmx1024m -jar path/to/EquirectangularToCubic.jar \n" + "path/to/directory/of/images/ This will generate a folder of converted files \n" + "beside the input directory or file with 'cubic_' prepended onto the name.\n" + "So in the basic example above, the output files would be in \n" + "path/to/directory/of/cubic_images/. \n\n" + " Options:\n\n" + "-overlap: number of pixels of overlap added around the cubefaces. A value\n" + "\tof 1 causes the cube faces to be 90 degrees wide in pixels (dependent\n" + "\ton the size of the input equirectangular) plus 1 pixel. \n" + "\tDefault is 1. \n\n" + "-interpolation: possible values are: lanczos2, bilinear, nearest-neighbor.\n" + "\tSets the interpolation algorithm to use during remapping. Lanczos2 \n" + "\tand bilinear are the highest quality. Nearest-neighbor is faster \n" + "\tand generally lower quality, although it preserves sharp edges better. \n" + "\tDefault is lanczos2. \n\n" + "-outputdir or -o: the output directory for the converted images. It need\n" + "\tnot exist. Default is a folder next to the input folder or file, with \n" + "\t'cubic_' prepended to the name of the input (input files will have the \n" + "\textension removed).\n\n" + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" + "-debug: print various debugging messages during processing. \n\n" + " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" + "(or both) If there are multiple input folders or images, each should\n" + "be separated by a space. Input folders will not be NOT be recursed.\n" + "Only images immediately inside the folder will be processed. All\n" + "inputs will be processed into the one output directory, so general\n" + "usage is to process one folder containing multiples images \n" + "or to process one singe image file.\n\n" + "Happy converting!  And next time you see Helmut Dersch,\n" + "Fulvio Senore, and other contributors to PTViewer, say thanks!\n";
+    static final String help = "\nEquirectangularToCubic v1.4\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n"
+            + "[args...] For a list of java options try: java -help or java -X for a\n"
+            + "list of less comon options. Loading large images for conversion takes a\n"
+            + "lot of RAM so you will find the -Xmx option useful to raise Java's maximum\n"
+            + "heap size. The -Xmx command is followed immediately by an integer specifying\n"
+            + "RAM size and a unit indicator. For example, -Xmx1024m means to use 1024\n"
+            + "megabytes.If you see an error about heapsize, then you will need to increase\n"
+            + "this value. \n\n" + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/EquirectangularToCubic.jar \n"
+            + "path/to/directory/of/images/ This will generate a folder of converted files \n"
+            + "beside the input directory or file with 'cubic_' prepended onto the name.\n"
+            + "So in the basic example above, the output files would be in \n"
+            + "path/to/directory/of/cubic_images/. \n\n" + " Options:\n\n"
+            + "-overlap: number of pixels of overlap added around the cubefaces. A value\n"
+            + "\tof 1 causes the cube faces to be 90 degrees wide in pixels (dependent\n"
+            + "\ton the size of the input equirectangular) plus 1 pixel. \n"
+            + "\tDefault is 1. \n\n"
+            + "-interpolation: possible values are: lanczos2, bilinear, nearest-neighbor.\n"
+            + "\tSets the interpolation algorithm to use during remapping. Lanczos2 \n"
+            + "\tand bilinear are the highest quality. Nearest-neighbor is faster \n"
+            + "\tand generally lower quality, although it preserves sharp edges better. \n"
+            + "\tDefault is lanczos2. \n\n"
+            + "-outputdir or -o: the output directory for the converted images. It need\n"
+            + "\tnot exist. Default is a folder next to the input folder or file, with \n"
+            + "\t'cubic_' prepended to the name of the input (input files will have the \n"
+            + "\textension removed).\n\n"
+            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
+            + "-debug: print various debugging messages during processing. \n\n"
+            + " Arguments:\n\n"
+            + "The arguments following any options are the input images or folders.\n"
+            + "(or both) If there are multiple input folders or images, each should\n"
+            + "be separated by a space. Input folders will not be NOT be recursed.\n"
+            + "Only images immediately inside the folder will be processed. All\n"
+            + "inputs will be processed into the one output directory, so general\n"
+            + "usage is to process one folder containing multiples images \n"
+            + "or to process one singe image file.\n\n"
+            + "Happy converting!  And next time you see Helmut Dersch,\n"
+            + "Fulvio Senore, and other contributors to PTViewer, say thanks!\n";
     static final String LANCZOS2 = "lanczos2";
     static final String BILINEAR = "bilinear";
     static final String NEAREST_NEIGHBOUR = "nearest-neighbor";
@@ -276,8 +312,9 @@ public class EquirectangularToCubic {
 
         yaw = 0;
         pitch = 0;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_f");
         output.flush();
@@ -286,8 +323,9 @@ public class EquirectangularToCubic {
 
         yaw = 90;
         pitch = 0;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_r");
         output.flush();
@@ -296,8 +334,9 @@ public class EquirectangularToCubic {
 
         yaw = 180;
         pitch = 0;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_b");
         output.flush();
@@ -306,8 +345,9 @@ public class EquirectangularToCubic {
 
         yaw = 270;
         pitch = 0;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_l");
         output.flush();
@@ -316,8 +356,9 @@ public class EquirectangularToCubic {
 
         yaw = 0;
         pitch = 90;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_u");
         output.flush();
@@ -326,8 +367,9 @@ public class EquirectangularToCubic {
 
         yaw = 0;
         pitch = -90;
-        imgBuf.reset(yaw, pitch);
+        imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
+        imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + "_d");
         output.flush();
@@ -354,9 +396,12 @@ public class EquirectangularToCubic {
      * @param path the path of the file to which it is saved (less the extension)     
      */
     private static void saveImage(BufferedImage img, String path) throws IOException {
+        if (verboseMode) {
+            System.out.print("Saving image...");
+        }
         JAI.create("filestore", img, path + ".tif", "TIFF");
         if (verboseMode) {
-            System.out.print("created: " + path + ".tif");
+            System.out.print("Created: " + path + ".tif");
         }
     }
 }

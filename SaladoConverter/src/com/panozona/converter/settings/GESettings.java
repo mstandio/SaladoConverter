@@ -107,7 +107,7 @@ public class GESettings {
     public void setOutputDir(String value, String errorMsg) throws InfoException {
         if (value != null) {
             File tmp = new File(value);
-            if (tmp.isDirectory()) {
+            if (tmp.exists() && tmp.isDirectory()) {
                 outputDir = value;
             } else {
                 throw new InfoException(errorMsg);

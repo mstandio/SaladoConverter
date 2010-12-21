@@ -8,9 +8,8 @@ import com.panozona.converter.task.TaskData;
 import com.panozona.converter.task.TaskOperation;
 import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.RESSettings;
-import java.io.File;
-
 import org.jdesktop.application.Task;
+import java.io.File;
 
 /**
  *
@@ -30,57 +29,72 @@ public class TasksExecutor extends Task<Void, Void> {
         componentInvoker = new ComponentInvoker();
     }
 
+    private int numberOperations(TaskData taskData) {
+        int result = 0;
+        for (int k = 0; k < taskData.operations.size(); k++) {
+            if (!taskData.operations.get(k).operationType.equals(TaskOperation.OPERATION_DEL)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     @Override
     protected Void doInBackground() throws Exception {
-        int numTasksToRun = 0;
-        int numTasksDone = 0;        
+        int numOperationsToRun = 0;
+        int numOperationsDone = 0;
         TaskData taskData;
+        TaskOperation taskOperation;
 
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             taskData = taskTableModel.rows.get(i);
-            if(taskData.checkBoxEnabled && taskData.checkBoxSelected){
-                numTasksToRun++;
+            if (taskData.checkBoxEnabled && taskData.checkBoxSelected) {
+                numOperationsToRun += numberOperations(taskData);
             }
         }
-        
-        for (int j = 0; j < taskTableModel.getRowCount(); j++) {
-            
-            setProgress(numTasksDone, 0, numTasksToRun);
 
+        for (int j = 0; j < taskTableModel.getRowCount(); j++) {
             taskData = taskTableModel.rows.get(j);
-            for (TaskOperation operation : taskData.operations) {
+            for (int m = 0; m < taskData.operations.size(); m++) {
+                taskOperation = taskData.operations.get(m);
                 if (!super.isCancelled()) {
                     taskData.taskState = TaskData.STATE_PROCESSING;
                     taskTableModel.fireTableDataChanged();
                     try {
-                        if (operation.operationType.equals(TaskOperation.OPERATION_DZT)) {
-                            componentInvoker.run(aggstngs.dzt.getJarDir(), DZTSettings.JAR_CLASSNAME, operation.args);
-                        } else if (operation.operationType.equals(TaskOperation.OPERATION_EC)) {
-                            componentInvoker.run(aggstngs.ec.getJarDir(), ECSettings.JAR_CLASSNAME, operation.args);
-                        } else if(operation.operationType.equals(TaskOperation.OPERATION_RES)){
-                            componentInvoker.run(aggstngs.res.getJarDir(), RESSettings.JAR_CLASSNAME, operation.args);
-                        } else if(operation.operationType.equals(TaskOperation.OPERATION_DEL)){
-                            new File(operation.args[0]).delete();                            
+                        if (taskOperation.operationType.equals(TaskOperation.OPERATION_DZT)) {
+                            componentInvoker.run(aggstngs.dzt.getJarDir(), DZTSettings.JAR_CLASSNAME, taskOperation.args);
+                            numOperationsDone++;
+                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_EC)) {                            
+                            componentInvoker.run(aggstngs.ec.getJarDir(), ECSettings.JAR_CLASSNAME, taskOperation.args);
+                            numOperationsDone++;
+                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_RES)) {                            
+                            componentInvoker.run(aggstngs.res.getJarDir(), RESSettings.JAR_CLASSNAME, taskOperation.args);
+                            numOperationsDone++;
+                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_DEL)) {
+                            new File(taskOperation.args[0]).delete();
                         }
+                        setProgress(numOperationsDone, 0, numOperationsToRun);
                     } catch (InfoException ex) {
-                        System.out.println("ERROR: "+ex.getMessage());
+                        numOperationsDone += numberOperations(taskData) - m;
+                        setProgress(numOperationsDone, 0, numOperationsToRun);
+                        System.out.println("ERROR: " + ex.getMessage());
                         taskData.taskState = TaskData.STATE_ERROR;
                         taskTableModel.fireTableDataChanged();
-                        numTasksDone++;
                     }
                 } else {
+                    numOperationsDone += numberOperations(taskData);
+                    setProgress(numOperationsDone, 0, numOperationsToRun);
                     taskData.taskState = TaskData.STATE_CANCELED;
                     System.out.println("CANCELLED");
                     taskTableModel.fireTableDataChanged();
                     return null;
                 }
             }
-            if(taskData.operations.size() > 0){
+            if (taskData.operations.size() > 0) {
                 System.out.println("DONE");
                 taskData.taskState = TaskData.STATE_DONE;
                 taskData.checkBoxSelected = false;
                 taskTableModel.fireTableDataChanged();
-                numTasksDone++;
             }
         }
         return null;

@@ -5,6 +5,7 @@
  */
 package com.panozona.converter;
 
+import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.utils.FileFilterDir;
 import com.panozona.converter.utils.InfoException;
@@ -29,9 +30,13 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private String initialmemoryLimitValue = "-1";
 
+    private TaskSettingsView taskSettingsView;
+    private TaskTableModel taskTableModel;
+
     /** Creates new form SettingsWindowView */
-    public SettingsWindowView() {
+    public SettingsWindowView(TaskTableModel taskTableModel) {
         initComponents();
+        this.taskTableModel = taskTableModel;
         setTitle("SaladoConverter settings");
         setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
         allowCloseFlag = true;
@@ -57,6 +62,10 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         KeyStroke strokeENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         this.getRootPane().registerKeyboardAction(actionListenerENTER, strokeENTER, JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    public void setTaskSettingsViewReference (TaskSettingsView taskSettingsView){
+        this.taskSettingsView = taskSettingsView;
     }
 
     /** This method is called from within the constructor to
@@ -100,7 +109,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldDZTDirectory = new javax.swing.JTextField();
         jButtonDZTBrowseDirectory = new javax.swing.JButton();
         jButtonDZTRestoreDefault = new javax.swing.JButton();
-        jComboBoxTilePart = new javax.swing.JComboBox();
         ResizerTab = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jButtonRESRestoreDefault = new javax.swing.JButton();
@@ -353,13 +361,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxTilePart.setName("jComboBoxTilePart"); // NOI18N
-        jComboBoxTilePart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxTilePartActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -380,12 +381,9 @@ public class SettingsWindowView extends javax.swing.JFrame {
                                 .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonDZTBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jComboBoxTilePart, 0, 189, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTextFieldDZTOverlap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -398,8 +396,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBoxTilePart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -409,7 +406,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonDZTBrowseDirectory)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jButtonDZTRestoreDefault)
                 .addContainerGap())
         );
@@ -581,8 +578,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonDZTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTRestoreDefaultActionPerformed
         jTextFieldDZTOverlap.setText(aggstngs.dzt.getDefaultOverlap());
-        jTextFieldDZTTileSize.setText(aggstngs.dzt.getDefaultTileSize());
-        jComboBoxTilePart.setSelectedItem(aggstngs.dzt.getDefaultTilePart().toString());
+        jTextFieldDZTTileSize.setText(aggstngs.dzt.getDefaultTileSize());        
         jTextFieldDZTQuality.setText(aggstngs.dzt.getDefaultQuality());
         jTextFieldDZTDirectory.setText(aggstngs.dzt.getDefaultJarDir());
     }//GEN-LAST:event_jButtonDZTRestoreDefaultActionPerformed
@@ -623,10 +619,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonGEBrowseDirectoryActionPerformed
 
-    private void jComboBoxTilePartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTilePartActionPerformed
-        setTileSizeEnabled();
-    }//GEN-LAST:event_jComboBoxTilePartActionPerformed
-
     private void jButtonRESRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESRestoreDefaultActionPerformed
         jTextFieldRESDirectory.setText(aggstngs.res.getDefaultJarDir());
     }//GEN-LAST:event_jButtonRESRestoreDefaultActionPerformed
@@ -646,16 +638,14 @@ public class SettingsWindowView extends javax.swing.JFrame {
     public void displayAggregatedSettings(AggregatedSettings aggstngs) {
         this.aggstngs = aggstngs;
 
-        jComboBoxECInterpolation.setModel(new DefaultComboBoxModel(this.aggstngs.ec.getInterpolationNames()));
-        jComboBoxTilePart.setModel(new DefaultComboBoxModel(this.aggstngs.dzt.getTilePartNames()));
+        jComboBoxECInterpolation.setModel(new DefaultComboBoxModel(this.aggstngs.ec.getInterpolationNames()));        
 
         jTextFieldGEDirectory.setText(aggstngs.ge.getTmpDir());
         jTextFieldMemoryLimit.setText(aggstngs.ge.getMemoryLimit());
         initialmemoryLimitValue = aggstngs.ge.getMemoryLimit();
 
         jTextFieldDZTOverlap.setText(aggstngs.dzt.getOverlap());
-        jTextFieldDZTTileSize.setText(aggstngs.dzt.getTileSize());
-        jComboBoxTilePart.setSelectedItem(aggstngs.dzt.getDefaultTilePart());
+        jTextFieldDZTTileSize.setText(aggstngs.dzt.getTileSize());        
         jTextFieldDZTQuality.setText(aggstngs.dzt.getQuality());
         jTextFieldDZTDirectory.setText(aggstngs.dzt.getJarDir());
 
@@ -664,8 +654,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldECDirectory.setText(aggstngs.ec.getJarDir());
 
         jTextFieldRESDirectory.setText(aggstngs.res.getJarDir());
-
-        setTileSizeEnabled();
     }
 
     private void collectAllData() {
@@ -675,7 +663,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
             aggstngs.dzt.setOverlap(jTextFieldDZTOverlap.getText(), Info.DZT_OVERLAP_ERROR);
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText(), Info.DZT_TILESIZE_ERROR);
-            aggstngs.dzt.setTilePart(jComboBoxTilePart.getSelectedItem().toString(), Info.DZT_TILEPART_ERROR);
+            if (taskSettingsView != null){
+                taskSettingsView.fireTileSizeChanged();
+            }
+            taskTableModel.fireTableDataChanged();
+
             aggstngs.dzt.setQuality(jTextFieldDZTQuality.getText(), Info.DZT_QUALITY_ERROR);
             aggstngs.dzt.setJarDir(jTextFieldDZTDirectory.getText(), Info.DZT_JAR_DIR_ERROR);
 
@@ -685,18 +677,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
             aggstngs.res.setJarDir(jTextFieldRESDirectory.getText(), Info.RES_JAR_DIR_ERROR);
 
+
         } catch (InfoException ex) {
             showOptionPane(ex.getMessage());
         }
-    }
-
-    private void setTileSizeEnabled() {
-        if (aggstngs.dzt.tilePartDisabled(jComboBoxTilePart.getSelectedItem().toString())) {
-            jTextFieldDZTTileSize.setEnabled(true);
-        } else {
-            jTextFieldDZTTileSize.setEnabled(false);
-        }
-    }
+    }   
 
     private void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -719,7 +704,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JButton jButtonRESBrowseDirectory;
     private javax.swing.JButton jButtonRESRestoreDefault;
     private javax.swing.JComboBox jComboBoxECInterpolation;
-    private javax.swing.JComboBox jComboBoxTilePart;
     private javax.swing.JFileChooser jFileChooser;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

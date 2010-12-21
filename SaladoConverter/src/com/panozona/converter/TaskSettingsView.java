@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -30,7 +31,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
 
     private TSKSettings taskSettings;
     private TaskTableModel taskTableModel;
-    private Controller controller;
+    private Controller controller;    
 
     /** Creates new form TaskSettingsView */
     public TaskSettingsView(TaskTableModel taskTableModel, Controller controller) {
@@ -67,7 +68,25 @@ public class TaskSettingsView extends javax.swing.JFrame {
     public void displayTaskSettings(TSKSettings taskSettings) {
         this.taskSettings = taskSettings;
         jTextFieldTaskResize.setText(taskSettings.getCubeNewSize());
-        jLabelOriginalValue.setText(taskSettings.getDefaultCubeNewSize());
+        jLabelOriginalValue.setText(taskSettings.getDefaultCubeNewSize());        
+        if (taskSettings.getTileSelection().equals(TSKSettings.RadioButtonState.DEFAULT)){            
+            jRadioButtonDefault.setSelected(true);
+            jRadioButtonDefaultActionPerformed(null);
+        }else if (taskSettings.getTileSelection().equals(TSKSettings.RadioButtonState.CUSTOM)){
+            jRadioButtonCustom.setSelected(true);
+            jRadioButtonCustomActionPerformed(null);
+        } else if (taskSettings.getTileSelection().equals(TSKSettings.RadioButtonState.DIVISION)){
+            jRadioButtonDivision.setSelected(true);
+            jRadioButtonDivisionActionPerformed(null);
+        }
+        jLabelTileDefaultValue.setText(taskSettings.getDefaultTileNewSize());
+        jTextFieldTileCustom.setText(taskSettings.getTileCustom());        
+        jSpinnerTileDivision.setModel(new SpinnerNumberModel(taskSettings.getTileDivision(), 1, 50, 1));
+        jSpinnerTileDivisionStateChanged(null);
+    }
+
+    public void fireTileSizeChanged(){
+        jLabelTileDefaultValue.setText(taskSettings.getDefaultTileNewSize());
     }
 
     /** This method is called from within the constructor to
@@ -79,6 +98,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupTask = new javax.swing.ButtonGroup();
         jButtonTaskOK = new javax.swing.JButton();
         jButtonTaskCancel = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -86,6 +106,15 @@ public class TaskSettingsView extends javax.swing.JFrame {
         jTextFieldTaskResize = new javax.swing.JTextField();
         jLabelOriginalValue = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jRadioButtonDefault = new javax.swing.JRadioButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabelTileEquals = new javax.swing.JLabel();
+        jLabelTileDefaultValue = new javax.swing.JLabel();
+        jTextFieldTileCustom = new javax.swing.JTextField();
+        jLabelDivResult = new javax.swing.JLabel();
+        jSpinnerTileDivision = new javax.swing.JSpinner();
+        jRadioButtonCustom = new javax.swing.JRadioButton();
+        jRadioButtonDivision = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("Form"); // NOI18N
@@ -115,6 +144,11 @@ public class TaskSettingsView extends javax.swing.JFrame {
 
         jTextFieldTaskResize.setText(resourceMap.getString("jTextFieldTaskResize.text")); // NOI18N
         jTextFieldTaskResize.setName("jTextFieldTaskResize"); // NOI18N
+        jTextFieldTaskResize.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldTaskResizeFocusLost(evt);
+            }
+        });
 
         jLabelOriginalValue.setText(resourceMap.getString("jLabelOriginalValue.text")); // NOI18N
         jLabelOriginalValue.setName("jLabelOriginalValue"); // NOI18N
@@ -122,19 +156,90 @@ public class TaskSettingsView extends javax.swing.JFrame {
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
+        buttonGroupTask.add(jRadioButtonDefault);
+        jRadioButtonDefault.setText(resourceMap.getString("jRadioButtonDefault.text")); // NOI18N
+        jRadioButtonDefault.setName("jRadioButtonDefault"); // NOI18N
+        jRadioButtonDefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonDefaultActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        jLabelTileEquals.setText(resourceMap.getString("jLabelTileEquals.text")); // NOI18N
+        jLabelTileEquals.setName("jLabelTileEquals"); // NOI18N
+
+        jLabelTileDefaultValue.setText(resourceMap.getString("jLabelTileDefaultValue.text")); // NOI18N
+        jLabelTileDefaultValue.setName("jLabelTileDefaultValue"); // NOI18N
+
+        jTextFieldTileCustom.setText(resourceMap.getString("jTextFieldTileCustom.text")); // NOI18N
+        jTextFieldTileCustom.setName("jTextFieldTileCustom"); // NOI18N
+
+        jLabelDivResult.setText(resourceMap.getString("jLabelDivResult.text")); // NOI18N
+        jLabelDivResult.setName("jLabelDivResult"); // NOI18N
+
+        jSpinnerTileDivision.setName("jSpinnerTileDivision"); // NOI18N
+        jSpinnerTileDivision.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerTileDivisionStateChanged(evt);
+            }
+        });
+
+        buttonGroupTask.add(jRadioButtonCustom);
+        jRadioButtonCustom.setText(resourceMap.getString("jRadioButtonCustom.text")); // NOI18N
+        jRadioButtonCustom.setName("jRadioButtonCustom"); // NOI18N
+        jRadioButtonCustom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonCustomActionPerformed(evt);
+            }
+        });
+
+        buttonGroupTask.add(jRadioButtonDivision);
+        jRadioButtonDivision.setSelected(true);
+        jRadioButtonDivision.setText(resourceMap.getString("jRadioButtonDivision.text")); // NOI18N
+        jRadioButtonDivision.setActionCommand(resourceMap.getString("jRadioButtonDivision.actionCommand")); // NOI18N
+        jRadioButtonDivision.setName("jRadioButtonDivision"); // NOI18N
+        jRadioButtonDivision.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonDivisionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelOriginalValue)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldTaskResize, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jRadioButtonDivision)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerTileDivision, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTileEquals)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelDivResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jRadioButtonCustom)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldTileCustom, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jRadioButtonDefault)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelTileDefaultValue, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelOriginalValue)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldTaskResize, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -142,10 +247,27 @@ public class TaskSettingsView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextFieldTaskResize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelOriginalValue)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldTaskResize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButtonDefault, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTileDefaultValue))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButtonCustom)
+                            .addComponent(jTextFieldTileCustom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButtonDivision)
+                            .addComponent(jSpinnerTileDivision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTileEquals)
+                            .addComponent(jLabelDivResult))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -153,14 +275,14 @@ public class TaskSettingsView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonTaskOK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonTaskCancel)))
+                        .addComponent(jButtonTaskCancel))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -192,12 +314,70 @@ public class TaskSettingsView extends javax.swing.JFrame {
         this.dispose();
 }//GEN-LAST:event_jButtonTaskCancelActionPerformed
 
+    private void jRadioButtonDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonDefaultActionPerformed
+        jLabelTileDefaultValue.setEnabled(true);
+        jTextFieldTileCustom.setEnabled(false);
+        jSpinnerTileDivision.setEnabled(false);
+        jLabelTileEquals.setEnabled(false);
+        jLabelDivResult.setEnabled(false);
+    }//GEN-LAST:event_jRadioButtonDefaultActionPerformed
+
+    private void jRadioButtonCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCustomActionPerformed
+        jLabelTileDefaultValue.setEnabled(false);
+        jTextFieldTileCustom.setEnabled(true);
+        jSpinnerTileDivision.setEnabled(false);
+        jLabelTileEquals.setEnabled(false);
+        jLabelDivResult.setEnabled(false);
+    }//GEN-LAST:event_jRadioButtonCustomActionPerformed
+
+    private void jRadioButtonDivisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonDivisionActionPerformed
+        jLabelTileDefaultValue.setEnabled(false);
+        jTextFieldTileCustom.setEnabled(false);
+        jSpinnerTileDivision.setEnabled(true);
+        jLabelTileEquals.setEnabled(true);
+        jLabelDivResult.setEnabled(true);
+    }//GEN-LAST:event_jRadioButtonDivisionActionPerformed
+
+    private void jSpinnerTileDivisionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerTileDivisionStateChanged
+        jLabelDivResult.setText(Integer.toString((int) Math.ceil((double)Integer.parseInt(jTextFieldTaskResize.getText()) /(double)((Integer)jSpinnerTileDivision.getValue()).intValue())));
+    }//GEN-LAST:event_jSpinnerTileDivisionStateChanged
+
+    private void jTextFieldTaskResizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldTaskResizeFocusLost
+        String tmpCubeNewSize = jTextFieldTaskResize.getText();
+        try{
+            int tmp = Integer.parseInt(tmpCubeNewSize);
+            if (tmp <= 0){
+                throw new NumberFormatException();
+            }else{
+                jTextFieldTaskResize.setText(tmpCubeNewSize); // TODO: add message 
+            }
+        }catch(NumberFormatException ex){
+            jTextFieldTaskResize.setText(taskSettings.getCubeNewSize());
+            showOptionPane(ex.getMessage());
+        }
+        jSpinnerTileDivisionStateChanged(null);
+    }//GEN-LAST:event_jTextFieldTaskResizeFocusLost
+
     private void collectAllData() {
         try {
             if (jTextFieldTaskResize.getText().isEmpty()){
                 taskSettings.setCubeNewSize(taskSettings.getDefaultCubeNewSize(), Info.TSK_RESIZE_ERROR);
             }else{
                 taskSettings.setCubeNewSize(jTextFieldTaskResize.getText(), Info.TSK_RESIZE_ERROR);
+            }
+
+            taskSettings.setTileCustom(jTextFieldTileCustom.getText(), "Message"); // TODO: add message
+            taskSettings.setTileDivision(((Integer)jSpinnerTileDivision.getValue()).intValue());
+
+            if(jRadioButtonDefault.isSelected()){
+                taskSettings.setTileSelection(TSKSettings.RadioButtonState.DEFAULT);                
+                taskSettings.setTileNewSize(taskSettings.getDefaultTileNewSize(), "Message"); // TODO: add message
+            } else if(jRadioButtonCustom.isSelected()){
+                taskSettings.setTileSelection(TSKSettings.RadioButtonState.CUSTOM);
+                taskSettings.setTileNewSize(jTextFieldTileCustom.getText(), "Message"); // TODO: add message
+            }else{
+                taskSettings.setTileSelection(TSKSettings.RadioButtonState.DIVISION);
+                taskSettings.setTileNewSize(jLabelDivResult.getText(), "Message"); // TODO: add message
             }
         } catch (InfoException ex) {
             showOptionPane(ex.getMessage());
@@ -209,13 +389,23 @@ public class TaskSettingsView extends javax.swing.JFrame {
         allowCloseFlag = false;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroupTask;
     private javax.swing.JButton jButtonTaskCancel;
     private javax.swing.JButton jButtonTaskOK;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelDivResult;
     private javax.swing.JLabel jLabelOriginalValue;
+    private javax.swing.JLabel jLabelTileDefaultValue;
+    private javax.swing.JLabel jLabelTileEquals;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadioButtonCustom;
+    private javax.swing.JRadioButton jRadioButtonDefault;
+    private javax.swing.JRadioButton jRadioButtonDivision;
+    private javax.swing.JSpinner jSpinnerTileDivision;
     private javax.swing.JTextField jTextFieldTaskResize;
+    private javax.swing.JTextField jTextFieldTileCustom;
     // End of variables declaration//GEN-END:variables
     private boolean allowCloseFlag;
 }

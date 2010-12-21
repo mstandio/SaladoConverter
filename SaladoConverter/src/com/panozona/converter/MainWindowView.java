@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.EventObject;
 import javax.swing.event.ListSelectionEvent;
 import org.jdesktop.application.Action;
@@ -54,7 +53,7 @@ public class MainWindowView extends FrameView {
 
         aggstngs = new AggregatedSettings(finder.currentDir);
 
-        taskTableModel = new TaskTableModel(new ArrayList<TaskData>(), aggstngs);
+        taskTableModel = new TaskTableModel();
         jTableTasks.getTableHeader().setReorderingAllowed(false);
         jTableTasks.setModel(taskTableModel);
 
@@ -68,13 +67,17 @@ public class MainWindowView extends FrameView {
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMinWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setResizable(false);
 
-        //jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
+        jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setMinWidth(60);
-        //jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
+        jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
 
-        //jTableTasks.getColumn(taskTableModel.columnNames[2]).setMaxWidth(100);
+        jTableTasks.getColumn(taskTableModel.columnNames[2]).setMaxWidth(100);
         jTableTasks.getColumn(taskTableModel.columnNames[2]).setMinWidth(100);
-        //jTableTasks.getColumn(taskTableModel.columnNames[2]).setResizable(false);
+        jTableTasks.getColumn(taskTableModel.columnNames[2]).setResizable(false);
+
+        jTableTasks.getColumn(taskTableModel.columnNames[3]).setMaxWidth(60);
+        jTableTasks.getColumn(taskTableModel.columnNames[3]).setMinWidth(60);
+        jTableTasks.getColumn(taskTableModel.columnNames[3]).setResizable(false);
 
         jTableTasks.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
@@ -96,11 +99,11 @@ public class MainWindowView extends FrameView {
 
             @Override
             public void keyPressed(KeyEvent evt) {
-                if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                     evt.consume();
                     showTaskSettings();
                 }
-                if(evt.getKeyCode() == KeyEvent.VK_DELETE || evt.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+                if (evt.getKeyCode() == KeyEvent.VK_DELETE || evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     evt.consume();
                     jButtonRemoveTaskActionPerformed(null);
                 }
@@ -193,9 +196,9 @@ public class MainWindowView extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                     InterfaceEnable();
-                    if (saladoConverterLog != null) {
-                        saladoConverterLog.setRunning(false);
-                        saladoConverterLog.dispose();
+                    if (logWindowView != null) {
+                        logWindowView.setRunning(false);
+                        logWindowView.dispose();
                     }
                 } else if ("message".equals(propertyName)) {
                     String text = (String) (evt.getNewValue());
@@ -516,6 +519,9 @@ public class MainWindowView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTaskActionPerformed
+        if (interfaceLocked) {
+            return;
+        }
         jFileChooser.setDialogTitle("Select files and/or directories");
         jFileChooser.resetChoosableFileFilters();
         jFileChooser.setFileFilter(new FileFilterAddTask());
@@ -524,7 +530,7 @@ public class MainWindowView extends FrameView {
         int returnVal = jFileChooser.showOpenDialog(this.getFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = jFileChooser.getSelectedFiles();
-            controller.addTask(files);            
+            controller.addTask(files);
             try {
                 aggstngs.ge.setInputDir(jFileChooser.getSelectedFile().getParentFile().getAbsolutePath(), Info.GE_IN_DIR_ERROR);
             } catch (InfoException ex) {
@@ -537,27 +543,33 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_jButtonAddTaskActionPerformed
 
     private void jButtonClearTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearTasksActionPerformed
+        if (interfaceLocked) {
+            return;
+        }
         controller.clearTasks();
         analyseTasks();
         jButtonAddTask.requestFocusInWindow();
     }//GEN-LAST:event_jButtonClearTasksActionPerformed
 
     private void jButtonRemoveTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveTaskActionPerformed
+        if (interfaceLocked) {
+            return;
+        }
         int[] selectedRows = jTableTasks.getSelectedRows();
         int beginIndex = -1;
-        if (selectedRows.length > 0){
+        if (selectedRows.length > 0) {
             beginIndex = selectedRows[0];
         }
         TaskData[] tasksToRemove = new TaskData[selectedRows.length];
         for (int i = 0; i < selectedRows.length; i++) {
             tasksToRemove[i] = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(selectedRows[i]));
         }
-        
+
         controller.removeTasks(tasksToRemove);
         analyseTasks();
         jButtonAddTask.requestFocusInWindow();
-        
-        if (beginIndex >= 0){
+
+        if (beginIndex >= 0) {
             jTableTasks.getSelectionModel().setSelectionInterval(beginIndex, beginIndex);
             jTableTasks.requestFocusInWindow();
         }
@@ -565,13 +577,19 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_jButtonRemoveTaskActionPerformed
 
     private void fileMenuSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuSettingsActionPerformed
-        if (saladoConverterSettings == null) {
-            JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
-            saladoConverterSettings = new SettingsWindowView();
-            saladoConverterSettings.setLocationRelativeTo(mainFrame);
+        if (interfaceLocked) {
+            return;
         }
-        SaladoConverter.getApplication().show(saladoConverterSettings);
-        saladoConverterSettings.displayAggregatedSettings(aggstngs);
+        if (settingsWindowView == null) {
+            JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
+            settingsWindowView = new SettingsWindowView(taskTableModel);
+            settingsWindowView.setLocationRelativeTo(mainFrame);
+        }
+        SaladoConverter.getApplication().show(settingsWindowView);
+        settingsWindowView.displayAggregatedSettings(aggstngs);
+        if (taskSettingsView != null) {
+            settingsWindowView.setTaskSettingsViewReference(taskSettingsView);
+        }
     }//GEN-LAST:event_fileMenuSettingsActionPerformed
 
     private void fileMenuLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuLogActionPerformed
@@ -579,15 +597,18 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_fileMenuLogActionPerformed
 
     private void showLog() {
-        if (saladoConverterLog == null) {
+        if (logWindowView == null) {
             JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
-            saladoConverterLog = new LogWindowView(this);
-            saladoConverterLog.setLocationRelativeTo(mainFrame);
+            logWindowView = new LogWindowView(this);
+            logWindowView.setLocationRelativeTo(mainFrame);
         }
-        SaladoConverter.getApplication().show(saladoConverterLog);
+        SaladoConverter.getApplication().show(logWindowView);
     }
 
     private void showTaskSettings() {
+        if (interfaceLocked) {
+            return;
+        }
         if (jTableTasks.getSelectedRow() >= 0) {
             TaskData taskData = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(jTableTasks.getSelectedRow()));
             if (taskSettingsView == null) {
@@ -597,10 +618,16 @@ public class MainWindowView extends FrameView {
             }
             SaladoConverter.getApplication().show(taskSettingsView);
             taskSettingsView.displayTaskSettings(taskData.getTaskSettings());
+            if (settingsWindowView != null) {
+                settingsWindowView.setTaskSettingsViewReference(taskSettingsView);
+            }
         }
     }
 
     private void jComboBoxCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCommandActionPerformed
+        if (interfaceLocked) {
+            return;
+        }
         try {
             aggstngs.ge.setSelectedCommand(jComboBoxCommand.getSelectedItem().toString(), Info.GE_COMMAND_ERROR);
         } catch (InfoException ex) {
@@ -612,6 +639,9 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_jComboBoxCommandActionPerformed
 
     private void jButtonSelectOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectOutputActionPerformed
+        if (interfaceLocked) {
+            return;
+        }
         jFileChooser.resetChoosableFileFilters();
         jFileChooser.setFileFilter(new FileFilterDir());
         jFileChooser.setDialogTitle("Browse for output directory");
@@ -635,12 +665,20 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_fileMenuExitActionPerformed
 
     private void jButtonRunTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunTasksActionPerformed
-        InterfaceDisable();
-        showLog();
-        saladoConverterLog.setRunning(true);        
-        controller.applyCommand();
-        controller.generateOperations();
-        controller.executeTasks();
+        if (interfaceLocked) {
+            return;
+        }
+        try{
+            aggstngs.ge.setOutputDir(jTextFieldOutputDir.getText(), "Invalid output directory");
+            InterfaceDisable();
+            showLog();
+            logWindowView.setRunning(true);
+            controller.applyCommand();
+            controller.generateOperations();
+            controller.executeTasks();
+        }catch (InfoException ex){
+            showOptionPane(ex.getMessage());
+        }
     }//GEN-LAST:event_jButtonRunTasksActionPerformed
 
     private void jMenuItemOnlineHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOnlineHelpActionPerformed
@@ -658,16 +696,17 @@ public class MainWindowView extends FrameView {
 
     public void cancelRunningTasks() {
         controller.cancelRunningTasks();
-        if (saladoConverterLog != null) {
-            saladoConverterLog.setRunning(false);
+        if (logWindowView != null) {
+            logWindowView.setRunning(false);
         }
         InterfaceEnable();
     }
 
     private void InterfaceDisable() {
         //TODO: disable table sorting
-        if (saladoConverterSettings != null) {
-            saladoConverterSettings.dispose();
+        interfaceLocked = true;
+        if (settingsWindowView != null) {
+            settingsWindowView.dispose();
         }
         if (taskSettingsView != null) {
             taskSettingsView.dispose();
@@ -685,6 +724,7 @@ public class MainWindowView extends FrameView {
 
     private void InterfaceEnable() {
         // TODO: enable table sorting
+        interfaceLocked = false;
         jButtonAddTask.setEnabled(true);
         jButtonRemoveTask.setEnabled(true);
         jButtonClearTasks.setEnabled(true);
@@ -716,8 +756,8 @@ public class MainWindowView extends FrameView {
 
             @Override
             public void run() {
-                if (saladoConverterLog != null) {
-                    saladoConverterLog.append(text);
+                if (logWindowView != null) {
+                    logWindowView.append(text);
                 }
             }
         });
@@ -744,6 +784,12 @@ public class MainWindowView extends FrameView {
         System.setOut(new PrintStream(out, true));
         System.setErr(new PrintStream(out, true));
     }
+
+    private void showOptionPane(String message) {
+        JOptionPane.showMessageDialog(this.getFrame(), message);
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem fileMenuLog;
     private javax.swing.JSeparator fileMenuSeparator;
@@ -774,10 +820,11 @@ public class MainWindowView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
-    private SettingsWindowView saladoConverterSettings;
-    private LogWindowView saladoConverterLog;
+    private SettingsWindowView settingsWindowView;
+    private LogWindowView logWindowView;
     private TaskSettingsView taskSettingsView;
     private TaskTableModel taskTableModel;
     private Controller controller;
     private AggregatedSettings aggstngs;
+    private boolean interfaceLocked;
 }

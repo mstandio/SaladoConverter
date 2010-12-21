@@ -21,6 +21,7 @@ public class ImageBuffer {
     private int rowLimit;
     private long startTime;
     private boolean verboseMode;
+    private int wallCount;
 
     public ImageBuffer(File inFile, boolean verboseMode) throws IOException {
         this.verboseMode = verboseMode;
@@ -42,7 +43,7 @@ public class ImageBuffer {
         }
     }
 
-    public void reset(double yaw, double pitch) {
+    public void init(double yaw, double pitch) {
         // top, botttom
         if (pitch != 0) {
             rowLimit = (int) Math.ceil((double) planarImage.getHeight() * 0.300d);
@@ -57,6 +58,11 @@ public class ImageBuffer {
         rowCounter = 0;
         buffer = new HashMap<Integer, int[]>();
         startTime = System.currentTimeMillis();
+        wallCount++;
+    }
+
+    public void reset(){
+        buffer = null;
     }
 
     public void printStats() {
@@ -106,7 +112,7 @@ public class ImageBuffer {
             if (verboseMode) {
                 rowCounter++;
                 if (rowCounter % 100 == 0) {
-                    System.out.println("progress: " + (int) Math.ceil(((double) buffer.size() / (double) rowLimit) * 100d) + "%");
+                    System.out.println("Reading wall " + wallCount + " of 6: " + (int) Math.ceil(((double) buffer.size() / (double) rowLimit) * 100d) + "%");
                 }
             }
             return result;
