@@ -29,7 +29,7 @@ public class TSKSettings {
         if (taskImages.getPanoType().equals(TaskImages.panoType.cubic)) {
             cubeNewSize = taskImages.getCubeSize();
         } else {
-            cubeNewSize = taskImages.getCubeSize()+ 2 * Integer.parseInt(aggstngs.ec.getOverlap());
+            cubeNewSize = taskImages.getCubeSize() + 2 * Integer.parseInt(aggstngs.ec.getOverlap());
         }
         tileSelection = defaultTileSelection;
         tileCustom = Integer.parseInt(aggstngs.dzt.getTileSize());
@@ -68,7 +68,11 @@ public class TSKSettings {
     }
 
     public boolean CubeNewSizeChanged() {
-        return cubeNewSize != taskImages.getCubeSize();
+        if (taskImages.getPanoType().equals(TaskImages.panoType.cubic)){
+            return cubeNewSize != taskImages.getCubeSize();
+        }else{
+            return cubeNewSize != taskImages.getCubeSize()+ 2 * Integer.parseInt(aggstngs.ec.getOverlap());
+        }
     }
 
     public String cubeSizeDescription() {

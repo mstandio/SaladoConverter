@@ -219,15 +219,14 @@ public class Controller {
             if (taskData.getTaskSettings().CubeNewSizeChanged()) {
                 newSize = Integer.parseInt(taskData.getTaskSettings().getCubeNewSize());
                 nameWithExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.length());
+                
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, resDir, newSize, true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, resDir + File.separator + nameWithExtension, newSize, true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + File.separator + nameWithExtension, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + nameWithExtension, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), false)));
-
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resDir + nameWithExtension}));
-
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resDir + File.separator + nameWithExtension}));
             } else {
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), false)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), true)));
             }
         }
     }
@@ -304,7 +303,7 @@ public class Controller {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_r.tif"}));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_b.tif", outputDir, taskData.taskSettings.getTileNewSize(),true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_b.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_d.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_f.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resizedFile + "_l.tif", outputDir, taskData.taskSettings.getTileNewSize(), true)));

@@ -585,6 +585,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonECBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECBrowseDirectoryActionPerformed
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterJar());
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogTitle("Browse for EquirectangularToCubic.jar");
@@ -597,6 +598,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonDZTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTBrowseDirectoryActionPerformed
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterJar());
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogTitle("Browse for DeepZoomTiler.jar");
@@ -609,6 +611,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonGEBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGEBrowseDirectoryActionPerformed
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterDir());
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jFileChooser.setDialogTitle("Browse for tmp directory");
@@ -625,6 +628,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonRESBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESBrowseDirectoryActionPerformed
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterJar());
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogTitle("Browse for Resizer.jar");

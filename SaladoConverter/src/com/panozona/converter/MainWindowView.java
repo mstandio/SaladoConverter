@@ -521,9 +521,10 @@ public class MainWindowView extends FrameView {
     private void jButtonAddTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTaskActionPerformed
         if (interfaceLocked) {
             return;
-        }
+        }        
         jFileChooser.setDialogTitle("Select files and/or directories");
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterAddTask());
         jFileChooser.setMultiSelectionEnabled(true);
         jFileChooser.setCurrentDirectory(new File(aggstngs.ge.getInputDir()));
@@ -642,7 +643,9 @@ public class MainWindowView extends FrameView {
         if (interfaceLocked) {
             return;
         }
+
         jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterDir());
         jFileChooser.setDialogTitle("Browse for output directory");
         jFileChooser.setMultiSelectionEnabled(false);
