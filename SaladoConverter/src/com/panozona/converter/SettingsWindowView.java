@@ -87,6 +87,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jButtonGEBrowseDirectory = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jTextFieldMemoryLimit = new javax.swing.JTextField();
+        jCheckBoxGERemoveObsoleteDZ = new javax.swing.JCheckBox();
+        jCheckBoxGEOverwriteOutput = new javax.swing.JCheckBox();
         DeepZoomTilerTab = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -163,6 +165,12 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldMemoryLimit.setText(resourceMap.getString("jTextFieldMemoryLimit.text")); // NOI18N
         jTextFieldMemoryLimit.setName("jTextFieldMemoryLimit"); // NOI18N
 
+        jCheckBoxGERemoveObsoleteDZ.setText(resourceMap.getString("jCheckBoxGERemoveObsoleteDZ.text")); // NOI18N
+        jCheckBoxGERemoveObsoleteDZ.setName("jCheckBoxGERemoveObsoleteDZ"); // NOI18N
+
+        jCheckBoxGEOverwriteOutput.setText(resourceMap.getString("jCheckBoxGEOverwriteOutput.text")); // NOI18N
+        jCheckBoxGEOverwriteOutput.setName("jCheckBoxGEOverwriteOutput"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -176,12 +184,14 @@ public class SettingsWindowView extends javax.swing.JFrame {
                             .addComponent(jLabel15)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxGERemoveObsoleteDZ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonGEBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxGEOverwriteOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -196,7 +206,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxGERemoveObsoleteDZ)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxGEOverwriteOutput)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jButtonGERestoreDefault)
                 .addContainerGap())
         );
@@ -568,6 +582,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private void jButtonGERestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGERestoreDefaultActionPerformed
         jTextFieldGEDirectory.setText(aggstngs.ge.getDefaultTmpDir());
         jTextFieldMemoryLimit.setText(aggstngs.ge.getDefaultMemoryLimit());
+        jCheckBoxGERemoveObsoleteDZ.setSelected(aggstngs.ge.getDefaultRemoveObsolete());
+        jCheckBoxGEOverwriteOutput.setSelected(aggstngs.ge.getDefaultOverwriteOutput());
     }//GEN-LAST:event_jButtonGERestoreDefaultActionPerformed
 
     private void jButtonECRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECRestoreDefaultActionPerformed
@@ -647,6 +663,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldGEDirectory.setText(aggstngs.ge.getTmpDir());
         jTextFieldMemoryLimit.setText(aggstngs.ge.getMemoryLimit());
         initialmemoryLimitValue = aggstngs.ge.getMemoryLimit();
+        jCheckBoxGERemoveObsoleteDZ.setSelected(aggstngs.ge.getRemoveObsolete());
+        jCheckBoxGEOverwriteOutput.setSelected(aggstngs.ge.getOverwriteOutput());
 
         jTextFieldDZTOverlap.setText(aggstngs.dzt.getOverlap());
         jTextFieldDZTTileSize.setText(aggstngs.dzt.getTileSize());        
@@ -664,6 +682,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         try {
             aggstngs.ge.setTmpDir(jTextFieldGEDirectory.getText(), Info.GE_TMP_DIR_ERROR);
             aggstngs.ge.setMemoryLimit(jTextFieldMemoryLimit.getText(), Info.GE_MEM_LIMIT_ERROR);
+            aggstngs.ge.setRemoveObsolete(jCheckBoxGERemoveObsoleteDZ.isSelected());
+            aggstngs.ge.setOverwriteOutput(jCheckBoxGEOverwriteOutput.isSelected());
 
             aggstngs.dzt.setOverlap(jTextFieldDZTOverlap.getText(), Info.DZT_OVERLAP_ERROR);
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText(), Info.DZT_TILESIZE_ERROR);
@@ -707,6 +727,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOK;
     private javax.swing.JButton jButtonRESBrowseDirectory;
     private javax.swing.JButton jButtonRESRestoreDefault;
+    private javax.swing.JCheckBox jCheckBoxGEOverwriteOutput;
+    private javax.swing.JCheckBox jCheckBoxGERemoveObsoleteDZ;
     private javax.swing.JComboBox jComboBoxECInterpolation;
     private javax.swing.JFileChooser jFileChooser;
     private javax.swing.JLabel jLabel10;

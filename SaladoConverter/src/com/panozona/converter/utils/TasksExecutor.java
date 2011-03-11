@@ -45,7 +45,7 @@ public class TasksExecutor extends Task<Void, Void> {
         int numOperationsDone = 0;
         TaskData taskData;
         TaskOperation taskOperation;
-
+        File file;
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             taskData = taskTableModel.rows.get(i);
             if (taskData.checkBoxEnabled && taskData.checkBoxSelected) {
@@ -64,14 +64,21 @@ public class TasksExecutor extends Task<Void, Void> {
                         if (taskOperation.operationType.equals(TaskOperation.OPERATION_DZT)) {
                             componentInvoker.run(aggstngs.dzt.getJarDir(), DZTSettings.JAR_CLASSNAME, taskOperation.args);
                             numOperationsDone++;
-                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_EC)) {                            
+                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_EC)) {
                             componentInvoker.run(aggstngs.ec.getJarDir(), ECSettings.JAR_CLASSNAME, taskOperation.args);
                             numOperationsDone++;
-                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_RES)) {                            
+                        } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_RES)) {
                             componentInvoker.run(aggstngs.res.getJarDir(), RESSettings.JAR_CLASSNAME, taskOperation.args);
                             numOperationsDone++;
                         } else if (taskOperation.operationType.equals(TaskOperation.OPERATION_DEL)) {
-                            new File(taskOperation.args[0]).delete();
+                            file = new File(taskOperation.args[0]);
+                            if (file.isDirectory()) {
+                                for (File f: file.listFiles()) {
+                                    f.delete();
+                                }
+                            }
+                            file.delete();
+                            setProgress(numOperationsDone, 0, numOperationsToRun);
                         }
                         setProgress(numOperationsDone, 0, numOperationsToRun);
                     } catch (InfoException ex) {
@@ -92,8 +99,8 @@ public class TasksExecutor extends Task<Void, Void> {
             }
             if (taskData.operations.size() > 0) {
                 System.out.println("DONE");
-                taskData.taskState = TaskData.STATE_DONE;
                 taskData.checkBoxSelected = false;
+                taskData.taskState = TaskData.STATE_DONE;
                 taskTableModel.fireTableDataChanged();
             }
         }

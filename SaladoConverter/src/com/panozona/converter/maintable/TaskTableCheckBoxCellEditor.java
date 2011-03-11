@@ -15,7 +15,7 @@ import javax.swing.table.TableCellEditor;
  *
  * @author Marek
  */
-public class TaskTableCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor,ActionListener {
+public class TaskTableCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
     private TaskData taskData;
     private JCheckBox jcheckbox;
@@ -40,7 +40,7 @@ public class TaskTableCheckBoxCellEditor extends AbstractCellEditor implements T
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        taskData = (TaskData)value;        
+        taskData = (TaskData)value;
         jcheckbox.setSelected(taskData.checkBoxSelected);
         jcheckbox.setEnabled(taskData.checkBoxEnabled);        
         return jcheckbox;

@@ -196,13 +196,25 @@ public class Controller {
         }
     }
 
+    private String getOutputFolderName(String outputFolderName) {
+        if (aggstngs.ge.getOverwriteOutput() || !new File(outputFolderName).exists()) {
+            return outputFolderName;
+        } else {
+            int counter = 1;
+            while (new File(outputFolderName + "(" + counter + ")").exists()) {
+                counter++;
+            }
+            return outputFolderName + "(" + counter + ")";
+        }
+    }
+
     // Cubic to resized Cubic
     private void generateOpCRES(TaskData taskData) {
         String parentFolderName;
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
             String[] tmp = imagedata.path.split(Pattern.quote(File.separator));
             parentFolderName = tmp[tmp.length - 2];
-            taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "resized_" + parentFolderName, Integer.parseInt(taskData.getTaskSettings().getCubeNewSize()), true)));
+            taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "resized_" + parentFolderName), Integer.parseInt(taskData.getTaskSettings().getCubeNewSize()), true)));
         }
     }
 
@@ -210,23 +222,37 @@ public class Controller {
     private void generateOpCTDZC(TaskData taskData) {
         String parentFolderName;
         String nameWithExtension;
+        String nameWithoutExtension;
         String[] tmp;
         int newSize;
+        String outputDir;
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
             tmp = imagedata.path.split(Pattern.quote(File.separator));
             parentFolderName = tmp[tmp.length - 2];
+
+            outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName);
+            nameWithExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.length());
+            nameWithoutExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.lastIndexOf('.'));
+
             if (taskData.getTaskSettings().CubeNewSizeChanged()) {
                 newSize = Integer.parseInt(taskData.getTaskSettings().getCubeNewSize());
-                nameWithExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.length());
-                
+
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(imagedata.path, resDir, newSize, true)));
 
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + File.separator + nameWithExtension, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(resDir + File.separator + nameWithExtension, outputDir, taskData.taskSettings.getTileNewSize(), true)));
 
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{resDir + File.separator + nameWithExtension}));
+
             } else {
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, aggstngs.ge.getOutputDir() + File.separator + "dz_" + parentFolderName, taskData.taskSettings.getTileNewSize(), true)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DZT, generateArgsDZT(imagedata.path, outputDir, taskData.taskSettings.getTileNewSize(), true)));
+            }
+
+            if (aggstngs.ge.getRemoveObsolete()) {
+                if (!nameWithoutExtension.endsWith("_f")) {
+                    taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + ".xml"}));
+                }
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension);
             }
         }
     }
@@ -240,12 +266,12 @@ public class Controller {
         int newSize;
         // there is only one imagedata
         for (ImageData imagedata : taskData.getTaskSettings().getTaskImages().getImagesData()) {
-            if (taskData.taskSettings.CubeNewSizeChanged()) {
-                nameWithoutExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.lastIndexOf('.'));
-                cubeFile = aggstngs.ge.getTmpDir() + File.separator + "res" + File.separator + nameWithoutExtension;
-                outputDir = aggstngs.ge.getOutputDir() + File.separator + "cubic_" + nameWithoutExtension;
-                newSize = Integer.parseInt(taskData.getTaskSettings().getCubeNewSize());
+            nameWithoutExtension = imagedata.path.substring(imagedata.path.lastIndexOf(File.separator) + 1, imagedata.path.lastIndexOf('.'));
+            cubeFile = aggstngs.ge.getTmpDir() + File.separator + "res" + File.separator + nameWithoutExtension;
+            outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "cubic_" + nameWithoutExtension);
+            newSize = Integer.parseInt(taskData.getTaskSettings().getCubeNewSize());
 
+            if (taskData.taskSettings.CubeNewSizeChanged()) {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, resDir, true)));
 
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_RES, generateArgsRES(cubeFile + "_b.tif", outputDir, newSize, true)));
@@ -263,7 +289,7 @@ public class Controller {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
 
             } else {
-                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, aggstngs.ge.getOutputDir(), false)));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, outputDir, true)));
             }
         }
     }
@@ -283,7 +309,7 @@ public class Controller {
 
             taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_EC, generateArgsEC(imagedata.path, aggstngs.ge.getTmpDir(), true)));
 
-            outputDir = aggstngs.ge.getOutputDir() + File.separator + "dz_" + nameWithoutExtension;
+            outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "dz_" + nameWithoutExtension);
 
             if (taskData.getTaskSettings().CubeNewSizeChanged()) {
                 resizedFile = resDir + File.separator + nameWithoutExtension;
@@ -332,6 +358,37 @@ public class Controller {
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_r.tif"}));
                 taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{cubeFile + "_u.tif"}));
             }
+
+            if (aggstngs.ge.getRemoveObsolete()) {
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + "_b.xml"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + "_d.xml"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + "_l.xml"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + "_r.xml"}));
+                taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + "_u.xml"}));
+
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_b");
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_d");
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_f");
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_l");
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_r");
+                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension + "_u");
+            }
+        }
+    }
+
+    private void removeObsoleteDeepZoomImages(TaskData taskData, String path) {
+        double cubeSize = Double.parseDouble(taskData.taskSettings.getCubeNewSize());
+        double tileSize = Double.parseDouble(taskData.taskSettings.getTileNewSize());
+        int numLevels = (int) Math.ceil(Math.log(cubeSize) / Math.log(2));
+        double levelSize = cubeSize;
+        for (int i = numLevels; i > 0; i--) {
+            if (levelSize < tileSize) {
+                for (int j = i - 1; j >= 0; j--) {
+                    taskData.operations.add(new TaskOperation(TaskOperation.OPERATION_DEL, new String[]{path + File.separator + j}));
+                }
+                return;
+            }
+            levelSize = Math.ceil(levelSize / 2);
         }
     }
 
@@ -431,6 +488,8 @@ public class Controller {
 
                 aggstngs.ge.setTmpDir(prop.getProperty(GESettings.VALUE_TMP_DIR), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.ge.setMemoryLimit(prop.getProperty(GESettings.VALUE_MEM_LIMIT), Info.CONFIGURATIN_READ_ERROR);
+                aggstngs.ge.setRemoveObsolete(!prop.getProperty(GESettings.VALUE_REM_OBSOLETE, Info.CONFIGURATIN_READ_ERROR).equals("false"));
+                aggstngs.ge.setOverwriteOutput(prop.getProperty(GESettings.VALUE_OVERWRITE_OUTPUT, Info.CONFIGURATIN_READ_ERROR).equals("true"));
                 aggstngs.ge.setInputDir(prop.getProperty(GESettings.VALUE_INPUT_DIR), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.ge.setOutputDir(prop.getProperty(GESettings.VALUE_OUTPUT_DIR), Info.CONFIGURATIN_READ_ERROR);
                 aggstngs.ge.setSelectedCommand(prop.getProperty(GESettings.VALUE_SELECTED_COMMAND), Info.CONFIGURATIN_READ_ERROR);
@@ -482,6 +541,12 @@ public class Controller {
         }
         if (aggstngs.ge.memoryLimitChanged()) {
             prop.put(GESettings.VALUE_MEM_LIMIT, aggstngs.ge.getMemoryLimit());
+        }
+        if (aggstngs.ge.removeObsoleteChanged()) {
+            prop.put(GESettings.VALUE_REM_OBSOLETE, aggstngs.ge.getRemoveObsolete() ? "true" : "false");
+        }
+        if (aggstngs.ge.overwriteOutputChanged()) {
+            prop.put(GESettings.VALUE_OVERWRITE_OUTPUT, aggstngs.ge.getOverwriteOutput() ? "true" : "false");
         }
         if (aggstngs.ge.outputDirChanged()) {
             prop.put(GESettings.VALUE_OUTPUT_DIR, aggstngs.ge.getOutputDir());

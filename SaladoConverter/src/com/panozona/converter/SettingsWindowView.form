@@ -116,7 +116,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jButtonGERestoreDefault" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -126,13 +126,15 @@
                                       <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jCheckBoxGERemoveObsoleteDZ" alignment="1" pref="244" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
                                           <Component id="jTextFieldGEDirectory" pref="207" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButtonGEBrowseDirectory" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jTextFieldMemoryLimit" alignment="0" pref="244" max="32767" attributes="0"/>
+                                      <Component id="jCheckBoxGEOverwriteOutput" alignment="0" pref="244" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -154,7 +156,11 @@
                               <Component id="jTextFieldMemoryLimit" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="88" max="32767" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="jCheckBoxGERemoveObsoleteDZ" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="jCheckBoxGEOverwriteOutput" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="21" max="32767" attributes="0"/>
                           <Component id="jButtonGERestoreDefault" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -202,6 +208,18 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="jTextFieldMemoryLimit.text"/>
                     <Property name="name" type="java.lang.String" value="jTextFieldMemoryLimit" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxGERemoveObsoleteDZ">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jCheckBoxGERemoveObsoleteDZ.text"/>
+                    <Property name="name" type="java.lang.String" value="jCheckBoxGERemoveObsoleteDZ" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxGEOverwriteOutput">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jCheckBoxGEOverwriteOutput.text"/>
+                    <Property name="name" type="java.lang.String" value="jCheckBoxGEOverwriteOutput" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

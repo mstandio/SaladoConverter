@@ -674,7 +674,7 @@ public class MainWindowView extends FrameView {
         try{
             aggstngs.ge.setOutputDir(jTextFieldOutputDir.getText(), "Invalid output directory");
             InterfaceDisable();
-            showLog();
+            showLog();            
             logWindowView.setRunning(true);
             controller.applyCommand();
             controller.generateOperations();
@@ -685,7 +685,7 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_jButtonRunTasksActionPerformed
 
     private void jMenuItemOnlineHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOnlineHelpActionPerformed
-        String url = "http://panozona.com/wiki/SaladoConverter";
+        String url = "http://panozona.com/saladoconverter";
         try {
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
         } catch (IOException ex) {
@@ -722,7 +722,8 @@ public class MainWindowView extends FrameView {
         jButtonRunTasks.setEnabled(false);
         jTextFieldOutputDir.setEditable(false);
         jComboBoxCommand.setEditable(false);
-        fileMenuSettings.setEnabled(false);
+        fileMenuSettings.setEnabled(false);        
+        jTableTasks.setEnabled(false);
     }
 
     private void InterfaceEnable() {
@@ -737,10 +738,12 @@ public class MainWindowView extends FrameView {
         jTextFieldOutputDir.setEditable(true);
         jComboBoxCommand.setEditable(true);
         fileMenuSettings.setEnabled(true);
+        jTableTasks.setEnabled(true);
         analyseTasks();
     }
 
     public void analyseTasks() {
+        jTableTasks.getColumn(taskTableModel.columnNames[0]).getCellEditor().stopCellEditing();
         if (taskTableModel.getRowCount() > 0) {
             jButtonClearTasks.setEnabled(true);
         } else {
@@ -791,7 +794,7 @@ public class MainWindowView extends FrameView {
     private void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this.getFrame(), message);
 
-    }
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem fileMenuLog;

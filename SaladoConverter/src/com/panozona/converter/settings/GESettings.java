@@ -11,6 +11,8 @@ public class GESettings {
 
     public static final String VALUE_TMP_DIR = "GE_tmpdir";
     public static final String VALUE_MEM_LIMIT = "GE_memlimit";
+    public static final String VALUE_REM_OBSOLETE = "GE_remobsolete";
+    public static final String VALUE_OVERWRITE_OUTPUT = "GE_ovrwr_output";
     public static final String VALUE_INPUT_DIR = "GE_inputdir";
     public static final String VALUE_OUTPUT_DIR = "GE_outputdir";
     public static final String VALUE_SELECTED_COMMAND = "GE_sel_comm";
@@ -21,10 +23,14 @@ public class GESettings {
     private String tmpDir;
     private int memoryLimit;
     private String outputDir;
+    private boolean remObsolete;
+    private boolean overwriteOutput;
     private String inputDir;
     private String selectedCommand;
     private String defaultTmpDir = "";
     private int defaultMemoryLimit = 1024;
+    private boolean defaultRemObsolete = true;
+    private boolean defaultOverwriteOutput = false;
     private String defaultOutputDir = "";
     private String defaultInputDir = "";
     private final String defaultSelectedCommand = EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC;
@@ -41,6 +47,8 @@ public class GESettings {
                 + AggregatedSettings.FOLDER_INPUT;
         tmpDir = defaultTmpDir;
         memoryLimit = defaultMemoryLimit;
+        remObsolete = defaultRemObsolete;
+        overwriteOutput = defaultOverwriteOutput;
         outputDir = defaultOutputDir;
         inputDir = defaultInputDir;
         selectedCommand = defaultSelectedCommand;
@@ -101,7 +109,39 @@ public class GESettings {
     }
 
     public boolean memoryLimitChanged() {
-        return !(memoryLimit == defaultMemoryLimit);
+        return (memoryLimit != defaultMemoryLimit);
+    }
+
+    public void setRemoveObsolete(boolean value) {
+        remObsolete = value;
+    }
+
+    public boolean getRemoveObsolete() {
+        return remObsolete;
+    }
+
+    public boolean getDefaultRemoveObsolete() {
+        return defaultRemObsolete;
+    }
+
+    public boolean removeObsoleteChanged() {
+        return (remObsolete != defaultRemObsolete);
+    }
+
+    public void setOverwriteOutput(boolean value) {
+        overwriteOutput = value;
+    }
+
+    public boolean getOverwriteOutput() {
+        return overwriteOutput;
+    }
+
+    public boolean getDefaultOverwriteOutput() {
+        return defaultOverwriteOutput;
+    }
+
+    public boolean overwriteOutputChanged() {
+        return (overwriteOutput != defaultOverwriteOutput);
     }
 
     public void setOutputDir(String value, String errorMsg) throws InfoException {
