@@ -30,7 +30,7 @@ import com.sun.media.jai.codec.FileSeekableStream;
  */
 public class DeepZoomTiler {
 
-    static final String help = "\nDeepZoomTiler v1.3 \n\n Usage: \n\n"
+    static final String help = "\nDeepZoomTiler v1.4 \n\n Usage: \n\n"
             + "java [-java_options] -jar path/to/DeepZoomTiler.jar [-options] [args...]\n"
             + "For a list of java options try: java -help or java -X for a list of less\n"
             + "common options. Loading large images for conversion takes a lot of RAM so\n"
@@ -60,7 +60,7 @@ public class DeepZoomTiler {
             + "\tmay not be this width or height, respectively, unless the\n"
             + "\tinput image's size is divisible by the tileSize. The tileSize\n"
             + "\tdoes NOT include the overlap. Overlap pixels are add to the\n"
-            + "\tdimensions of the tile.\n" + "\tDefault is 256.\n\n"
+            + "\tdimensions of the tile.\n" + "\tDefault is 512.\n\n"
             + "-outputdir or -o: the output directory for the converted images. It\n"
             + "\tneed not exist. Default is a folder next to the input folder\n"
             + "\tor file, with 'tiles_' prepended to the name of the input\n"
@@ -85,7 +85,7 @@ public class DeepZoomTiler {
     }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
-    static int tileSize = 256;                     // -tilesize    
+    static int tileSize = 512;                     // -tilesize
     static int tileOverlap = 1;                    // -overlap
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
     static File outputDir = null;                  // -outputdir | -o    
