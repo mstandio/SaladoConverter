@@ -67,7 +67,7 @@ public class TSKSettings {
         }
     }
 
-    public boolean CubeNewSizeChanged() {
+    public boolean cubeNewSizeChanged() {
         if (taskImages.getPanoType().equals(TaskImages.panoType.cubic)){
             return cubeNewSize != taskImages.getCubeSize();
         }else{
@@ -76,7 +76,7 @@ public class TSKSettings {
     }
 
     public String cubeSizeDescription() {
-        if (CubeNewSizeChanged()) {
+        if (cubeNewSizeChanged()) {
             return getDefaultCubeNewSize() + " to " + getCubeNewSize();
         } else {
             return getDefaultCubeNewSize();

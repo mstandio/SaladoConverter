@@ -20,7 +20,7 @@ public class DZTSettings {
     private float quality;
     private String jarDir;
     private final int defaultOverlap = 1;
-    private final int defaultTileSize = 256;
+    private final int defaultTileSize = 512;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
 
