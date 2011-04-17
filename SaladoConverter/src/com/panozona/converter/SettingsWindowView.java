@@ -38,7 +38,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         initComponents();
         this.taskTableModel = taskTableModel;
         setTitle("SaladoConverter settings");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
         allowCloseFlag = true;
 
         ActionListener actionListenerESC = new ActionListener() {

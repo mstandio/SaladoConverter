@@ -19,7 +19,7 @@ public class LogWindowView extends javax.swing.JFrame {
         this.mainWindowView = mainWindowView; // TODO: this is wrong
         initComponents();
         setTitle("SaladoConverter log");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
         setRunning(false);
     }
 

@@ -145,7 +145,7 @@ public class MainWindowView extends FrameView {
         redirectSystemStreams();
 
         // set application icon
-        this.getFrame().setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
+        //this.getFrame().setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
