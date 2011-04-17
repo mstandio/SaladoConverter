@@ -89,6 +89,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldMemoryLimit = new javax.swing.JTextField();
         jCheckBoxGERemoveObsoleteDZ = new javax.swing.JCheckBox();
         jCheckBoxGEOverwriteOutput = new javax.swing.JCheckBox();
+        OptimizerTab = new javax.swing.JPanel();
         DeepZoomTilerTab = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -185,13 +186,13 @@ public class SettingsWindowView extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxGERemoveObsoleteDZ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxGERemoveObsoleteDZ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                                .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonGEBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                            .addComponent(jCheckBoxGEOverwriteOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxGEOverwriteOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -233,6 +234,21 @@ public class SettingsWindowView extends javax.swing.JFrame {
         );
 
         TabbedPane.addTab(resourceMap.getString("GeneralTab.TabConstraints.tabTitle"), GeneralTab); // NOI18N
+
+        OptimizerTab.setName("OptimizerTab"); // NOI18N
+
+        javax.swing.GroupLayout OptimizerTabLayout = new javax.swing.GroupLayout(OptimizerTab);
+        OptimizerTab.setLayout(OptimizerTabLayout);
+        OptimizerTabLayout.setHorizontalGroup(
+            OptimizerTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 441, Short.MAX_VALUE)
+        );
+        OptimizerTabLayout.setVerticalGroup(
+            OptimizerTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 209, Short.MAX_VALUE)
+        );
+
+        TabbedPane.addTab(resourceMap.getString("OptimizerTab.TabConstraints.tabTitle"), OptimizerTab); // NOI18N
 
         DeepZoomTilerTab.setName("DeepZoomTilerTab"); // NOI18N
 
@@ -287,11 +303,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addGap(17, 17, 17)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                                .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonECBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
-                            .addComponent(jComboBoxECInterpolation, 0, 253, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                            .addComponent(jComboBoxECInterpolation, 0, 302, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -392,12 +408,12 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                                .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonDZTBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldDZTOverlap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldDZTOverlap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -480,7 +496,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(10, 10, 10)
-                        .addComponent(jTextFieldRESDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                        .addComponent(jTextFieldRESDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonRESBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -540,7 +556,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonOK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -715,6 +731,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JPanel DeepZoomTilerTab;
     private javax.swing.JPanel EquirectangularToCubicTab;
     private javax.swing.JPanel GeneralTab;
+    private javax.swing.JPanel OptimizerTab;
     private javax.swing.JPanel ResizerTab;
     private javax.swing.JTabbedPane TabbedPane;
     private javax.swing.JButton jButtonCancel;
