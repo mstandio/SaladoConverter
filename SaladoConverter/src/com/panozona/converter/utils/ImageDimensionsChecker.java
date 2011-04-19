@@ -4,7 +4,7 @@
  */
 package com.panozona.converter.utils;
 
-import com.panozona.converter.task.ImageData;
+import com.panozona.converter.task.Image;
 import com.sun.media.jai.codec.FileSeekableStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +22,8 @@ public class ImageDimensionsChecker {
 
     private ImageDimensionsChecker(){}
 
-    public static ImageData analise(File image) {
-        ImageData imageData = new ImageData();
+    public static Image analise(File image) {
+        Image imageData = new Image();
         imageData.path = image.getAbsolutePath();
         if (image.getName().matches("(?i)^.+\\.(jpg|jpeg|gif|bmp|png)$")) {
             try {

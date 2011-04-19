@@ -35,8 +35,6 @@ import com.panozona.converter.task.TaskData;
 import com.panozona.converter.utils.CurrentDirectoryFinder;
 import com.panozona.converter.utils.FileFilterAddTask;
 import com.panozona.converter.utils.FileFilterDir;
-import com.panozona.converter.utils.Info;
-import com.panozona.converter.utils.InfoException;
 import java.awt.event.KeyEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -51,7 +49,8 @@ public class MainWindowView extends FrameView {
 
         CurrentDirectoryFinder finder = new CurrentDirectoryFinder();
 
-        aggstngs = new AggregatedSettings(finder.currentDir);
+        aggstngs = AggregatedSettings.getInstance();
+        aggstngs.setCurrentDirectory(finder.currentDir);
 
         taskTableModel = new TaskTableModel();
         jTableTasks.getTableHeader().setReorderingAllowed(false);
@@ -115,8 +114,7 @@ public class MainWindowView extends FrameView {
         jButtonClearTasks.setEnabled(false);
         jButtonRunTasks.setEnabled(false);
 
-        controller = Controller.getInstance();
-        controller.setAggregatedSettings(aggstngs);
+        controller = Controller.getInstance();        
         controller.setTaskTableModel(taskTableModel);
         controller.setMainWindowView(this);
         controller.readSettingsFromFile();
@@ -521,7 +519,7 @@ public class MainWindowView extends FrameView {
     private void jButtonAddTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTaskActionPerformed
         if (interfaceLocked) {
             return;
-        }        
+        }
         jFileChooser.setDialogTitle("Select files and/or directories");
         jFileChooser.resetChoosableFileFilters();
         jFileChooser.setSelectedFile(new File(""));
@@ -533,8 +531,8 @@ public class MainWindowView extends FrameView {
             File[] files = jFileChooser.getSelectedFiles();
             controller.addTask(files);
             try {
-                aggstngs.ge.setInputDir(jFileChooser.getSelectedFile().getParentFile().getAbsolutePath(), Info.GE_IN_DIR_ERROR);
-            } catch (InfoException ex) {
+                aggstngs.ge.setInputDir(jFileChooser.getSelectedFile().getParentFile().getAbsolutePath());
+            } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this.getFrame(), ex.getMessage());
             }
         }
@@ -614,11 +612,11 @@ public class MainWindowView extends FrameView {
             TaskData taskData = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(jTableTasks.getSelectedRow()));
             if (taskSettingsView == null) {
                 JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
-                taskSettingsView = new TaskSettingsView(taskTableModel, controller);
+                taskSettingsView = new TaskSettingsView(taskTableModel);
                 taskSettingsView.setLocationRelativeTo(mainFrame);
             }
             SaladoConverter.getApplication().show(taskSettingsView);
-            taskSettingsView.displayTaskSettings(taskData.getTaskSettings());
+            taskSettingsView.displayTaskData(taskData);
             if (settingsWindowView != null) {
                 settingsWindowView.setTaskSettingsViewReference(taskSettingsView);
             }
@@ -630,8 +628,8 @@ public class MainWindowView extends FrameView {
             return;
         }
         try {
-            aggstngs.ge.setSelectedCommand(jComboBoxCommand.getSelectedItem().toString(), Info.GE_COMMAND_ERROR);
-        } catch (InfoException ex) {
+            aggstngs.ge.setSelectedCommand(jComboBoxCommand.getSelectedItem().toString());
+        } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this.getFrame(), ex.getMessage());
         }
         jTableTasks.removeEditor();
@@ -643,7 +641,6 @@ public class MainWindowView extends FrameView {
         if (interfaceLocked) {
             return;
         }
-
         jFileChooser.resetChoosableFileFilters();
         jFileChooser.setSelectedFile(new File(""));
         jFileChooser.setFileFilter(new FileFilterDir());
@@ -653,9 +650,10 @@ public class MainWindowView extends FrameView {
         int returnVal = jFileChooser.showOpenDialog(this.getFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                aggstngs.ge.setOutputDir(jFileChooser.getSelectedFile().getAbsolutePath(), Info.GE_OUT_DIR_ERROR);
                 jTextFieldOutputDir.setText(aggstngs.ge.getOutputDir());
-            } catch (InfoException ex) {
+                aggstngs.ge.setOutputDir(jFileChooser.getSelectedFile().getAbsolutePath());
+                jTextFieldOutputDir.setText(aggstngs.ge.getOutputDir());
+            } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this.getFrame(), ex.getMessage());
             }
         }
@@ -671,15 +669,15 @@ public class MainWindowView extends FrameView {
         if (interfaceLocked) {
             return;
         }
-        try{
-            aggstngs.ge.setOutputDir(jTextFieldOutputDir.getText(), "Invalid output directory");
+        try {
+            aggstngs.ge.setOutputDir(jTextFieldOutputDir.getText());
             InterfaceDisable();
-            showLog();            
+            showLog();
             logWindowView.setRunning(true);
             controller.applyCommand();
             controller.generateOperations();
             controller.executeTasks();
-        }catch (InfoException ex){
+        } catch (IllegalArgumentException ex) {
             showOptionPane(ex.getMessage());
         }
     }//GEN-LAST:event_jButtonRunTasksActionPerformed
@@ -722,7 +720,7 @@ public class MainWindowView extends FrameView {
         jButtonRunTasks.setEnabled(false);
         jTextFieldOutputDir.setEditable(false);
         jComboBoxCommand.setEditable(false);
-        fileMenuSettings.setEnabled(false);        
+        fileMenuSettings.setEnabled(false);
         jTableTasks.setEnabled(false);
     }
 
@@ -794,8 +792,7 @@ public class MainWindowView extends FrameView {
     private void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this.getFrame(), message);
 
-    }    
-
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem fileMenuLog;
     private javax.swing.JSeparator fileMenuSeparator;

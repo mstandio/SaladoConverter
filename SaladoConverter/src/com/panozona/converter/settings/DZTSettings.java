@@ -1,25 +1,24 @@
 package com.panozona.converter.settings;
 
-import com.panozona.converter.utils.InfoException;
+import com.panozona.converter.utils.Messages;
 import java.io.File;
 
 /**
- *
  * @author Marek Standio
  */
 public class DZTSettings {
 
     public static final String JAR_CLASSNAME = "deepzoomtiler.DeepZoomTiler";
     public static final String JAR_FILENAME = "DeepZoomTiler.jar";
-    public static final String VALUE_OVERLAP = "DZT_overlap";
+    public static final String VALUE_TILE_OVERLAP = "DZT_overlap";
     public static final String VALUE_TILE_SIZE = "DZT_tileSize";
     public static final String VALUE_QUALITY = "DZT_quality";
     public static final String VALUE_JAR_DIR = "DZT_jarDir";
-    private int overlap;
+    private int tileOverlap;
     private int tileSize;
     private float quality;
     private String jarDir;
-    private final int defaultOverlap = 1;
+    private final int defaultTileOverlap = 1;
     private final int defaultTileSize = 512;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
@@ -28,97 +27,125 @@ public class DZTSettings {
         if (currentDirectory != null) {
             defaultJarDir = currentDirectory
                     + File.separator
-                    + AggregatedSettings.FOLDER_COMPONENTS
+                    + "components"
                     + File.separator
                     + JAR_FILENAME;
         }
-        overlap = defaultOverlap;
+        tileOverlap = defaultTileOverlap;
         tileSize = defaultTileSize;
         quality = defaultQuality;
         jarDir = defaultJarDir;
     }
 
-    public void setOverlap(String value, String errorMsg) throws InfoException {
+    public void setTileOverlap(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                overlap = Integer.parseInt(value);
-            } catch (NumberFormatException ex) {
-                throw new InfoException(errorMsg);
+                if (Integer.parseInt(value) >= 0) {
+                    tileOverlap = Integer.parseInt(value);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.DZT_TILE_OVERLAP_ERROR);
             }
         }
     }
 
-    public String getOverlap() {
-        return Integer.toString(overlap);
+    public void setTileOverlap(int value) throws IllegalArgumentException {
+        if (value >= 0) {
+            tileOverlap = value;
+        } else {
+            throw new IllegalArgumentException(Messages.DZT_TILE_OVERLAP_ERROR);
+        }
     }
 
-    public String getDefaultOverlap() {
-        return Integer.toString(defaultOverlap);
+    public int getTileOverlap() {
+        return tileOverlap;
     }
 
-    public boolean overlapChanged() {
-        return (overlap != defaultOverlap);
+    public int getDefaultTileOverlap() {
+        return defaultTileOverlap;
     }
 
-    public void setTileSize(String value, String errorMsg) throws InfoException {
+    public boolean tileOverlapChanged() {
+        return (tileOverlap != defaultTileOverlap);
+    }
+
+    public void setTileSize(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Integer.parseInt(value) != 0) {
+                if (Integer.parseInt(value) > 0) {
                     tileSize = Integer.parseInt(value);
                 } else {
-                    throw new NumberFormatException();
+                    throw new IllegalArgumentException();
                 }
-            } catch (NumberFormatException ex) {
-                throw new InfoException(errorMsg);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.DZT_TILESIZE_ERROR);
             }
         }
     }
 
-    public String getTileSize() {
-        return Integer.toString(tileSize);
+    public void setTileSize(int value) throws IllegalArgumentException {
+        if (value > 0) {
+            tileSize = value;
+        } else {
+            throw new IllegalArgumentException(Messages.DZT_TILESIZE_ERROR);
+        }
     }
 
-    public String getDefaultTileSize() {
-        return Integer.toString(defaultTileSize);
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public int getDefaultTileSize() {
+        return defaultTileSize;
     }
 
     public boolean tileSizeChanged() {
         return (tileSize != defaultTileSize);
     }
 
-    public void setQuality(String value, String errorMsg) throws InfoException {
+    public void setQuality(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Float.parseFloat(value) > 0 && Float.parseFloat(value) <= 1) {
+                if (Float.parseFloat(value) > 0f && Float.parseFloat(value) <= 1f) {
                     quality = Float.parseFloat(value);
                 } else {
-                    throw new NumberFormatException();
+                    throw new IllegalArgumentException();
                 }
-            } catch (NumberFormatException ex) {
-                throw new InfoException(errorMsg);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.DZT_QUALITY_ERROR);
             }
         }
     }
 
-    public String getQuality() {
-        return Float.toString(quality);
+    public void setQuality(float value) throws IllegalArgumentException {
+        if (value > 0f && value <= 1f) {
+            quality = value;
+        } else {
+            throw new IllegalArgumentException(Messages.DZT_QUALITY_ERROR);
+        }
     }
 
-    public String getDefaultQuality() {
-        return Float.toString(defaultQuality);
+    public float getQuality() {
+        return quality;
+    }
+
+    public float getDefaultQuality() {
+        return defaultQuality;
     }
 
     public boolean qualityChanged() {
         return (quality != defaultQuality);
     }
 
-    public void setJarDir(String value, String errorMsg) throws InfoException {
+    public void setJarDir(String value) throws IllegalArgumentException {
         if (value != null) {
             File tmp = new File(value);
             if (tmp.isFile() && value.endsWith(".jar")) {
                 jarDir = value;
             } else {
-                throw new InfoException(errorMsg);
+                throw new IllegalArgumentException(Messages.DZT_JAR_DIR_ERROR);
             }
         }
     }

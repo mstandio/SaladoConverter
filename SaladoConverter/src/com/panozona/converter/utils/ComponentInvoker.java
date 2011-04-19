@@ -26,29 +26,29 @@ public class ComponentInvoker {
 
     }
     
-    public void run(String path, String name, String[] args) throws InfoException{
+    public void run(String path, String name, String[] args) throws IllegalStateException{
         //System.out.println(path +" "+name+" "+Arrays.toString(args));
 
         try {
             invokeClass(path, name, args);
         } catch (IllegalAccessException ex) {
             ex.printStackTrace();
-            throw new InfoException(ILLEGAL_ACCESS_EXCEPTION);
+            throw new IllegalStateException(ILLEGAL_ACCESS_EXCEPTION);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
-            throw new InfoException(CLASS_NOT_FOUND_EXCEPTION);            
+            throw new IllegalStateException(CLASS_NOT_FOUND_EXCEPTION);
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
-            throw new InfoException(NO_SUCH_METHOD_EXCEPTION);
+            throw new IllegalStateException(NO_SUCH_METHOD_EXCEPTION);
         } catch (InvocationTargetException ex) {
             ex.printStackTrace();
-            throw new InfoException(INVOCATION_TARGET_EXCEPTION);
+            throw new IllegalStateException(INVOCATION_TARGET_EXCEPTION);
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
-            throw new InfoException(MALFORMED_URL_EXCEPTION);
+            throw new IllegalStateException(MALFORMED_URL_EXCEPTION);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
-            throw new InfoException(INTERRUPTED_EXCEPTION);
+            throw new IllegalStateException(INTERRUPTED_EXCEPTION);
         }
     }
 

@@ -7,8 +7,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
-/**
- *
+/** 
  * @author Marek
  */
 public class TaskTableCheckBoxCellRenderer implements TableCellRenderer{

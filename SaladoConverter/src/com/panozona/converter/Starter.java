@@ -25,10 +25,14 @@ public class Starter {
         Properties prop = new Properties();
 
         // TODO: DO SOMETHING WIT THIS MESS
-        AggregatedSettings aggstngs = new AggregatedSettings((new CurrentDirectoryFinder()).currentDir);
+        AggregatedSettings aggstngs = AggregatedSettings.getInstance();
+        aggstngs.setCurrentDirectory((new CurrentDirectoryFinder()).currentDir);
+
         try {
-            prop.load(new FileInputStream(aggstngs.getCurrentDirectory() + File.separator + AggregatedSettings.FILE_PROPERTIES));
-            aggstngs.ge.setMemoryLimit(prop.getProperty(GESettings.VALUE_MEM_LIMIT), "on start: corrupted file");
+            prop.load(new FileInputStream(aggstngs.currentDirectory + File.separator + AggregatedSettings.FILE_PROPERTIES));
+            if (prop.getProperty(GESettings.VALUE_MEMORY_LIMIT) != null){
+                aggstngs.ge.setMemoryLimit(Integer.parseInt(prop.getProperty(GESettings.VALUE_MEMORY_LIMIT)));
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

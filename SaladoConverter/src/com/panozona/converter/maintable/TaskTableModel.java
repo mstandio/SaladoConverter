@@ -39,13 +39,13 @@ public class TaskTableModel extends AbstractTableModel {
             case 0:
                 return rows.get(rowIndex);
             case 1:
-                return rows.get(rowIndex).taskState;
+                return rows.get(rowIndex).state;
             case 2:
-                return rows.get(rowIndex).taskSettings.cubeSizeDescription();
+                return rows.get(rowIndex).getCubeSizeDescription();
             case 3:
-                return rows.get(rowIndex).taskSettings.tileSizeDescription();
+                return rows.get(rowIndex).getTileSizeDescription();
             case 4:
-                return rows.get(rowIndex).taskSettings.getTaskImages().getTaskPathDescription();
+                return rows.get(rowIndex).getPathDescription();
             default:
                 return null;
         }

@@ -1,73 +1,85 @@
 package com.panozona.converter.settings;
-import com.panozona.converter.utils.InfoException;
+
+import com.panozona.converter.utils.Messages;
 import java.io.File;
 
 /**
- *
  * @author Marek Standio
  */
 public class ECSettings {
 
     public static final String JAR_CLASSNAME = "equirectangulartocubic.EquirectangularToCubic";
     public static final String JAR_FILENAME = "EquirectangularToCubic.jar";
-    public static final String VALUE_OVERLAP = "EC_overlap";
+    public static final String VALUE_WALL_OVERLAP = "EC_overlap";
     public static final String VALUE_INTERPOLATION = "EC_interp";
     public static final String VALUE_JAR_DIR = "EC_jarDir";
-    private static final String INTERP_LANCZOS2 = "lanczos2";
-    private static final String INTERP_BILINEAR = "bilinear";
-    private static final String INTERP_NEAREST = "nearest-neighbour";
-    private int overlap;
+    private static final String INTERPOLATION_LANCZOS2 = "lanczos2";
+    private static final String INTERPOLATION_BILINEAR = "bilinear";
+    private static final String INTERPOLATION_NEAREST_NEIGHBOUR = "nearest-neighbour";
+    private int wallOverlap;
     private String interpolation;
     private String jarDir;
-    private final int defaultOverlap = 1;
-    private final String defaultInterpolation = INTERP_LANCZOS2;
+    private final int defaultWallOverlap = 1;
+    private final String defaultInterpolation = INTERPOLATION_LANCZOS2;
     private String defaultJarDir = "";
 
     public ECSettings(String currentDirectory) {
         if (currentDirectory != null) {
             defaultJarDir = currentDirectory
                     + File.separator
-                    + AggregatedSettings.FOLDER_COMPONENTS
+                    + "components"
                     + File.separator
                     + JAR_FILENAME;
         }
-        overlap = defaultOverlap;
+        wallOverlap = defaultWallOverlap;
         interpolation = defaultInterpolation;
         jarDir = defaultJarDir;
     }
 
     public String[] getInterpolationNames() {
-        return new String[]{INTERP_LANCZOS2, INTERP_BILINEAR, INTERP_NEAREST};
+        return new String[]{INTERPOLATION_LANCZOS2, INTERPOLATION_BILINEAR, INTERPOLATION_NEAREST_NEIGHBOUR};
     }
 
-    public void setOverlap(String value, String errorMsg) throws InfoException {
+    public void setWallOverlap(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                overlap = Integer.parseInt(value);
-            } catch (NumberFormatException ex) {
-                throw new InfoException(errorMsg);
+                if (Integer.parseInt(value) >= 0) {
+                    wallOverlap = Integer.parseInt(value);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.EC_WALL_OVERLAP_ERROR);
             }
         }
     }
 
-    public String getOverlap() {
-        return Integer.toString(overlap);
+    public void setWallOverlap(int value) throws IllegalArgumentException {
+        if (value >= 0) {
+            wallOverlap = value;
+        } else {
+            throw new IllegalArgumentException(Messages.EC_WALL_OVERLAP_ERROR);
+        }
     }
 
-    public String getDefaultOverlap() {
-        return Integer.toString(defaultOverlap);
+    public int getWallOverlap() {
+        return wallOverlap;
     }
 
-    public boolean overlapChanged() {
-        return (overlap != defaultOverlap);
+    public int getDefaultWallOverlap() {
+        return defaultWallOverlap;
     }
 
-    public void setInterpolation(String value, String errorMsg) throws InfoException {
+    public boolean wallOverlapChanged() {
+        return (wallOverlap != defaultWallOverlap);
+    }
+
+    public void setInterpolation(String value) throws IllegalArgumentException {
         if (value != null) {
-            if (value.equals(INTERP_BILINEAR) || value.equals(INTERP_LANCZOS2) || value.equals(INTERP_NEAREST)) {
+            if (value.equals(INTERPOLATION_BILINEAR) || value.equals(INTERPOLATION_LANCZOS2) || value.equals(INTERPOLATION_NEAREST_NEIGHBOUR)) {
                 interpolation = value;
             } else {
-                throw new InfoException(errorMsg);
+                throw new IllegalArgumentException(Messages.EC_INTERPOLATION_ERROR);
             }
         }
     }
@@ -84,13 +96,13 @@ public class ECSettings {
         return !(interpolation.equals(defaultInterpolation));
     }
 
-    public void setJarDir(String value, String errorMsg) throws InfoException {
+    public void setJarDir(String value) throws IllegalArgumentException {
         if (value != null) {
             File tmp = new File(value);
             if (tmp.isFile() && value.endsWith(".jar")) {
                 jarDir = value;
             } else {
-                throw new InfoException(errorMsg);
+                throw new IllegalArgumentException(Messages.EC_JAR_DIR_ERROR);
             }
         }
     }
