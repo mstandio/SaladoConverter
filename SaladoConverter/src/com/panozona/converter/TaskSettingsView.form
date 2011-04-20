@@ -1,9 +1,15 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroupCubeTileSize">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
+    <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -92,7 +98,7 @@
                   <Component id="jRadioButtonCustom" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jRadioButtonAutosize" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="76" max="32767" attributes="0"/>
+                  <EmptySpace pref="77" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -111,6 +117,9 @@
       <SubComponents>
         <Component class="javax.swing.JRadioButton" name="jRadioButtonAutosize">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="buttonGroupCubeTileSize"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="jRadioButtonAutosize.text"/>
             <Property name="name" type="java.lang.String" value="jRadioButtonAutosize" noResource="true"/>
           </Properties>
@@ -120,6 +129,9 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="jRadioButtonCustom">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="buttonGroupCubeTileSize"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="jRadioButtonCustom.text"/>
             <Property name="name" type="java.lang.String" value="jRadioButtonCustom" noResource="true"/>
           </Properties>
@@ -158,8 +170,8 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTextFieldTileSize" pref="82" max="32767" attributes="1"/>
-                      <Component id="jTextFieldCubeSize" alignment="0" pref="82" max="32767" attributes="3"/>
+                      <Component id="jTextFieldTileSize" pref="83" max="32767" attributes="1"/>
+                      <Component id="jTextFieldCubeSize" alignment="0" pref="83" max="32767" attributes="3"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>

@@ -3,13 +3,11 @@
  *
  * Created on 2010-03-18, 03:58:20
  */
-
 package com.panozona.converter;
 
 import java.awt.Toolkit;
 
 /**
- *
  * @author Marek Standio
  */
 public class LogWindowView extends javax.swing.JFrame {
@@ -72,7 +70,7 @@ public class LogWindowView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -95,7 +93,7 @@ public class LogWindowView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        if(isRunning){
+        if (isRunning) {
             isCanceled = true;
             mainWindowView.cancelRunningTasks();
         }
@@ -105,42 +103,38 @@ public class LogWindowView extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
-    public void append(String text){
+    public void append(String text) {
         jTextAreaLog.append(text);
     }
-        
-    public void setRunning(Boolean value){
-        isRunning = value;        
+
+    public void setRunning(Boolean value) {
+        isRunning = value;
         jButtonCancel.setEnabled(isRunning);
-        if (isRunning){
+        if (isRunning) {
             setCanceled(false);
             jTextAreaLog.setText("");
         }
     }
 
-    public Boolean getRunning(){
+    public Boolean getRunning() {
         return isRunning;
     }
 
-    public void setCanceled(Boolean value){
-        isCanceled = value;        
+    public void setCanceled(Boolean value) {
+        isCanceled = value;
         jButtonCancel.setEnabled(!isCanceled);
     }
 
-    public Boolean getCanceled(){
+    public Boolean getCanceled() {
         return isCanceled;
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonClose;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaLog;
     // End of variables declaration//GEN-END:variables
-
     private MainWindowView mainWindowView;
     private boolean isRunning;
     private boolean isCanceled;
-    
 }

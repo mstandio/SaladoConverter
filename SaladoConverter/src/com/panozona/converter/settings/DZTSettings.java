@@ -10,7 +10,7 @@ public class DZTSettings {
 
     public static final String JAR_CLASSNAME = "deepzoomtiler.DeepZoomTiler";
     public static final String JAR_FILENAME = "DeepZoomTiler.jar";
-    public static final String VALUE_TILE_OVERLAP = "DZT_overlap";
+    public static final String VALUE_TILE_OVERLAP = "DZT_tileOverlap";
     public static final String VALUE_TILE_SIZE = "DZT_tileSize";
     public static final String VALUE_QUALITY = "DZT_quality";
     public static final String VALUE_JAR_DIR = "DZT_jarDir";

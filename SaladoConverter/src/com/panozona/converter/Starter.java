@@ -11,8 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-/**
- *
+/** 
  * @author Marek
  */
 public class Starter {
@@ -30,7 +29,7 @@ public class Starter {
 
         try {
             prop.load(new FileInputStream(aggstngs.currentDirectory + File.separator + AggregatedSettings.FILE_PROPERTIES));
-            if (prop.getProperty(GESettings.VALUE_MEMORY_LIMIT) != null){
+            if (prop.getProperty(GESettings.VALUE_MEMORY_LIMIT) != null) {
                 aggstngs.ge.setMemoryLimit(Integer.parseInt(prop.getProperty(GESettings.VALUE_MEMORY_LIMIT)));
             }
         } catch (Exception ex) {

@@ -124,7 +124,7 @@ public class GESettings {
     }
 
     public void setRemoveObsolete(String value) {
-        if(value != null){
+        if (value != null) {
             remObsolete = value.equals("true");
         }
     }
@@ -146,7 +146,7 @@ public class GESettings {
     }
 
     public void setOverwriteOutput(String value) {
-        if (value != null){
+        if (value != null) {
             overwriteOutput = value.equals("true");
         }
     }

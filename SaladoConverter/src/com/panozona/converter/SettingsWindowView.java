@@ -26,23 +26,25 @@ import javax.swing.KeyStroke;
  */
 public class SettingsWindowView extends javax.swing.JFrame {
 
-    private String initialmemoryLimitValue = "-1";
-    private TaskSettingsView taskSettingsView;
     private TaskTableModel taskTableModel;
+    private AggregatedSettings aggstngs;
+    private String initialmemoryLimitValue = "-1";
+    private boolean allowCloseFlag;
 
     /** Creates new form SettingsWindowView */
     public SettingsWindowView(TaskTableModel taskTableModel) {
         initComponents();
-        this.taskTableModel = taskTableModel;
         setTitle("SaladoConverter settings");
         //setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
+        this.taskTableModel = taskTableModel;
+        aggstngs = AggregatedSettings.getInstance();
         allowCloseFlag = true;
 
         ActionListener actionListenerESC = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                dispose();
+                onClose();
             }
         };
 
@@ -59,10 +61,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         KeyStroke strokeENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         this.getRootPane().registerKeyboardAction(actionListenerENTER, strokeENTER, JComponent.WHEN_IN_FOCUSED_WINDOW);
-    }
 
-    public void setTaskSettingsViewReference(TaskSettingsView taskSettingsView) {
-        this.taskSettingsView = taskSettingsView;
     }
 
     /** This method is called from within the constructor to
@@ -125,6 +124,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jFileChooser.setName("jFileChooser"); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("Form"); // NOI18N
         setResizable(false);
 
@@ -602,13 +603,13 @@ public class SettingsWindowView extends javax.swing.JFrame {
             if (!initialmemoryLimitValue.equals(jTextFieldMemoryLimit.getText())) {
                 JOptionPane.showMessageDialog(this, Messages.GE_MEMORY_LIMIT_WARNING);
             }
-            this.dispose();
+            onClose();
         }
         allowCloseFlag = true;
     }//GEN-LAST:event_jButtonOKActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        this.dispose();
+        onClose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonGERestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGERestoreDefaultActionPerformed
@@ -687,8 +688,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonRESBrowseDirectoryActionPerformed
 
-    public void displayAggregatedSettings(AggregatedSettings aggstngs) {
-        this.aggstngs = aggstngs;
+    public void displayAggregatedSettings() {
 
         jComboBoxECInterpolation.setModel(new DefaultComboBoxModel(this.aggstngs.ec.getInterpolationNames()));
 
@@ -719,9 +719,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
             aggstngs.dzt.setTileOverlap(jTextFieldDZTTileOverlap.getText());
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());
-            //if (taskSettingsView != null){
-            //    taskSettingsView.fireTileSizeChanged();
-            //}
             taskTableModel.fireTableDataChanged();
 
             aggstngs.dzt.setQuality(jTextFieldDZTQuality.getText());
@@ -742,6 +739,10 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this, message);
         allowCloseFlag = false;
+    }
+
+    private void onClose() {
+        this.dispose();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AutosizeTab;
@@ -790,6 +791,4 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldMemoryLimit;
     private javax.swing.JTextField jTextFieldRESDirectory;
     // End of variables declaration//GEN-END:variables
-    private AggregatedSettings aggstngs;
-    private boolean allowCloseFlag;
 }

@@ -18,7 +18,7 @@ public class TaskData {
     public String state = STATE_READY;
     public Boolean checkBoxSelected = true;
     public Boolean checkBoxEnabled = false;
-    public boolean autosize;
+    public boolean autosize = true;
     private Panorama panorama;
     private int newTileSize;
     private int newCubeSize;
@@ -34,6 +34,20 @@ public class TaskData {
         return panorama;
     }
 
+    public void setNewTileSize(String value) throws IllegalArgumentException {
+        if (value != null) {
+            try {
+                if (Integer.parseInt(value) > 0) {
+                    newTileSize = Integer.parseInt(value);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.TSK_TILE_SIZE_ERROR);
+            }
+        }
+    }
+
     public void setNewTileSize(int value) throws IllegalArgumentException {
         if (value > 0) {
             newTileSize = value;
@@ -44,6 +58,20 @@ public class TaskData {
 
     public int getNewTileSize() {
         return newTileSize;
+    }
+
+    public void setNewCubeSize(String value) throws IllegalArgumentException {
+        if (value != null) {
+            try {
+                if (Integer.parseInt(value) > 0) {
+                    newCubeSize = Integer.parseInt(value);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.TSK_CUBE_SIZE_ERROR);
+            }
+        }
     }
 
     public void setNewCubeSize(int value) throws IllegalArgumentException {

@@ -6,6 +6,7 @@ package com.panozona.converter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -19,14 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.EventObject;
 import javax.swing.event.ListSelectionEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
-import org.jdesktop.application.Application.ExitListener;
 import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.maintable.TaskTableCheckBoxCellEditor;
 import com.panozona.converter.maintable.TaskTableCheckBoxCellRenderer;
@@ -36,6 +35,7 @@ import com.panozona.converter.utils.CurrentDirectoryFinder;
 import com.panozona.converter.utils.FileFilterAddTask;
 import com.panozona.converter.utils.FileFilterDir;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowListener;
 import javax.swing.event.ListSelectionListener;
 
 /**
@@ -46,7 +46,6 @@ public class MainWindowView extends FrameView {
     public MainWindowView(SingleFrameApplication app) {
         super(app);
         initComponents();
-
         CurrentDirectoryFinder finder = new CurrentDirectoryFinder();
 
         aggstngs = AggregatedSettings.getInstance();
@@ -114,7 +113,7 @@ public class MainWindowView extends FrameView {
         jButtonClearTasks.setEnabled(false);
         jButtonRunTasks.setEnabled(false);
 
-        controller = Controller.getInstance();        
+        controller = Controller.getInstance();
         controller.setTaskTableModel(taskTableModel);
         controller.setMainWindowView(this);
         controller.readSettingsFromFile();
@@ -124,23 +123,43 @@ public class MainWindowView extends FrameView {
 
         jTextFieldOutputDir.setText(aggstngs.ge.getOutputDir());
 
-        app.addExitListener(new ExitListener() {
+        this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.getFrame().addWindowListener(new WindowListener() {
 
             @Override
-            public boolean canExit(EventObject event) {
-                MainWindowView.this.controller.saveSettingsToFile();
-                //TODO: prompt for saving tasks
-                return true;
+            public void windowOpened(WindowEvent e) {
             }
 
             @Override
-            public void willExit(EventObject event) {
-                System.out.println("SaladoConverter exited");
-                getFrame().dispose();
+            public void windowClosing(WindowEvent e) {
+                controller.saveSettingsToFile();
+                SaladoConverter.getApplication().exit();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
             }
         });
 
         redirectSystemStreams();
+        logWindowView = new LogWindowView(this);
+        logWindowView.setLocationRelativeTo(SaladoConverter.getApplication().getMainFrame());
 
         // set application icon
         //this.getFrame().setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
@@ -194,10 +213,8 @@ public class MainWindowView extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                     InterfaceEnable();
-                    if (logWindowView != null) {
-                        logWindowView.setRunning(false);
-                        logWindowView.dispose();
-                    }
+                    logWindowView.setRunning(false);
+                    logWindowView.setVisible(false);
                 } else if ("message".equals(propertyName)) {
                     String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
@@ -585,10 +602,7 @@ public class MainWindowView extends FrameView {
             settingsWindowView.setLocationRelativeTo(mainFrame);
         }
         SaladoConverter.getApplication().show(settingsWindowView);
-        settingsWindowView.displayAggregatedSettings(aggstngs);
-        if (taskSettingsView != null) {
-            settingsWindowView.setTaskSettingsViewReference(taskSettingsView);
-        }
+        settingsWindowView.displayAggregatedSettings();
     }//GEN-LAST:event_fileMenuSettingsActionPerformed
 
     private void fileMenuLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuLogActionPerformed
@@ -596,11 +610,6 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_fileMenuLogActionPerformed
 
     private void showLog() {
-        if (logWindowView == null) {
-            JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
-            logWindowView = new LogWindowView(this);
-            logWindowView.setLocationRelativeTo(mainFrame);
-        }
         SaladoConverter.getApplication().show(logWindowView);
     }
 
@@ -611,15 +620,11 @@ public class MainWindowView extends FrameView {
         if (jTableTasks.getSelectedRow() >= 0) {
             TaskData taskData = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(jTableTasks.getSelectedRow()));
             if (taskSettingsView == null) {
-                JFrame mainFrame = SaladoConverter.getApplication().getMainFrame();
                 taskSettingsView = new TaskSettingsView(taskTableModel);
-                taskSettingsView.setLocationRelativeTo(mainFrame);
+                taskSettingsView.setLocationRelativeTo(SaladoConverter.getApplication().getMainFrame());
             }
             SaladoConverter.getApplication().show(taskSettingsView);
             taskSettingsView.displayTaskData(taskData);
-            if (settingsWindowView != null) {
-                settingsWindowView.setTaskSettingsViewReference(taskSettingsView);
-            }
         }
     }
 
@@ -660,9 +665,8 @@ public class MainWindowView extends FrameView {
     }//GEN-LAST:event_jButtonSelectOutputActionPerformed
 
     private void fileMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuExitActionPerformed
-        //TODO: prompt for saving tasks
         controller.saveSettingsToFile();
-        this.getApplication().exit();
+        SaladoConverter.getApplication().exit();
     }//GEN-LAST:event_fileMenuExitActionPerformed
 
     private void jButtonRunTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunTasksActionPerformed

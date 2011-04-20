@@ -1,7 +1,6 @@
 /*
  * SaladoConverter.java
  */
-
 package com.panozona.converter;
 
 import org.jdesktop.application.Application;
@@ -10,12 +9,13 @@ import org.jdesktop.application.SingleFrameApplication;
 /**
  * The main class of the application.
  */
-public class SaladoConverter extends SingleFrameApplication{
+public class SaladoConverter extends SingleFrameApplication {
 
     /**
      * At startup create and show the main frame of the application.
      */
-    @Override protected void startup() {        
+    @Override
+    protected void startup() {
         show(new MainWindowView(this));
     }
 
@@ -24,7 +24,8 @@ public class SaladoConverter extends SingleFrameApplication{
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
      */
-    @Override protected void configureWindow(java.awt.Window root) {
+    @Override
+    protected void configureWindow(java.awt.Window root) {
     }
 
     /**
@@ -40,5 +41,5 @@ public class SaladoConverter extends SingleFrameApplication{
      */
     public static void main(String[] args) {
         launch(SaladoConverter.class, args);
-    }    
+    }
 }

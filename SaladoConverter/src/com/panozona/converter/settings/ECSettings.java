@@ -10,8 +10,8 @@ public class ECSettings {
 
     public static final String JAR_CLASSNAME = "equirectangulartocubic.EquirectangularToCubic";
     public static final String JAR_FILENAME = "EquirectangularToCubic.jar";
-    public static final String VALUE_WALL_OVERLAP = "EC_overlap";
-    public static final String VALUE_INTERPOLATION = "EC_interp";
+    public static final String VALUE_WALL_OVERLAP = "EC_wallOverlap";
+    public static final String VALUE_INTERPOLATION = "EC_interpolation";
     public static final String VALUE_JAR_DIR = "EC_jarDir";
     private static final String INTERPOLATION_LANCZOS2 = "lanczos2";
     private static final String INTERPOLATION_BILINEAR = "bilinear";
