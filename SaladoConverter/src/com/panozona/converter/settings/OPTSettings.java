@@ -52,7 +52,7 @@ public class OPTSettings {
     }
 
     public void setMaxTileSize(int value) {
-        if (value > 0 && value > minTileSize) {
+        if (value > 0 && value >= minTileSize) {
             maxTileSize = value;
         } else {
             throw new IllegalArgumentException(Messages.OPT_MAX_TILE_SIZE_ERROR);
@@ -82,7 +82,7 @@ public class OPTSettings {
     }
 
     public void setMinTileSize(int value) {
-        if (value > 0 && value < maxTileSize) {
+        if (value > 0 && value <= maxTileSize) {
             minTileSize = value;
         } else {
             throw new IllegalArgumentException(Messages.OPT_MIN_TILE_SIZE_ERROR);

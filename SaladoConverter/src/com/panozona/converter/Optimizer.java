@@ -41,11 +41,19 @@ public class Optimizer {
     }
 
     private static int optimizeTileSize(int newCubeSize) {
-        for (int i = AggregatedSettings.getInstance().opt.getMinTileSize(); i <= AggregatedSettings.getInstance().opt.getMaxTileSize(); i++) {
+        AggregatedSettings aggstngs =AggregatedSettings.getInstance();
+        for (int i = aggstngs.opt.getMinTileSize(); i <= aggstngs.opt.getMaxTileSize(); i++) {
             if (newCubeSize % i == 0) {
                 return i;
             }
         }
-        return AggregatedSettings.getInstance().dzt.getTileSize();
+
+        if (aggstngs.opt.getMinTileSize() >= aggstngs.dzt.getTileSize()){
+            return aggstngs.opt.getMinTileSize();
+        }else if (aggstngs.opt.getMaxTileSize() <= aggstngs.dzt.getTileSize()){
+            return aggstngs.opt.getMaxTileSize();
+        }else{
+            return aggstngs.dzt.getTileSize();
+        }        
     }
 }
