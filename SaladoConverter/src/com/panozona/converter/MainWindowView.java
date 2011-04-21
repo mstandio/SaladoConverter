@@ -554,6 +554,7 @@ public class MainWindowView extends FrameView {
             }
         }
         jTableTasks.removeEditor();
+        controller.Optimize();
         controller.applyCommand();
         analyseTasks();
     }//GEN-LAST:event_jButtonAddTaskActionPerformed
@@ -793,7 +794,7 @@ public class MainWindowView extends FrameView {
         System.setErr(new PrintStream(out, true));
     }
 
-    private void showOptionPane(String message) {
+    public void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this.getFrame(), message);
 
     }

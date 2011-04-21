@@ -88,11 +88,7 @@ public class GESettings {
     public void setMemoryLimit(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Integer.parseInt(value) > 253) {
-                    memoryLimit = Integer.parseInt(value);
-                } else {
-                    throw new NumberFormatException();
-                }
+                setMemoryLimit(Integer.parseInt(value));
             } catch (NumberFormatException ex) {
                 throw new IllegalArgumentException(Messages.GE_MEMORY_LIMIT_ERROR);
             }

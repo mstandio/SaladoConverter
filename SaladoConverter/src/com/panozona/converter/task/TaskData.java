@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * @author Marek
+ * @author Marek Standio
  */
 public class TaskData {
 

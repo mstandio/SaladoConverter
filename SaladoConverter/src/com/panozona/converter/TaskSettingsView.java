@@ -219,7 +219,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
     private void jButtonTaskOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTaskOKActionPerformed
         collectAllData();
         if (allowCloseFlag) {
-            this.dispose();
+            this.dispose();            
             taskTableModel.fireTableDataChanged();
             controller.applyCommand();
         }
@@ -233,23 +233,31 @@ public class TaskSettingsView extends javax.swing.JFrame {
     private void jRadioButtonCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCustomActionPerformed
         jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected());
         jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected());
+        if (jRadioButtonAutosize.isSelected()) {
+            Optimizer.optimize(currentTaskData);
+            displayTaskData(currentTaskData);
+        }
 }//GEN-LAST:event_jRadioButtonCustomActionPerformed
 
     private void jRadioButtonAutosizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonAutosizeActionPerformed
         jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected());
         jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected());
+        if (jRadioButtonAutosize.isSelected()) {
+            Optimizer.optimize(currentTaskData);
+            displayTaskData(currentTaskData);
+        }
 }//GEN-LAST:event_jRadioButtonAutosizeActionPerformed
 
     public void displayTaskData(TaskData taskData) {
         currentTaskData = taskData;
 
-        jLabelTileDefaultCubeSize.setText(Integer.toString(taskData.getPanorama().getCubeSize()));
+        jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getPanorama().getCubeSize()));
         jLabelTileDefaultTileSize.setText(Integer.toString(AggregatedSettings.getInstance().dzt.getTileSize()));
 
-        jTextFieldCubeSize.setText(Integer.toString(taskData.getNewCubeSize()));
-        jTextFieldTileSize.setText(Integer.toString(taskData.getNewTileSize()));
+        jTextFieldCubeSize.setText(Integer.toString(currentTaskData.getNewCubeSize()));
+        jTextFieldTileSize.setText(Integer.toString(currentTaskData.getNewTileSize()));
 
-        if (taskData.autosize) {
+        if (currentTaskData.autosize) {
             jRadioButtonAutosize.setSelected(true);
         } else {
             jRadioButtonCustom.setSelected(false);

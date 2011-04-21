@@ -6,7 +6,7 @@ package com.panozona.converter.settings;
 public class AggregatedSettings {
     
     public GESettings ge;
-    public OPTSettings aus;
+    public OPTSettings opt;
     public ECSettings ec;
     public RESSettings res;
     public DZTSettings dzt;
@@ -22,7 +22,7 @@ public class AggregatedSettings {
     public void setCurrentDirectory(String value) {
         currentDirectory = value;
         ge = new GESettings(value);
-        aus = new OPTSettings();
+        opt = new OPTSettings();
         ec = new ECSettings(value);
         res = new RESSettings(value);
         dzt = new DZTSettings(value);

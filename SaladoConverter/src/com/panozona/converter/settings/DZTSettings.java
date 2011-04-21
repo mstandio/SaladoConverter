@@ -40,11 +40,7 @@ public class DZTSettings {
     public void setTileOverlap(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Integer.parseInt(value) >= 0) {
-                    tileOverlap = Integer.parseInt(value);
-                } else {
-                    throw new IllegalArgumentException();
-                }
+                setTileOverlap(Integer.parseInt(value));
             } catch (Exception ex) {
                 throw new IllegalArgumentException(Messages.DZT_TILE_OVERLAP_ERROR);
             }
@@ -74,11 +70,7 @@ public class DZTSettings {
     public void setTileSize(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Integer.parseInt(value) > 0) {
-                    tileSize = Integer.parseInt(value);
-                } else {
-                    throw new IllegalArgumentException();
-                }
+                setTileSize(Integer.parseInt(value));
             } catch (Exception ex) {
                 throw new IllegalArgumentException(Messages.DZT_TILESIZE_ERROR);
             }
@@ -108,11 +100,7 @@ public class DZTSettings {
     public void setQuality(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Float.parseFloat(value) > 0f && Float.parseFloat(value) <= 1f) {
-                    quality = Float.parseFloat(value);
-                } else {
-                    throw new IllegalArgumentException();
-                }
+                setQuality(Float.parseFloat(value));
             } catch (Exception ex) {
                 throw new IllegalArgumentException(Messages.DZT_QUALITY_ERROR);
             }

@@ -82,10 +82,18 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldGEDirectory = new javax.swing.JTextField();
         jButtonGEBrowseDirectory = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldMemoryLimit = new javax.swing.JTextField();
+        jTextFieldGEMemoryLimit = new javax.swing.JTextField();
         jCheckBoxGERemoveObsoleteDZ = new javax.swing.JCheckBox();
         jCheckBoxGEOverwriteOutput = new javax.swing.JCheckBox();
         AutosizeTab = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jButtonOPTRestoreDefault = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextFieldOPTResizePercent = new javax.swing.JTextField();
+        jTextFieldOPTMaxTileSize = new javax.swing.JTextField();
+        jTextFieldOPTMinTileSize = new javax.swing.JTextField();
         ComponentsTab = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         EquirectangularToCubicTab = new javax.swing.JPanel();
@@ -163,8 +171,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        jTextFieldMemoryLimit.setText(resourceMap.getString("jTextFieldMemoryLimit.text")); // NOI18N
-        jTextFieldMemoryLimit.setName("jTextFieldMemoryLimit"); // NOI18N
+        jTextFieldGEMemoryLimit.setText(resourceMap.getString("jTextFieldGEMemoryLimit.text")); // NOI18N
+        jTextFieldGEMemoryLimit.setName("jTextFieldGEMemoryLimit"); // NOI18N
 
         jCheckBoxGERemoveObsoleteDZ.setText(resourceMap.getString("jCheckBoxGERemoveObsoleteDZ.text")); // NOI18N
         jCheckBoxGERemoveObsoleteDZ.setName("jCheckBoxGERemoveObsoleteDZ"); // NOI18N
@@ -186,13 +194,13 @@ public class SettingsWindowView extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxGERemoveObsoleteDZ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxGERemoveObsoleteDZ, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                                .addComponent(jTextFieldGEDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonGEBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
-                            .addComponent(jCheckBoxGEOverwriteOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldGEMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxGEOverwriteOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -205,7 +213,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jButtonGEBrowseDirectory))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldMemoryLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldGEMemoryLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addComponent(jCheckBoxGERemoveObsoleteDZ)
@@ -237,15 +245,89 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         AutosizeTab.setName("AutosizeTab"); // NOI18N
 
+        jPanel5.setName("jPanel5"); // NOI18N
+
+        jButtonOPTRestoreDefault.setText(resourceMap.getString("jButtonOPTRestoreDefault.text")); // NOI18N
+        jButtonOPTRestoreDefault.setName("jButtonOPTRestoreDefault"); // NOI18N
+        jButtonOPTRestoreDefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOPTRestoreDefaultActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        jLabel6.setText(resourceMap.getString("jLabel6.text")); // NOI18N
+        jLabel6.setName("jLabel6"); // NOI18N
+
+        jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
+        jLabel12.setName("jLabel12"); // NOI18N
+
+        jTextFieldOPTResizePercent.setText(resourceMap.getString("jTextFieldOPTResizePercent.text")); // NOI18N
+        jTextFieldOPTResizePercent.setName("jTextFieldOPTResizePercent"); // NOI18N
+
+        jTextFieldOPTMaxTileSize.setText(resourceMap.getString("jTextFieldOPTMaxTileSize.text")); // NOI18N
+        jTextFieldOPTMaxTileSize.setName("jTextFieldOPTMaxTileSize"); // NOI18N
+
+        jTextFieldOPTMinTileSize.setText(resourceMap.getString("jTextFieldOPTMinTileSize.text")); // NOI18N
+        jTextFieldOPTMinTileSize.setName("jTextFieldOPTMinTileSize"); // NOI18N
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonOPTRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldOPTMinTileSize)
+                            .addComponent(jTextFieldOPTMaxTileSize)
+                            .addComponent(jTextFieldOPTResizePercent, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldOPTResizePercent, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldOPTMaxTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(jTextFieldOPTMinTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addComponent(jButtonOPTRestoreDefault)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout AutosizeTabLayout = new javax.swing.GroupLayout(AutosizeTab);
         AutosizeTab.setLayout(AutosizeTabLayout);
         AutosizeTabLayout.setHorizontalGroup(
             AutosizeTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 441, Short.MAX_VALUE)
+            .addGroup(AutosizeTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         AutosizeTabLayout.setVerticalGroup(
             AutosizeTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
+            .addGroup(AutosizeTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         TabbedPane.addTab(resourceMap.getString("AutosizeTab.TabConstraints.tabTitle"), AutosizeTab); // NOI18N
@@ -307,11 +389,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addGap(17, 17, 17)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                                .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonECBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                            .addComponent(jComboBoxECInterpolation, 0, 297, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldECOverlap, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                            .addComponent(jComboBoxECInterpolation, 0, 328, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -412,12 +494,12 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                                .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonDZTBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldDZTTileOverlap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldDZTTileOverlap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDZTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDZTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -500,7 +582,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(10, 10, 10)
-                        .addComponent(jTextFieldRESDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                        .addComponent(jTextFieldRESDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonRESBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -541,7 +623,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         ComponentsTab.setLayout(ComponentsTabLayout);
         ComponentsTabLayout.setHorizontalGroup(
             ComponentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
         ComponentsTabLayout.setVerticalGroup(
             ComponentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -577,7 +659,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                         .addComponent(jButtonOK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel))
-                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
+                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -600,9 +682,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
         collectAllData();
         if (allowCloseFlag) {
-            if (!initialmemoryLimitValue.equals(jTextFieldMemoryLimit.getText())) {
+            if (!initialmemoryLimitValue.equals(jTextFieldGEMemoryLimit.getText())) {
                 JOptionPane.showMessageDialog(this, Messages.GE_MEMORY_LIMIT_WARNING);
             }
+            Controller.getInstance().Optimize();
+            taskTableModel.fireTableDataChanged();
             onClose();
         }
         allowCloseFlag = true;
@@ -614,7 +698,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
     private void jButtonGERestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGERestoreDefaultActionPerformed
         jTextFieldGEDirectory.setText(aggstngs.ge.getDefaultTmpDir());
-        jTextFieldMemoryLimit.setText(Integer.toString(aggstngs.ge.getDefaultMemoryLimit()));
+        jTextFieldGEMemoryLimit.setText(Integer.toString(aggstngs.ge.getDefaultMemoryLimit()));
         jCheckBoxGERemoveObsoleteDZ.setSelected(aggstngs.ge.getDefaultRemoveObsolete());
         jCheckBoxGEOverwriteOutput.setSelected(aggstngs.ge.getDefaultOverwriteOutput());
     }//GEN-LAST:event_jButtonGERestoreDefaultActionPerformed
@@ -688,15 +772,25 @@ public class SettingsWindowView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonRESBrowseDirectoryActionPerformed
 
+    private void jButtonOPTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOPTRestoreDefaultActionPerformed
+        jTextFieldOPTResizePercent.setText(Integer.toString(aggstngs.opt.getDefaultResizePercent()));
+        jTextFieldOPTMaxTileSize.setText(Integer.toString(aggstngs.opt.getDefaultMaxTileSize()));
+        jTextFieldOPTMinTileSize.setText(Integer.toString(aggstngs.opt.getDefaultMinTileSize()));
+    }//GEN-LAST:event_jButtonOPTRestoreDefaultActionPerformed
+
     public void displayAggregatedSettings() {
 
         jComboBoxECInterpolation.setModel(new DefaultComboBoxModel(this.aggstngs.ec.getInterpolationNames()));
 
         jTextFieldGEDirectory.setText(aggstngs.ge.getTmpDir());
-        jTextFieldMemoryLimit.setText(Integer.toString(aggstngs.ge.getMemoryLimit()));
+        jTextFieldGEMemoryLimit.setText(Integer.toString(aggstngs.ge.getMemoryLimit()));
         initialmemoryLimitValue = Integer.toString(aggstngs.ge.getMemoryLimit());
         jCheckBoxGERemoveObsoleteDZ.setSelected(aggstngs.ge.getRemoveObsolete());
         jCheckBoxGEOverwriteOutput.setSelected(aggstngs.ge.getOverwriteOutput());
+
+        jTextFieldOPTResizePercent.setText(Integer.toString(aggstngs.opt.getResizePercent()));
+        jTextFieldOPTMaxTileSize.setText(Integer.toString(aggstngs.opt.getMaxTileSize()));
+        jTextFieldOPTMinTileSize.setText(Integer.toString(aggstngs.opt.getMinTileSize()));
 
         jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getTileOverlap()));
         jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getTileSize()));
@@ -713,13 +807,16 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private void collectAllData() {
         try {
             aggstngs.ge.setTmpDir(jTextFieldGEDirectory.getText());
-            aggstngs.ge.setMemoryLimit(jTextFieldMemoryLimit.getText());
+            aggstngs.ge.setMemoryLimit(jTextFieldGEMemoryLimit.getText());
             aggstngs.ge.setRemoveObsolete(jCheckBoxGERemoveObsoleteDZ.isSelected());
             aggstngs.ge.setOverwriteOutput(jCheckBoxGEOverwriteOutput.isSelected());
 
+            aggstngs.opt.setResizePercent(jTextFieldOPTResizePercent.getText());
+            aggstngs.opt.setMaxTileSize(jTextFieldOPTMaxTileSize.getText());
+            aggstngs.opt.setMinTileSize(jTextFieldOPTMinTileSize.getText());
+
             aggstngs.dzt.setTileOverlap(jTextFieldDZTTileOverlap.getText());
-            aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());
-            taskTableModel.fireTableDataChanged();
+            aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());            
 
             aggstngs.dzt.setQuality(jTextFieldDZTQuality.getText());
             aggstngs.dzt.setJarDir(jTextFieldDZTDirectory.getText());
@@ -760,19 +857,23 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JButton jButtonGEBrowseDirectory;
     private javax.swing.JButton jButtonGERestoreDefault;
     private javax.swing.JButton jButtonOK;
+    private javax.swing.JButton jButtonOPTRestoreDefault;
     private javax.swing.JButton jButtonRESBrowseDirectory;
     private javax.swing.JButton jButtonRESRestoreDefault;
     private javax.swing.JCheckBox jCheckBoxGEOverwriteOutput;
     private javax.swing.JCheckBox jCheckBoxGERemoveObsoleteDZ;
     private javax.swing.JComboBox jComboBoxECInterpolation;
     private javax.swing.JFileChooser jFileChooser;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -780,6 +881,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextFieldDZTDirectory;
     private javax.swing.JTextField jTextFieldDZTQuality;
@@ -788,7 +890,10 @@ public class SettingsWindowView extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldECDirectory;
     private javax.swing.JTextField jTextFieldECOverlap;
     private javax.swing.JTextField jTextFieldGEDirectory;
-    private javax.swing.JTextField jTextFieldMemoryLimit;
+    private javax.swing.JTextField jTextFieldGEMemoryLimit;
+    private javax.swing.JTextField jTextFieldOPTMaxTileSize;
+    private javax.swing.JTextField jTextFieldOPTMinTileSize;
+    private javax.swing.JTextField jTextFieldOPTResizePercent;
     private javax.swing.JTextField jTextFieldRESDirectory;
     // End of variables declaration//GEN-END:variables
 }

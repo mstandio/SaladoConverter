@@ -18,6 +18,9 @@ public class Messages {
     public final static String GE_OUTPUT_DIR_ERROR = "Invalid output directory";
     public final static String GE_INPUT_DIR_ERROR = "Invalid input directory";
     public final static String GE_COMMAND_ERROR = "Invalid command";
+    public final static String OPT_RESIZE_PERCENT_ERROR = "Invalid Autosize Resize percent value";
+    public final static String OPT_MAX_TILE_SIZE_ERROR = "Invalid Autosize Max tile size value";
+    public final static String OPT_MIN_TILE_SIZE_ERROR = "Invalid Autosize Min tile size value";
     public final static String TSK_TILE_SIZE_ERROR = "Invalid Tile size value";
     public final static String TSK_CUBE_SIZE_ERROR = "Invalid Cube size value";
     public final static String RES_JAR_DIR_ERROR = "Invalid Resizer *.jar directory";

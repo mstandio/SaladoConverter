@@ -27,6 +27,7 @@ import com.panozona.converter.task.Image;
 import com.panozona.converter.utils.FileFilterAddTask;
 import com.panozona.converter.utils.TasksExecutor;
 import com.panozona.converter.maintable.TaskTableModel;
+import com.panozona.converter.settings.OPTSettings;
 import com.panozona.converter.settings.RESSettings;
 import com.panozona.converter.task.PanoramaTypes;
 import com.panozona.converter.utils.ImageDimensionsChecker;
@@ -107,14 +108,18 @@ public class Controller {
                         System.out.println("Cube wall: " + image.path);
                     }
                 }
-            }
-
-            if (cubeWalls.size() == 6) {
-                TaskData newTask = new TaskData(new Panorama(collectedImages));
-                newTask.state = TaskData.STATE_READY;
-                appendTask(newTask);
-            } else {
-                System.out.println("Not enough cube walls: " + cubeWalls.size());
+                if (cubeWalls.size() == 6) {
+                    TaskData newTask = new TaskData(new Panorama(collectedImages));
+                    newTask.state = TaskData.STATE_READY;
+                    appendTask(newTask);
+                } else {
+                    StringBuilder sb = new StringBuilder("Not enough walls (" + cubeWalls.size() + ")");
+                    for (Image cubeWall : cubeWalls) {
+                        sb.append("\n");
+                        sb.append(cubeWall.path.substring(cubeWall.path.lastIndexOf(File.separator) + 1));                        
+                    }
+                    mainWindowView.showOptionPane(sb.toString());
+                }
             }
         }
     }
@@ -146,6 +151,9 @@ public class Controller {
                     contents.add(image);
                 }
                 return;
+
+            } else {
+                mainWindowView.showOptionPane("Invalid image proportions: " + selectedFile.getName());
             }
 
             // file is directory, so it needs to iterate through its content
@@ -178,9 +186,14 @@ public class Controller {
         taskTableModel.fireTableDataChanged();
     }
 
+    public void Optimize() {
+        for (int i = 0; i < taskTableModel.getRowCount(); i++) {
+            Optimizer.optimize(taskTableModel.rows.get(i));
+        }
+    }
+
     public void applyCommand() {
         boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_DEEPZOOM_CUBIC) || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
-
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             if (taskTableModel.rows.get(i).getPanorama().getPanoramaType() == PanoramaTypes.equirectangular) {
                 taskTableModel.rows.get(i).checkBoxEnabled = !cubic;
@@ -196,6 +209,7 @@ public class Controller {
                 }
             }
         }
+
         taskTableModel.fireTableDataChanged();
         mainWindowView.analyseTasks();
     }
@@ -515,6 +529,10 @@ public class Controller {
                 aggstngs.ge.setOutputDir(prop.getProperty(GESettings.VALUE_OUTPUT_DIR));
                 aggstngs.ge.setSelectedCommand(prop.getProperty(GESettings.VALUE_SELECTED_COMMAND));
 
+                aggstngs.opt.setResizePercent(prop.getProperty(OPTSettings.VALUE_RESIZE_PERCENT));
+                aggstngs.opt.setMaxTileSize(prop.getProperty(OPTSettings.VALUE_MAX_TILE_SIZE));
+                aggstngs.opt.setMinTileSize(prop.getProperty(OPTSettings.VALUE_MIN_TILE_SIZE));
+
             } catch (IllegalArgumentException ex) {
                 // TODO: indicate error
                 System.out.println("corrupted settings file not all settings red.");
@@ -577,6 +595,16 @@ public class Controller {
         }
         if (aggstngs.ge.selectedCommandChanged()) {
             prop.put(GESettings.VALUE_SELECTED_COMMAND, aggstngs.ge.getSelectedCommand());
+        }
+
+        if (aggstngs.opt.resizePercentChanged()) {
+            prop.put(OPTSettings.VALUE_RESIZE_PERCENT, Integer.toString(aggstngs.opt.getResizePercent()));
+        }
+        if (aggstngs.opt.maxTileSizeChanged()) {
+            prop.put(OPTSettings.VALUE_MAX_TILE_SIZE, Integer.toString(aggstngs.opt.getMaxTileSize()));
+        }
+        if (aggstngs.opt.minTileSizeChanged()) {
+            prop.put(OPTSettings.VALUE_MIN_TILE_SIZE, Integer.toString(aggstngs.opt.getMinTileSize()));
         }
 
         try {

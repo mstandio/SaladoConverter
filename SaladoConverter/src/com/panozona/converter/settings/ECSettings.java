@@ -43,11 +43,7 @@ public class ECSettings {
     public void setWallOverlap(String value) throws IllegalArgumentException {
         if (value != null) {
             try {
-                if (Integer.parseInt(value) >= 0) {
-                    wallOverlap = Integer.parseInt(value);
-                } else {
-                    throw new IllegalArgumentException();
-                }
+                setWallOverlap(Integer.parseInt(value));
             } catch (Exception ex) {
                 throw new IllegalArgumentException(Messages.EC_WALL_OVERLAP_ERROR);
             }
