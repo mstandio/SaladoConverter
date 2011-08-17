@@ -80,5 +80,7 @@
         <delete file="dist/${application.title}.SOURCES.zip"/>
         <zip destfile="dist/${application.title}.SOURCES.zip" basedir="src" includes="**/*.java"/>
     </target>
+	
+	
  
 </project>
