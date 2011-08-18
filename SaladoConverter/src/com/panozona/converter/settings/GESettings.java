@@ -1,6 +1,7 @@
 package com.panozona.converter.settings;
 
 import com.panozona.converter.utils.Messages;
+import com.panozona.converter.utils.Naming;
 import java.io.File;
 
 /**
@@ -17,8 +18,13 @@ public class GESettings {
     public static final String VALUE_SELECTED_COMMAND = "GE_selected_commmand";
     public static final String COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC = "Equirectangular to Deep Zoom cubic";
     public static final String COMMAND_CUBIC_TO_DEEPZOOM_CUBIC = "Cubic to Deep Zoom cubic";
+    public static final String COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC = "Equirectangular to Zoomify cubic";
+    public static final String COMMAND_CUBIC_TO_ZOOMIFY_CUBIC = "Cubic to Zoomify cubic";
     public static final String COMMAND_EQUIRECTANGULAR_TO_CUBIC = "Equirectangular to cubic";
     public static final String COMMAND_CUBIC_TO_RESIZED_CUBIC = "Cubic to resized cubic";
+
+    public final Naming naming = new Naming();
+
     private String tmpDir;
     private int memoryLimit;
     private String outputDir;
@@ -27,12 +33,12 @@ public class GESettings {
     private String inputDir;
     private String selectedCommand;
     private String defaultTmpDir = "";
-    private int defaultMemoryLimit = 1024;
+    private int defaultMemoryLimit = 2048;
     private boolean defaultRemObsolete = true;
     private boolean defaultOverwriteOutput = false;
     private String defaultOutputDir = "";
     private String defaultInputDir = "";
-    private final String defaultSelectedCommand = COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC;
+    private final String defaultSelectedCommand = COMMAND_CUBIC_TO_ZOOMIFY_CUBIC;
 
     public GESettings(String currentDirectory) {
         defaultTmpDir = currentDirectory
@@ -55,8 +61,10 @@ public class GESettings {
 
     public String[] getCommandNames() {
         return new String[]{
-                    COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC,
-                    COMMAND_CUBIC_TO_DEEPZOOM_CUBIC,
+                    //COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC,
+                    //COMMAND_CUBIC_TO_DEEPZOOM_CUBIC,
+                    COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC,
+                    COMMAND_CUBIC_TO_ZOOMIFY_CUBIC,
                     COMMAND_EQUIRECTANGULAR_TO_CUBIC,
                     COMMAND_CUBIC_TO_RESIZED_CUBIC
                 };
@@ -209,6 +217,8 @@ public class GESettings {
         if (value != null) {
             if (value.equals(COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC)
                     || value.equals(COMMAND_CUBIC_TO_DEEPZOOM_CUBIC)
+                    || value.equals(COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC)
+                    || value.equals(COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)
                     || value.equals(COMMAND_EQUIRECTANGULAR_TO_CUBIC)
                     || value.equals(COMMAND_CUBIC_TO_RESIZED_CUBIC)) {
                 selectedCommand = value;
