@@ -26,7 +26,7 @@ import javax.media.jai.JAI;
  */
 public class EquirectangularToCubic {
 
-    static final String help = "\nEquirectangularToCubic v1.4\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n"
+    static final String help = "\nEquirectangularToCubic v1.5\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n"
             + "[args...] For a list of java options try: java -help or java -X for a\n"
             + "list of less comon options. Loading large images for conversion takes a\n"
             + "lot of RAM so you will find the -Xmx option useful to raise Java's maximum\n"
@@ -48,6 +48,11 @@ public class EquirectangularToCubic {
             + "\tand bilinear are the highest quality. Nearest-neighbor is faster \n"
             + "\tand generally lower quality, although it preserves sharp edges better. \n"
             + "\tDefault is lanczos2. \n\n"
+            + "-naming: possible values are: numbers and letters.\n"
+            + "\tSets naming convention for outputed cube walls. For following walls \n"
+            + "\t(front, right, back, left, top, bottom) \"letters\" value gives\n"
+            + "\t(_f _r _b _l _t _b) and \"numbers\" value gives (_0 _1 _2 _3 _4 _5)\n"
+            + "\tDefault is letters. \n\n"
             + "-outputdir or -o: the output directory for the converted images. It need\n"
             + "\tnot exist. Default is a folder next to the input folder or file, with \n"
             + "\t'cubic_' prepended to the name of the input (input files will have the \n"
@@ -66,15 +71,18 @@ public class EquirectangularToCubic {
             + "Fulvio Senore, and other contributors to PTViewer, say thanks!\n";
     static final String LANCZOS2 = "lanczos2";
     static final String BILINEAR = "bilinear";
+    static final String LETTERS = "letters";
+    static final String NUMBERS = "numbers";
     static final String NEAREST_NEIGHBOUR = "nearest-neighbor";
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, OVERLAP, INPUTFILE, INTERPOLATION, QUALITY, RESIZE
+        DEFAULT, OUTPUTDIR, OVERLAP, INPUTFILE, INTERPOLATION, NAMING, QUALITY, RESIZE
     }
     // The following can be overriden/set by the indicated command line arguments    
     static boolean showHelp = false;            // -help | -h
     static String interpolation = LANCZOS2;     // -interpolation (lanczos2, bilinear, nearest-neighbor)
+    static String naming = LETTERS;             // -naming (letters, numbers)
     static int overlap = 1;           	        // -overlap
     static File outputDir = null;               // -outputdir | -o
     static boolean simpleoutput = false;        // -simpleoutput | -s
@@ -192,6 +200,8 @@ public class EquirectangularToCubic {
                         state = CmdParseState.OVERLAP;
                     } else if (arg.equals("-interpolation")) {
                         state = CmdParseState.INTERPOLATION;
+                    } else if (arg.equals("-naming")) {
+                        state = CmdParseState.NAMING;
                     } else {
                         state = CmdParseState.INPUTFILE;
                     }
@@ -210,7 +220,10 @@ public class EquirectangularToCubic {
                     interpolation = args[count];
                     state = CmdParseState.DEFAULT;
                     break;
-
+               case NAMING:
+                    naming = args[count];
+                    state = CmdParseState.DEFAULT;
+                    break;
             }
 
             if (state == CmdParseState.INPUTFILE) {
@@ -315,8 +328,8 @@ public class EquirectangularToCubic {
         imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
-        output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_f");
+        output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);        
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_0" : "_f"));
         output.flush();
         Arrays.fill(rectData, 0);
         imgBuf.printStats();
@@ -327,7 +340,7 @@ public class EquirectangularToCubic {
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_r");
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_1" : "_r"));
         output.flush();
         Arrays.fill(rectData, 0);
         imgBuf.printStats();
@@ -338,7 +351,7 @@ public class EquirectangularToCubic {
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_b");
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_2" : "_b"));
         output.flush();
         Arrays.fill(rectData, 0);
         imgBuf.printStats();
@@ -349,7 +362,7 @@ public class EquirectangularToCubic {
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_l");
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_3" : "_l"));
         output.flush();
         Arrays.fill(rectData, 0);
         imgBuf.printStats();
@@ -360,7 +373,7 @@ public class EquirectangularToCubic {
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_u");
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_4" : "_u"));
         output.flush();
         Arrays.fill(rectData, 0);
         imgBuf.printStats();
@@ -371,7 +384,7 @@ public class EquirectangularToCubic {
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
         output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
-        saveImage(output, outputDir + File.separator + nameWithoutExtension + "_d");
+        saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_5" : "_d"));
         output.flush();
         imgBuf.printStats();
     }

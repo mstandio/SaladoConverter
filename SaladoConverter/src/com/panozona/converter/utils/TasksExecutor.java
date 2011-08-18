@@ -8,12 +8,12 @@ import com.panozona.converter.task.TaskData;
 import com.panozona.converter.task.Operation;
 import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.RESSettings;
+import com.panozona.converter.settings.ZYTSettings;
 import org.jdesktop.application.Task;
 import java.io.File;
 
-/**
- *
- * @author Marek
+/** 
+ * @author Marek Standio
  */
 public class TasksExecutor extends Task<Void, Void> {
 
@@ -63,6 +63,9 @@ public class TasksExecutor extends Task<Void, Void> {
                     try {
                         if (taskOperation.type.equals(Operation.TYPE_DZT)) {
                             componentInvoker.run(aggstngs.dzt.getJarDir(), DZTSettings.JAR_CLASSNAME, taskOperation.args);
+                            numOperationsDone++;
+                        }else if (taskOperation.type.equals(Operation.TYPE_ZYT)) {
+                            componentInvoker.run(aggstngs.zyt.getJarDir(), ZYTSettings.JAR_CLASSNAME, taskOperation.args);
                             numOperationsDone++;
                         } else if (taskOperation.type.equals(Operation.TYPE_EC)) {
                             componentInvoker.run(aggstngs.ec.getJarDir(), ECSettings.JAR_CLASSNAME, taskOperation.args);

@@ -11,7 +11,10 @@ public class Messages {
     public final static String DZT_TILE_OVERLAP_ERROR = "Invalid DeepZoomTiler Tile overlap value";
     public final static String DZT_QUALITY_ERROR = "Invalid DeepZoomTiler Quality value";
     public final static String DZT_TILESIZE_ERROR = "Invalid DeepZoomTiler Tile size value";
-    public final static String DZT_JAR_DIR_ERROR = "Invalid DeepZoomTiler *.jar directory";
+    public final static String DZT_JAR_DIR_ERROR = "Invalid DeepZoomTiler *.jar directory";    
+    public final static String ZYT_QUALITY_ERROR = "Invalid ZoomifyTiler Quality value";
+    public final static String ZYT_TILESIZE_ERROR = "Invalid ZoomifyTiler Tile size value";
+    public final static String ZYT_JAR_DIR_ERROR = "Invalid ZoomifyTiler *.jar directory";
     public final static String GE_TMP_DIR_ERROR = "Invalid tmp directory";
     public final static String GE_MEMORY_LIMIT_ERROR = "Invalid memory limit value";
     public final static String GE_MEMORY_LIMIT_WARNING = "Restart application in order for memory limit changes to take effect";
