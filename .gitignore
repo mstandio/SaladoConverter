@@ -27,3 +27,7 @@
 /Resizer/manifest.mf
 /Resizer/build.xml
 /SaladoConverter/nbproject
+/EquirectangularToCubic/nbproject
+/DeepZoomTiler/build.xml
+/DeepZoomTiler/nbproject
+/Resizer/nbproject
