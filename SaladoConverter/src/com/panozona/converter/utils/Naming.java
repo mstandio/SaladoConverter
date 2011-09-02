@@ -73,4 +73,28 @@ public class Naming {
             return "[0|1|2|3|4|5]";
         }
     }
+    
+    public static boolean recognizeFront(String name){
+        return(name.matches("^.+(_f|_0|_11|_front)$"));
+    }
+    
+    public static boolean recognizeRight(String name){
+        return(name.matches("^.+(_r|_1|_22|_right)$"));
+    }
+    
+    public static boolean recognizeBack(String name){
+        return(name.matches("^.+(_b|_2|_33|_back)$"));
+    }
+    
+    public static boolean recognizeLeft(String name){
+        return(name.matches("^.+(_l|_3|_44|_left)$"));
+    }
+    
+    public static boolean recognizeUp(String name){
+        return(name.matches("^.+(_u|_4|_55|_up)$"));
+    }
+    
+    public static boolean recognizeDown(String name){
+        return(name.matches("^.+(_d|_5|_66|_down)$"));
+    }
 }

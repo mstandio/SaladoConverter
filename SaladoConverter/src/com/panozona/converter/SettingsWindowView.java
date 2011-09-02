@@ -921,6 +921,10 @@ private void jButtonZYTRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
         jTextFieldOPTResizePercent.setText(Integer.toString(aggstngs.opt.getResizePercent()));
         jTextFieldOPTMaxTileSize.setText(Integer.toString(aggstngs.opt.getMaxTileSize()));
         jTextFieldOPTMinTileSize.setText(Integer.toString(aggstngs.opt.getMinTileSize()));
+        
+        jTextFieldZYTTileSize.setText(Integer.toString(aggstngs.zyt.getTileSize()));
+        jTextFieldZYTQuality.setText(Float.toString(aggstngs.zyt.getQuality()));
+        jTextFieldZYTDirectory.setText(aggstngs.zyt.getJarDir());
 
         jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getTileOverlap()));
         jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getTileSize()));

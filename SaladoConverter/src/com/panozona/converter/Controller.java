@@ -119,7 +119,7 @@ public class Controller {
                     StringBuilder sb = new StringBuilder("Not enough walls (" + cubeWalls.size() + ")");
                     for (Image cubeWall : cubeWalls) {
                         sb.append("\n");
-                        sb.append(cubeWall.path.substring(cubeWall.path.lastIndexOf(File.separator) + 1));                        
+                        sb.append(cubeWall.path.substring(cubeWall.path.lastIndexOf(File.separator) + 1));
                     }
                     mainWindowView.showOptionPane(sb.toString());
                 }
@@ -196,7 +196,7 @@ public class Controller {
     }
 
     public void applyCommand() {
-        boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_DEEPZOOM_CUBIC) 
+        boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_DEEPZOOM_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
@@ -312,7 +312,7 @@ public class Controller {
     private void generateOpETC(TaskData taskData) {
         String nameWithoutExtension;
         String outputDir;
-        
+
         // there is only one image
         for (Image image : taskData.getPanorama().getImages()) {
             nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
@@ -404,7 +404,7 @@ public class Controller {
     }
 
     //Equirectangular to Zoomify cubic
-        private void generateOpETZYC(TaskData taskData) {
+    private void generateOpETZYC(TaskData taskData) {
         String nameWithoutExtension;
         String cubeFile;
         String outputDir;
@@ -419,6 +419,7 @@ public class Controller {
             taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir())));
 
             outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + nameWithoutExtension);
+            new File(outputDir).mkdir();
 
             if (taskData.cubeSizeChanged()) {
                 resizedFile = resDir + File.separator + nameWithoutExtension;
@@ -438,12 +439,12 @@ public class Controller {
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getUp() + ".tif"}));
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getDown() + ".tif"}));
 
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getFront() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getRight() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getBack() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getLeft() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getUp() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getDown() + ".tif", outputDir, taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getFront() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getFront(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getRight() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getRight(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getBack() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getBack(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getLeft() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getLeft(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getUp() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getUp(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resizedFile + aggstngs.ge.naming.getDown() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getDown(), taskData.getNewTileSize())));
 
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getFront() + ".tif"}));
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -453,12 +454,13 @@ public class Controller {
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getDown() + ".tif"}));
 
             } else {
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getFront() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getRight() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getBack() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getLeft() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getUp() + ".tif", outputDir, taskData.getNewTileSize())));
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getDown() + ".tif", outputDir, taskData.getNewTileSize())));
+
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getFront() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getFront(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getRight() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getRight(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getBack() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getBack(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getLeft() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getLeft(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getUp() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getUp(), taskData.getNewTileSize())));
+                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(cubeFile + aggstngs.ge.naming.getDown() + ".tif", outputDir + File.separator + nameWithoutExtension + aggstngs.ge.naming.getDown(), taskData.getNewTileSize())));
 
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif"}));
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -474,33 +476,68 @@ public class Controller {
     private void generateOpCTZYC(TaskData taskData) {
         String parentFolderName;
         String nameWithoutExtension;
+        String nameWithoutDescription;
         String[] tmp;
         String outputDir;
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
+
+        tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));
+        parentFolderName = tmp[tmp.length - 2];
+        outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + parentFolderName);
+        new File(outputDir).mkdir();
+
         for (Image image : taskData.getPanorama().getImages()) {
-            tmp = image.path.split(Pattern.quote(File.separator));
-            parentFolderName = tmp[tmp.length - 2];
-
-            outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + parentFolderName);
             nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
+            nameWithoutDescription = nameWithoutExtension.substring(0, nameWithoutExtension.lastIndexOf("_"));
 
-            if (taskData.cubeSizeChanged()) {
-
-                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
-
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir, taskData.getNewTileSize())));
-
-                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
-
-            } else {
-                taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir, taskData.getNewTileSize())));
-            }
-
-            if (aggstngs.ge.getRemoveObsolete()) {
-                if (!nameWithoutExtension.endsWith(aggstngs.ge.naming.getFront())) {
-                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{outputDir + File.separator + nameWithoutExtension + ".xml"}));
+            if (Naming.recognizeFront(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getFront(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getFront(), taskData.getNewTileSize())));
                 }
-                removeObsoleteDeepZoomImages(taskData, outputDir + File.separator + nameWithoutExtension);
+            } else if (Naming.recognizeRight(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getRight(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getRight(), taskData.getNewTileSize())));
+                }
+            } else if (Naming.recognizeBack(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getBack(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getBack(), taskData.getNewTileSize())));
+                }
+            } else if (Naming.recognizeLeft(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getLeft(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getLeft(), taskData.getNewTileSize())));
+                }
+            } else if (Naming.recognizeUp(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getUp(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getUp(), taskData.getNewTileSize())));
+                }
+            } else if (Naming.recognizeDown(nameWithoutExtension)) {
+                if (taskData.cubeSizeChanged()) {
+                    taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(image.path, resDir, taskData.getNewCubeSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(resDir + File.separator + nameWithoutExtension + ".tif", outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getDown(), taskData.getNewTileSize())));
+                    taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resDir + File.separator + nameWithoutExtension + ".tif"}));
+                } else {
+                    taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir + File.separator + nameWithoutDescription + aggstngs.ge.naming.getDown(), taskData.getNewTileSize())));
+                }
             }
         }
     }
@@ -558,7 +595,7 @@ public class Controller {
     private String[] generateArgsZYT(String input, String output, int tileSize) {
         ArrayList tmpArgsZYT = new ArrayList();
         tmpArgsZYT.add("-verbose");
-        //tmpArgsZYT.add("-simpleoutput");
+        tmpArgsZYT.add("-simpleoutput");
         tmpArgsZYT.add("-quality");
         tmpArgsZYT.add(Float.toString(aggstngs.zyt.getQuality()));
         tmpArgsZYT.add("-tilesize");
@@ -621,7 +658,7 @@ public class Controller {
                 aggstngs.dzt.setTileSize(prop.getProperty(DZTSettings.VALUE_TILE_SIZE));
                 aggstngs.dzt.setQuality(prop.getProperty(DZTSettings.VALUE_QUALITY));
                 aggstngs.dzt.setJarDir(prop.getProperty(DZTSettings.VALUE_JAR_DIR));
-                
+
                 aggstngs.zyt.setTileSize(prop.getProperty(ZYTSettings.VALUE_TILE_SIZE));
                 aggstngs.zyt.setQuality(prop.getProperty(ZYTSettings.VALUE_QUALITY));
                 aggstngs.zyt.setJarDir(prop.getProperty(ZYTSettings.VALUE_JAR_DIR));

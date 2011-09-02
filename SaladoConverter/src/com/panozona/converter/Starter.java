@@ -39,7 +39,7 @@ public class Starter {
         if (developmentMode) {
             SaladoConverter.main(args);
         } else {
-            try {
+            try {                
                 String pathToJar = SaladoConverter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
                 ProcessBuilder pb = new ProcessBuilder("java", "-Xmx" + aggstngs.ge.getMemoryLimit() + "m", "-classpath", pathToJar, "com.panozona.converter.SaladoConverter");
                 pb.start();
