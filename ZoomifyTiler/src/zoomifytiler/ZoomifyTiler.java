@@ -45,7 +45,7 @@ public class ZoomifyTiler {
             "with 'tiles_' prepended onto the name. So in the basic example above, \n" +
             "the output files would be in path/to/directory/of/tiles_images/.\n" +
             "\n" +
-            " Options:\n\n" +            
+            " Options:\n\n" +
             "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n" +
             "\t0.0 is maximum compression, lowest quality, smallest file.\n" +
             "\t1.0 is least compression, highest quality, tlargest file.\n" +
@@ -58,17 +58,17 @@ public class ZoomifyTiler {
             "\tdimensions of the tile.\n" +
             "\tDefault is 512.\n\n" +
             "-outputdir or -o: the output directory for the converted images. It\n" +
-            "\tneed not exist. Default is a folder next to the input folder\n" + 
+            "\tneed not exist. Default is a folder next to the input folder\n" +
             "\tor file, with 'tiles_' prepended to the name of the input\n" +
-            "\t(input files will have the extension removed). \n\n" +            
+            "\t(input files will have the extension removed). \n\n" +
             "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" +
-            "-debug: print various debugging messages during processing. \n\n" + 
+            "-debug: print various debugging messages during processing. \n\n" +
             " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" +
             "(or both) If there are multiple input folders or images, each should\n" +
-            "be separated by a space. Input folders will not be NOT be recursed.\n" + 
-            "Only images immediately inside the folder will be processed.\n" + 
+            "be separated by a space. Input folders will not be NOT be recursed.\n" +
+            "Only images immediately inside the folder will be processed.\n" +
             "All inputs will be processed into the one output directory,\n" +
-            "so general usage is to process one folder containing multiples images\n" + 
+            "so general usage is to process one folder containing multiples images\n" +
             "or to process one singe image file. \n";
 
     private enum CmdParseState {
@@ -77,9 +77,9 @@ public class ZoomifyTiler {
     }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
-    static int tileSize = 512;                     // -tilesize    
+    static int tileSize = 512;                     // -tilesize
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
-    static File outputDir = null;                  // -outputdir | -o        
+    static File outputDir = null;                  // -outputdir | -o
     static boolean verboseMode = false;            // -verbose
     static boolean debugMode = false;              // -debug
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
@@ -111,10 +111,10 @@ public class ZoomifyTiler {
                     while (itr.hasNext()) {
                         File inputFile = itr.next();
                         String fileName = inputFile.getName();
-                        String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));                        
-                        
-                        File outputFile = createDir(outputDir, nameWithoutExtension);
-                        outputFiles.add(outputFile);                        
+                        String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
+
+                        File outputFile = createDir(outputDir, "tiles_" + nameWithoutExtension);
+                        outputFiles.add(outputFile);
                     }
                 }
 
@@ -126,14 +126,14 @@ public class ZoomifyTiler {
                         File parentFile = inputFile.getAbsoluteFile().getParentFile();
                         String fileName = inputFile.getName();
                         String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
-                        
-                        File outputFile = createDir(parentFile, nameWithoutExtension);
+
+                        File outputFile = createDir(parentFile, "tiles_" + nameWithoutExtension);
                         outputFiles.add(outputFile);
                     }
                 }
 
                 if (debugMode) {
-                    System.out.printf("tileSize=%d ", tileSize);                    
+                    System.out.printf("tileSize=%d ", tileSize);
                     System.out.printf("quality=%.2f ", quality);
                 }
             } catch (Exception e) {
@@ -169,11 +169,11 @@ public class ZoomifyTiler {
                         verboseMode = true;
                     } else if (arg.equals("-debug")) {
                         verboseMode = true;
-                        debugMode = true;                    
+                        debugMode = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-tilesize")) {
-                        state = CmdParseState.TILESIZE;                    
+                        state = CmdParseState.TILESIZE;
                     } else if (arg.equals("-quality")) {
                         state = CmdParseState.QUALITY;
                     } else {
@@ -187,7 +187,7 @@ public class ZoomifyTiler {
                 case TILESIZE:
                     tileSize = Integer.parseInt(args[count]);
                     state = CmdParseState.DEFAULT;
-                    break;                
+                    break;
                 case QUALITY:
                     float qtmp = Float.parseFloat(args[count]);
                     if (qtmp < 0 || qtmp > 1) {
@@ -233,17 +233,17 @@ public class ZoomifyTiler {
             throw new Exception("No input files given.");
         }
     }
-    
+
     private static void processImageFile(File inFile, File outputDir) throws IOException {
         if (verboseMode) {
             System.out.printf("Processing image: %s\n", inFile);
-        }       
+        }
 
         BufferedImage image = loadImage(inFile);
 
         int originalWidth = image.getWidth();
-        int originalHeight = image.getHeight();              
-        
+        int originalHeight = image.getHeight();
+
         int numTiers = numTiers(originalWidth, originalHeight);
 
         if (verboseMode) {
@@ -276,10 +276,10 @@ public class ZoomifyTiler {
 
         double width = originalWidth;
         double height = originalHeight;
-        
-        final int totalTiles = numTilesTotal(originalWidth, originalHeight);        
+
+        final int totalTiles = numTilesTotal(originalWidth, originalHeight);
         int currentTileGroup = (int)Math.ceil((double)totalTiles/256d)-1;
-        int totalTilesCounter = totalTiles;       
+        int totalTilesCounter = totalTiles;
         File dir = createDir(imgDir, "TileGroup"+Integer.toString(currentTileGroup));
         for (int currentTier = numTiers; currentTier >= 0; currentTier--) {
             int nCols = (int) Math.ceil(width / tileSize);
@@ -288,20 +288,20 @@ public class ZoomifyTiler {
                 System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
                         numTiers, width, height, nCols, nRows);
             }            
-            for (int col = 0; col < nCols; col++) {
-                for (int row = 0; row < nRows; row++){                    
+            for (int row = nRows-1; row >= 0; row--){
+                for (int col = nCols-1; col >= 0; col--) {
                     saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' +  col + '-' + row, quality);
                     totalTilesCounter--;
                     if(totalTilesCounter > 0 && totalTilesCounter % 256 == 0){
                         currentTileGroup--;
-                        dir = createDir(imgDir, "TileGroup"+Integer.toString(currentTileGroup));                        
-                    }                    
+                        dir = createDir(imgDir, "TileGroup"+Integer.toString(currentTileGroup));
+                    }
                 }
             }
 
             // Scale down image for next level
-            width = Math.ceil(width / 2);
-            height = Math.ceil(height / 2);
+            width = Math.floor(width / 2d);
+            height = Math.floor(height / 2d);
             if (width > 10 && height > 10) {
                 // resize in stages to improve quality
                 image = resizeImage(image, width * 1.66d, height * 1.66d);
@@ -312,7 +312,7 @@ public class ZoomifyTiler {
 
         saveImageDescriptor(originalWidth, originalHeight, totalTiles, descriptor);
     }
-    
+
     private static int numTilesTotal(int originalWidth, int originalHeight) {
         int result = 0;
         int numTiers = numTiers(originalWidth, originalHeight);
@@ -321,12 +321,12 @@ public class ZoomifyTiler {
         }
         return result;
     }
-    
+
     private static int numTilesFromTier(int originalWidth, int originalHeight, int tier) {
         Point2D sizeAtTier = sizeAtTier(originalWidth, originalHeight, tier);
         return ((int) Math.ceil(sizeAtTier.getX() / tileSize) * (int) Math.ceil(sizeAtTier.getY() / tileSize));
     }
-    
+
     private static Point2D sizeAtTier(int originalWidth, int originalHeight, int tier) {
         double width = originalWidth;
         double height = originalHeight;
@@ -407,7 +407,7 @@ public class ZoomifyTiler {
         try {
             stream = new FileSeekableStream(file);
             PlanarImage planarImage = JAI.create("stream", stream);
-            //PlanarImage planarImage = JAI.create("fileload", file.getAbsolutePath());            
+            //PlanarImage planarImage = JAI.create("fileload", file.getAbsolutePath());
             result = planarImage.getAsBufferedImage();
         } catch (Exception e) {
             e.printStackTrace();
@@ -509,7 +509,7 @@ public class ZoomifyTiler {
      * @param file the file to which it is saved
      */
     private static void saveImageDescriptor(int width, int height, int numTiles, File file) throws IOException {
-        String xmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";        
+        String xmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(xmlHeader);
         lines.add("<IMAGE_PROPERTIES WIDTH=\"" + width + "\" HEIGHT=\"" + height + "\" NUMTILES=\"" + numTiles + "\" NUMIMAGES=\"1\" VERSION=\"1.8\" TILESIZE=\"" + tileSize + "\"/>");
@@ -550,6 +550,7 @@ class FileListFilter implements FilenameFilter {
         this.extensions = extensions;
     }
 
+    @Override
     public boolean accept(File directory, String filename) {
         if (extensions != null) {
             Iterator<String> itr = extensions.iterator();
