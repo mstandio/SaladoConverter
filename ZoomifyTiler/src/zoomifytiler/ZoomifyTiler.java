@@ -61,6 +61,9 @@ public class ZoomifyTiler {
             "\tneed not exist. Default is a folder next to the input folder\n" +
             "\tor file, with 'tiles_' prepended to the name of the input\n" +
             "\t(input files will have the extension removed). \n\n" +
+            "-simpleoutput or -s: '_tiles' parent directory for output files is not\n" +
+            "\tcreated. Both .xml file and folder containing tiles are saved\n" +
+            "\tdirectly into output folder.\n\n" +
             "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" +
             "-debug: print various debugging messages during processing. \n\n" +
             " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" +
@@ -80,6 +83,7 @@ public class ZoomifyTiler {
     static int tileSize = 512;                     // -tilesize
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
     static File outputDir = null;                  // -outputdir | -o
+    static boolean simpleoutput = false;           // -simpleoutput | -s
     static boolean verboseMode = false;            // -verbose
     static boolean debugMode = false;              // -debug
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
@@ -112,9 +116,12 @@ public class ZoomifyTiler {
                         File inputFile = itr.next();
                         String fileName = inputFile.getName();
                         String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
-
-                        File outputFile = createDir(outputDir, "tiles_" + nameWithoutExtension);
-                        outputFiles.add(outputFile);
+                        if(simpleoutput){
+                            outputFiles.add(outputDir);
+                        }else{
+                            File outputFile = createDir(outputDir, "tiles_" + nameWithoutExtension);
+                            outputFiles.add(outputFile);
+                        }
                     }
                 }
 
@@ -170,6 +177,8 @@ public class ZoomifyTiler {
                     } else if (arg.equals("-debug")) {
                         verboseMode = true;
                         debugMode = true;
+                    } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
+                        simpleoutput = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-tilesize")) {
@@ -287,7 +296,7 @@ public class ZoomifyTiler {
             if (debugMode) {
                 System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
                         numTiers, width, height, nCols, nRows);
-            }            
+            }
             for (int row = nRows-1; row >= 0; row--){
                 for (int col = nCols-1; col >= 0; col--) {
                     saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' +  col + '-' + row, quality);
