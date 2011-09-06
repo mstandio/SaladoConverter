@@ -29,10 +29,12 @@ import com.panozona.converter.utils.TasksExecutor;
 import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.OPTSettings;
 import com.panozona.converter.settings.RESSettings;
+import com.panozona.converter.settings.SBMSettings;
 import com.panozona.converter.settings.ZYTSettings;
 import com.panozona.converter.task.PanoramaTypes;
 import com.panozona.converter.utils.ImageDimensionsChecker;
 import com.panozona.converter.utils.Naming;
+import java.util.Arrays;
 
 /**
  * @author Marek Standio
@@ -198,7 +200,8 @@ public class Controller {
     public void applyCommand() {
         boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_DEEPZOOM_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)
-                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX);
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             if (taskTableModel.rows.get(i).getPanorama().getPanoramaType() == PanoramaTypes.equirectangular) {
                 taskTableModel.rows.get(i).checkBoxEnabled = !cubic;
@@ -241,6 +244,10 @@ public class Controller {
                     generateOpCTZYC(taskData);
                 } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC)) {
                     generateOpETZYC(taskData);
+                } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)) {
+                    generateOpETSB(taskData);
+                } else if (selection.equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)) {
+                    generateOpCTSB(taskData);
                 }
             }
             taskTableModel.fireTableDataChanged();
@@ -472,6 +479,72 @@ public class Controller {
         }
     }
 
+    //Equirectangular to Skybox
+    private void generateOpETSB(TaskData taskData) {
+        String nameWithoutExtension;
+        String cubeFile;
+        String outputDir;
+        String resizedFile;
+        int newSize;
+        String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
+
+        for (Image image : taskData.getPanorama().getImages()) {
+            nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
+            cubeFile = aggstngs.ge.getTmpDir() + File.separator + nameWithoutExtension;
+
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir())));
+
+            outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + nameWithoutExtension);
+            new File(outputDir).mkdir();
+
+            if (taskData.cubeSizeChanged()) {
+                resizedFile = resDir + File.separator + nameWithoutExtension;
+                newSize = taskData.getNewCubeSize();
+
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getFront() + ".tif", resDir, newSize)));
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getRight() + ".tif", resDir, newSize)));
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getBack() + ".tif", resDir, newSize)));
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getLeft() + ".tif", resDir, newSize)));
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getUp() + ".tif", resDir, newSize)));
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFile + aggstngs.ge.naming.getDown() + ".tif", resDir, newSize)));
+
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getRight() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getBack() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getLeft() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getUp() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getDown() + ".tif"}));
+
+                taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(new String[]{resDir}, outputDir)));
+
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getFront() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getRight() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getBack() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getLeft() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getUp() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getDown() + ".tif"}));
+
+            } else {
+
+                String[] input = new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif",
+                    cubeFile + aggstngs.ge.naming.getRight() + ".tif",
+                    cubeFile + aggstngs.ge.naming.getBack() + ".tif",
+                    cubeFile + aggstngs.ge.naming.getLeft() + ".tif",
+                    cubeFile + aggstngs.ge.naming.getUp() + ".tif",
+                    cubeFile + aggstngs.ge.naming.getDown() + ".tif"};
+
+                taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getRight() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getBack() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getLeft() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getUp() + ".tif"}));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getDown() + ".tif"}));
+            }
+        }
+    }
+
     //Cubic to Zoomify cubic
     private void generateOpCTZYC(TaskData taskData) {
         String parentFolderName;
@@ -542,6 +615,38 @@ public class Controller {
         }
     }
 
+    //Cubic to Skybox
+    private void generateOpCTSB(TaskData taskData) {
+        String parentFolderName;
+        String[] tmp;
+        String outputDir;
+        String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
+        String nameWithoutExtension;
+
+        tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));
+        parentFolderName = tmp[tmp.length - 2];
+        outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + parentFolderName);
+
+        if (taskData.cubeSizeChanged()) {
+            String[] input = new String[6];
+            for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {                
+                taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(taskData.getPanorama().getImages().get(i).path, resDir, taskData.getNewCubeSize())));
+                nameWithoutExtension = taskData.getPanorama().getImages().get(i).path.substring(taskData.getPanorama().getImages().get(i).path.lastIndexOf(File.separator) + 1, taskData.getPanorama().getImages().get(i).path.lastIndexOf('.'));
+                input[i] = resDir + File.separator + nameWithoutExtension + ".tif";
+            }
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+            for (String resized : input) {
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resized}));
+            }
+        } else {
+            String[] input = new String[6];
+            for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {
+                input[i] = taskData.getPanorama().getImages().get(i).path;
+            }
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+        }
+    }
+
     private void removeObsoleteDeepZoomImages(TaskData taskData, String path) {
         double cubeSize = taskData.getNewCubeSize();
         double tileSize = taskData.getNewTileSize();
@@ -608,6 +713,21 @@ public class Controller {
         return argsZYT;
     }
 
+    private String[] generateArgsSBM(String[] input, String output) {
+        ArrayList tmpArgsSBM = new ArrayList();
+        tmpArgsSBM.add("-verbose");
+        tmpArgsSBM.add("-quality");
+        tmpArgsSBM.add(Float.toString(aggstngs.sbm.getQuality()));
+        tmpArgsSBM.add("-previewSize");
+        tmpArgsSBM.add(Integer.toString(aggstngs.sbm.getPreviewSize()));
+        tmpArgsSBM.add("-outputdir");
+        tmpArgsSBM.add(output);
+        tmpArgsSBM.addAll(new ArrayList<String>(Arrays.asList(input)));
+        String argsSBM[] = new String[tmpArgsSBM.size()];
+        tmpArgsSBM.toArray(argsSBM);
+        return argsSBM;
+    }
+
     private String[] generateArgsEC(String input, String output) {
         ArrayList tmpArgsEC = new ArrayList();
         tmpArgsEC.add("-verbose");
@@ -662,6 +782,10 @@ public class Controller {
                 aggstngs.zyt.setTileSize(prop.getProperty(ZYTSettings.VALUE_TILE_SIZE));
                 aggstngs.zyt.setQuality(prop.getProperty(ZYTSettings.VALUE_QUALITY));
                 aggstngs.zyt.setJarDir(prop.getProperty(ZYTSettings.VALUE_JAR_DIR));
+
+                aggstngs.sbm.setPreviewSize(prop.getProperty(SBMSettings.VALUE_PREVIEW_SIZE));
+                aggstngs.sbm.setQuality(prop.getProperty(SBMSettings.VALUE_QUALITY));
+                aggstngs.sbm.setJarDir(prop.getProperty(SBMSettings.VALUE_JAR_DIR));
 
                 aggstngs.ec.setWallOverlap(prop.getProperty(ECSettings.VALUE_WALL_OVERLAP));
                 aggstngs.ec.setInterpolation(prop.getProperty(ECSettings.VALUE_INTERPOLATION));
@@ -718,6 +842,16 @@ public class Controller {
         }
         if (aggstngs.zyt.jarDirChanged()) {
             prop.put(ZYTSettings.VALUE_JAR_DIR, aggstngs.zyt.getJarDir());
+        }
+
+        if (aggstngs.sbm.previewSizeChanged()) {
+            prop.put(SBMSettings.VALUE_PREVIEW_SIZE, Integer.toString(aggstngs.sbm.getPreviewSize()));
+        }
+        if (aggstngs.sbm.qualityChanged()) {
+            prop.put(SBMSettings.VALUE_QUALITY, Float.toString(aggstngs.sbm.getQuality()));
+        }
+        if (aggstngs.sbm.jarDirChanged()) {
+            prop.put(SBMSettings.VALUE_JAR_DIR, aggstngs.sbm.getJarDir());
         }
 
         if (aggstngs.ec.wallOverlapChanged()) {

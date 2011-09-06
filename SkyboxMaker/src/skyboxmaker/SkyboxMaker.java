@@ -210,9 +210,17 @@ public class SkyboxMaker {
         Graphics graphics = output.getGraphics();
         graphics.drawImage(input, 0, getImagePosition(inputFiles.get(0).getName()) * inputSize, null);
         for (int i = 1; i < 6; i++) {
+            if (verboseMode) {
+                System.out.printf("Processing image: %s\n", inputFiles.get(i).getAbsolutePath());
+            }
             input = loadImage(inputFiles.get(i));
             graphics.drawImage(input, 0, getImagePosition(inputFiles.get(i).getName()) * inputSize, null);
         }
+
+        if (verboseMode) {
+            System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath() + File.separator + nameWithoutDescription);
+        }
+
         if (!previewOnly) {
             saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
         }
@@ -228,19 +236,19 @@ public class SkyboxMaker {
         if (nameWithoutExtension.matches("^.+(_f|_0|_11|_front)$")) {
             return 0;
         }
-        if (nameWithoutExtension.matches("^.+(_r|_1|_22|_right)$")){
+        if (nameWithoutExtension.matches("^.+(_r|_1|_22|_right)$")) {
             return 1;
         }
-        if (nameWithoutExtension.matches("^.+(_b|_2|_33|_back)$")){
+        if (nameWithoutExtension.matches("^.+(_b|_2|_33|_back)$")) {
             return 2;
         }
-        if (nameWithoutExtension.matches("^.+(_l|_3|_44|_left)$")){
+        if (nameWithoutExtension.matches("^.+(_l|_3|_44|_left)$")) {
             return 3;
         }
-        if (nameWithoutExtension.matches("^.+(_u|_4|_55|_up)$")){
+        if (nameWithoutExtension.matches("^.+(_u|_4|_55|_up)$")) {
             return 4;
         }
-        if (nameWithoutExtension.matches("^.+(_d|_5|_66|_down)$")){
+        if (nameWithoutExtension.matches("^.+(_d|_5|_66|_down)$")) {
             return 5;
         }
         throw new IllegalArgumentException("Cannot resolve name: " + name);

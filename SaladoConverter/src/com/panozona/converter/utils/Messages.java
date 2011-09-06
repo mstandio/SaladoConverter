@@ -15,6 +15,8 @@ public class Messages {
     public final static String ZYT_QUALITY_ERROR = "Invalid ZoomifyTiler Quality value";
     public final static String ZYT_TILESIZE_ERROR = "Invalid ZoomifyTiler Tile size value";
     public final static String ZYT_JAR_DIR_ERROR = "Invalid ZoomifyTiler *.jar directory";
+    public final static String SBM_QUALITY_ERROR = "Invalid SkyboxMaker Quality value";
+    public final static String SBM_PREVIEWSIZE_ERROR = "Invalid SkyboxMaker preview size value";
     public final static String GE_TMP_DIR_ERROR = "Invalid tmp directory";
     public final static String GE_MEMORY_LIMIT_ERROR = "Invalid memory limit value";
     public final static String GE_MEMORY_LIMIT_WARNING = "Restart application in order for memory limit changes to take effect";

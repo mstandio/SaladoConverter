@@ -11,6 +11,7 @@ public class AggregatedSettings {
     public RESSettings res;
     public DZTSettings dzt;
     public ZYTSettings zyt;
+    public SBMSettings sbm;
     public String currentDirectory = "";
     
     public static final String FILE_PROPERTIES = "settings.properties"; // GAH
@@ -28,6 +29,7 @@ public class AggregatedSettings {
         res = new RESSettings(value);
         dzt = new DZTSettings(value);
         zyt = new ZYTSettings(value);
+        sbm = new SBMSettings(value);
     }
 
     public static AggregatedSettings getInstance() {

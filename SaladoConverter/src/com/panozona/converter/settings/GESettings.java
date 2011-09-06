@@ -20,11 +20,11 @@ public class GESettings {
     public static final String COMMAND_CUBIC_TO_DEEPZOOM_CUBIC = "Cubic to Deep Zoom cubic";
     public static final String COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC = "Equirectangular to Zoomify cubic";
     public static final String COMMAND_CUBIC_TO_ZOOMIFY_CUBIC = "Cubic to Zoomify cubic";
+    public static final String COMMAND_EQUIRECTANGULAR_TO_SKYBOX = "Equirectangular to skybox";
+    public static final String COMMAND_CUBIC_TO_SKYBOX = "Cubic to skybox";
     public static final String COMMAND_EQUIRECTANGULAR_TO_CUBIC = "Equirectangular to cubic";
     public static final String COMMAND_CUBIC_TO_RESIZED_CUBIC = "Cubic to resized cubic";
-
     public final Naming naming = new Naming();
-
     private String tmpDir;
     private int memoryLimit;
     private String outputDir;
@@ -65,6 +65,8 @@ public class GESettings {
                     //COMMAND_CUBIC_TO_DEEPZOOM_CUBIC,
                     COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC,
                     COMMAND_CUBIC_TO_ZOOMIFY_CUBIC,
+                    COMMAND_EQUIRECTANGULAR_TO_SKYBOX,
+                    COMMAND_CUBIC_TO_SKYBOX,
                     COMMAND_EQUIRECTANGULAR_TO_CUBIC,
                     COMMAND_CUBIC_TO_RESIZED_CUBIC
                 };
@@ -220,7 +222,9 @@ public class GESettings {
                     || value.equals(COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC)
                     || value.equals(COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)
                     || value.equals(COMMAND_EQUIRECTANGULAR_TO_CUBIC)
-                    || value.equals(COMMAND_CUBIC_TO_RESIZED_CUBIC)) {
+                    || value.equals(COMMAND_CUBIC_TO_RESIZED_CUBIC)
+                    || value.equals(COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
+                    || value.equals(COMMAND_CUBIC_TO_SKYBOX)) {
                 selectedCommand = value;
             } else {
                 throw new IllegalArgumentException(Messages.GE_COMMAND_ERROR);
