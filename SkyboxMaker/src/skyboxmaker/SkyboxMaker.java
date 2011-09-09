@@ -25,12 +25,11 @@ public class SkyboxMaker {
             + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
             + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
             + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
-            + "If you see an error about heap size, then you will need to increase this \n"
+            + "If you see an error about heap size, then you will need to increase this\n"
             + "value.\n\n" + " Basic usage example for the jar file:\n\n"
             + "java -Xmx1024m -jar path/to/SkyboxMaker.jar path/to/directory/of/images/\n"
-            + "This will generate a folder beside the input directory or file \n"
-            + "with 'skybox_' prepended onto the name. So in the basic example above, \n"
-            + "the output files would be in path/to/directory/of/tiles_images/.\n"
+            + "This will generate a folder beside the input directory or file with\n"
+            + "'skybox_' prepended onto its name.\n"
             + "\n"
             + " Options:\n\n"
             + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
@@ -43,24 +42,19 @@ public class SkyboxMaker {
             + "-previewOnly: only preview image is outputed.\n\n"
             + "-outputdir or -o: the output directory for the converted images.\n"
             + "\tIt need not exist. Default is a folder next to the input folder\n"
-            + "\tor file, with 'skybox_' prepended to the name of the input\n"
-            + "\t(input files will have the extension removed). \n\n"
-            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
-            + "-debug: print various debugging messages during processing. \n\n"
+            + "\tor files, with 'skybox_' prepended to the name of the input files.\n\n"
+            + "-verbose or -v: makes the utility more 'chatty' during processing.\n\n"
             + " Arguments:\n\n"
-            + "The arguments following any options are the input images or folders.\n"
-            + "If there are multiple input folders or images, each should\n"
-            + "be separated by a space. Input folders will not be NOT be recursed.\n"
-            + "Only images immediately inside the folder will be processed.\n"
-            + "All inputs will be processed into the one output directory,\n"
-            + "so general usage is to process one folder containing multiples images\n"
-            + "or to process one singe image file. Application has to be able \n"
-            + "to recognize six cube walls, which need to be square, have exactly same\n"
-            + "size and their naming has to follow one of common conventions.\n";
+            + "The arguments following any options are the input images or folder.\n"
+            + "If there are multiple input images, each should be separated by a space.\n"
+            + "Input folder will NOT be recursed. Only images immediately inside\n"
+            + "the folder will be processed. Application has to be able to recognize\n"
+            + "six cube walls, which need to be square, have exactly same size\n"
+            + "and their naming has to follow one of common naming conventions.\n";
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, preview, QUALITY, PREVIEWSIZE, INPUTFILE
+        DEFAULT, OUTPUTDIR, PREVIEW, QUALITY, PREVIEWSIZE, INPUTFILE
     }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
@@ -69,7 +63,6 @@ public class SkyboxMaker {
     static boolean previewOnly = false;	           // -previewOnly
     static File outputDir = null;                  // -outputdir | -o
     static boolean verboseMode = false;            // -verbose
-    static boolean debugMode = false;              // -debug
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
 
     /**
@@ -92,10 +85,6 @@ public class SkyboxMaker {
                     }
                 } else {
                     outputDir = inputFiles.get(0).getAbsoluteFile().getParentFile();
-                }
-
-                if (debugMode) {
-                    System.out.printf("quality=%.2f ", quality);
                 }
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
@@ -128,9 +117,6 @@ public class SkyboxMaker {
                         previewOnly = true;
                     } else if (arg.equals("-verbose")) {
                         verboseMode = true;
-                    } else if (arg.equals("-debug")) {
-                        verboseMode = true;
-                        debugMode = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-quality")) {
@@ -146,11 +132,11 @@ public class SkyboxMaker {
                     state = CmdParseState.DEFAULT;
                     break;
                 case QUALITY:
-                    float qtmp = Float.parseFloat(args[count]);
-                    if (qtmp < 0 || qtmp > 1) {
+                    float tmp = Float.parseFloat(args[count]);
+                    if (tmp < 0 || tmp > 1) {
                         throw new Exception("-quality");
                     }
-                    quality = qtmp;
+                    quality = tmp;
                     state = CmdParseState.DEFAULT;
                     break;
                 case PREVIEWSIZE:
@@ -292,9 +278,14 @@ public class SkyboxMaker {
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
-        //surprisingly this gives worse results
-        //RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        //BufferedImage result = JAI.create("SubsampleAverage", img, width / (double) img.getWidth(), height / (double) img.getHeight(), qualityHints).getAsBufferedImage();
+        //surprisingly following code gives worse results
+        //RenderingHints qualityHints = new RenderingHints(
+        //    RenderingHints.KEY_RENDERING,
+        //    RenderingHints.VALUE_RENDER_QUALITY);
+        //BufferedImage result = JAI.create("SubsampleAverage",
+        //  img, width / (double) img.getWidth(),
+        //  height / (double) img.getHeight(),
+        //  qualityHints).getAsBufferedImage();
         return result;
     }
 

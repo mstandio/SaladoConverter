@@ -1,11 +1,16 @@
 package zoomifytiler;
 
-/*
-Copyright 2011 Marek Standio
-This file is part of ZoomifyTiler.java.
-ZoomifyTiler is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License along with EquirectangulartoCubic. If not, see http://www.gnu.org/licenses/.
-This code is modified from DeepJZoom, courtesy of Glenn Lawrence, which is also licensed under the GPL. Thank you!
+/**
+ * Copyright 2011 Marek Standio
+ * This file is part of ZoomifyTiler.java.
+ * ZoomifyTiler is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with ZoomifyTiler. If not, see http://www.gnu.org/licenses/.
+ * This code is modified from DeepJZoom, courtesy of Glenn Lawrence,
+ * which is also licensed under the GPL.  Thank you!
  */
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,53 +31,49 @@ import com.sun.media.jai.codec.FileSeekableStream;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-/**
- * @author Glenn Lawrence
- */
 public class ZoomifyTiler {
 
-    static final String help = "\nZoomifyTiler v1.0 \n\n Usage: \n\n" +
-            "java [-java_options] -jar path/to/ZoomifyTiler.jar [-options] [args...]\n" +
-            "For a list of java options try: java -help or java -X for a list of less\n" +
-            "common options. Loading large images for conversion takes a lot of RAM so\n" +
-            "you will find the -Xmx option useful to raise Java's maximum heap size.\n" +
-            "The -Xmx command is followed immediately by an integer specifying RAM size\n" +
-            "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n" +
-            "If you see an error about heap size, then you will need to increase this \n" +
-            "value.\n\n" + " Basic usage example for the jar file:\n\n" +
-            "java -Xmx1024m -jar path/to/ZoomifyTiler.jar path/to/directory/of/images/\n" +
-            "This will generate a folder of tiles beside the input directory or file \n" +
-            "with 'tiles_' prepended onto the name. So in the basic example above, \n" +
-            "the output files would be in path/to/directory/of/tiles_images/.\n" +
-            "\n" +
-            " Options:\n\n" +
-            "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n" +
-            "\t0.0 is maximum compression, lowest quality, smallest file.\n" +
-            "\t1.0 is least compression, highest quality, tlargest file.\n" +
-            "\tDefault is 0.8.\n\n" +
-            "-tilesize: target pixel tile size. Tiling starts at the top left \n" +
-            "\tof an image, so tiles at the right and bottom to the image\n" +
-            "\tmay not be this width or height, respectively, unless the\n" +
-            "\tinput image's size is divisible by the tileSize. The tileSize\n" +
-            "\tdoes NOT include the overlap. Overlap pixels are add to the\n" +
-            "\tdimensions of the tile.\n" +
-            "\tDefault is 512.\n\n" +
-            "-outputdir or -o: the output directory for the converted images. It\n" +
-            "\tneed not exist. Default is a folder next to the input folder\n" +
-            "\tor file, with 'tiles_' prepended to the name of the input\n" +
-            "\t(input files will have the extension removed). \n\n" +
-            "-simpleoutput or -s: '_tiles' parent directory for output files is not\n" +
-            "\tcreated. Both .xml file and folder containing tiles are saved\n" +
-            "\tdirectly into output folder.\n\n" +
-            "-verbose or -v: makes the utility more 'chatty' during processing. \n\n" +
-            "-debug: print various debugging messages during processing. \n\n" +
-            " Arguments:\n\n" + "The arguments following any options are the input images or folders.\n" +
-            "(or both) If there are multiple input folders or images, each should\n" +
-            "be separated by a space. Input folders will not be NOT be recursed.\n" +
-            "Only images immediately inside the folder will be processed.\n" +
-            "All inputs will be processed into the one output directory,\n" +
-            "so general usage is to process one folder containing multiples images\n" +
-            "or to process one singe image file. \n";
+    static final String help = "\nZoomifyTiler v1.0 \n\n Usage: \n\n"
+            + "java [-java_options] -jar path/to/ZoomifyTiler.jar [-options] [args...]\n"
+            + "For a list of java options try: java -help or java -X for a list of less\n"
+            + "common options. Loading large images for conversion takes a lot of RAM so\n"
+            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
+            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an error about heap size, then you will need to increase this \n"
+            + "value.\n\n" + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/ZoomifyTiler.jar path/to/directory/of/images/\n"
+            + "This will generate a folder of tiles beside the input directory or file \n"
+            + "with 'tiles_' prepended onto the name. So in the basic example above, \n"
+            + "the output files would be in path/to/directory/of/tiles_images/.\n"
+            + "\n"
+            + " Options:\n\n"
+            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
+            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
+            + "\t1.0 is least compression, highest quality, tlargest file.\n"
+            + "\tDefault is 0.8.\n\n"
+            + "-tilesize: target pixel tile size. Tiling starts at the top left\n"
+            + "\tof an image, so tiles at the right and bottom to the image\n"
+            + "\tmay not be this width or height, respectively, unless the\n"
+            + "\tinput image's size is divisible by the tileSize.\n"
+            + "\tDefault is 512.\n\n"
+            + "-outputdir or -o: the output directory for the converted images. It\n"
+            + "\tneed not exist. Default is a folder next to the input folder\n"
+            + "\tor file, with 'tiles_' prepended to the name of the input\n"
+            + "\t(input files will have the extension removed). \n\n"
+            + "-simpleoutput or -s: 'tiles_' parent directory for output files is not\n"
+            + "\tcreated. Both .xml file and folder containing tiles are saved\n"
+            + "\tdirectly into output folder.\n\n"
+            + "-verbose or -v: makes the utility more 'chatty' during processing.\n\n"
+            + "-debug: print various debugging messages during processing.\n\n"
+            + " Arguments:\n\n"
+            + "The arguments following any options are the input images or folders.\n"
+            + "(or both) If there are multiple input folders or images, each should\n"
+            + "be separated by a space. Input folders will not be NOT be recursed.\n"
+            + "Only images immediately inside the folder will be processed.\n"
+            + "All inputs will be processed into the one output directory,\n"
+            + "so general usage is to process one folder containing multiples images\n"
+            + "or to process one singe image file.\n";
 
     private enum CmdParseState {
 
@@ -116,9 +117,9 @@ public class ZoomifyTiler {
                         File inputFile = itr.next();
                         String fileName = inputFile.getName();
                         String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
-                        if(simpleoutput){
+                        if (simpleoutput) {
                             outputFiles.add(outputDir);
-                        }else{
+                        } else {
                             File outputFile = createDir(outputDir, "tiles_" + nameWithoutExtension);
                             outputFiles.add(outputFile);
                         }
@@ -247,18 +248,14 @@ public class ZoomifyTiler {
         if (verboseMode) {
             System.out.printf("Processing image: %s\n", inFile);
         }
-
         BufferedImage image = loadImage(inFile);
 
         int originalWidth = image.getWidth();
         int originalHeight = image.getHeight();
-
         int numTiers = numTiers(originalWidth, originalHeight);
-
         if (verboseMode) {
             System.out.printf("nTiers=%d\n", numTiers);
         }
-
         // Delete any existing output files and folders for this image
         File descriptor = new File(outputDir + File.separator + "ImageProperties.xml");
         if (descriptor.exists()) {
@@ -269,8 +266,8 @@ public class ZoomifyTiler {
         }
 
         File imgDir = null;
-        for(int i=0; i<100; i++){
-            imgDir = new File(outputDir + File.separator + "TileGroup"+i);
+        for (int i = 0; i < 100; i++) {
+            imgDir = new File(outputDir + File.separator + "TileGroup" + i);
             if (imgDir.exists()) {
                 if (verboseMode) {
                     System.out.printf("Deleting directory: %s\n", imgDir);
@@ -278,18 +275,16 @@ public class ZoomifyTiler {
                 deleteDir(imgDir);
             }
         }
-
         imgDir = outputDir;
-
         System.out.printf("Writing into directory: %s\n", imgDir);
 
         double width = originalWidth;
         double height = originalHeight;
 
         final int totalTiles = numTilesTotal(originalWidth, originalHeight);
-        int currentTileGroup = (int)Math.ceil((double)totalTiles/256d)-1;
+        int currentTileGroup = (int) Math.ceil((double) totalTiles / 256d) - 1;
         int totalTilesCounter = totalTiles;
-        File dir = createDir(imgDir, "TileGroup"+Integer.toString(currentTileGroup));
+        File dir = createDir(imgDir, "TileGroup" + Integer.toString(currentTileGroup));
         for (int currentTier = numTiers; currentTier >= 0; currentTier--) {
             int nCols = (int) Math.ceil(width / tileSize);
             int nRows = (int) Math.ceil(height / tileSize);
@@ -297,17 +292,16 @@ public class ZoomifyTiler {
                 System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
                         numTiers, width, height, nCols, nRows);
             }
-            for (int row = nRows-1; row >= 0; row--){
-                for (int col = nCols-1; col >= 0; col--) {
-                    saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' +  col + '-' + row, quality);
+            for (int row = nRows - 1; row >= 0; row--) {
+                for (int col = nCols - 1; col >= 0; col--) {
+                    saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' + col + '-' + row, quality);
                     totalTilesCounter--;
-                    if(totalTilesCounter > 0 && totalTilesCounter % 256 == 0){
+                    if (totalTilesCounter > 0 && totalTilesCounter % 256 == 0) {
                         currentTileGroup--;
-                        dir = createDir(imgDir, "TileGroup"+Integer.toString(currentTileGroup));
+                        dir = createDir(imgDir, "TileGroup" + Integer.toString(currentTileGroup));
                     }
                 }
             }
-
             // Scale down image for next level
             width = Math.floor(width / 2d);
             height = Math.floor(height / 2d);
@@ -318,14 +312,13 @@ public class ZoomifyTiler {
             }
             image = resizeImage(image, width, height);
         }
-
         saveImageDescriptor(originalWidth, originalHeight, totalTiles, descriptor);
     }
 
     private static int numTilesTotal(int originalWidth, int originalHeight) {
         int result = 0;
         int numTiers = numTiers(originalWidth, originalHeight);
-        for(int i=numTiers; i>=0; i--){
+        for (int i = numTiers; i >= 0; i--) {
             result += numTilesFromTier(originalWidth, originalHeight, i);
         }
         return result;
@@ -341,8 +334,8 @@ public class ZoomifyTiler {
         double height = originalHeight;
         int tiers = numTiers(originalWidth, originalHeight);
         for (int i = 0; i < (tiers - tier); i++) {
-            width = Math.ceil(width / 2d);
-            height = Math.ceil(height / 2d);
+            width = Math.floor(width / 2d);
+            height = Math.floor(height / 2d);
         }
         return new Point((int) width, (int) height);
     }
@@ -355,7 +348,7 @@ public class ZoomifyTiler {
         int result = 0;
         double size = Math.max(originalWidth, originalHeight);
         while (size > tileSize) {
-            size = Math.ceil(size / 2d);
+            size = Math.floor(size / 2d);
             result++;
         }
         return result;
@@ -475,9 +468,14 @@ public class ZoomifyTiler {
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
-        //surprisingly this gives worse results
-        //RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        //BufferedImage result = JAI.create("SubsampleAverage", img, width / (double) img.getWidth(), height / (double) img.getHeight(), qualityHints).getAsBufferedImage();
+        //surprisingly following code gives worse results
+        //RenderingHints qualityHints = new RenderingHints(
+        //    RenderingHints.KEY_RENDERING,
+        //    RenderingHints.VALUE_RENDER_QUALITY);
+        //BufferedImage result = JAI.create("SubsampleAverage",
+        //  img, width / (double) img.getWidth(),
+        //  height / (double) img.getHeight(),
+        //  qualityHints).getAsBufferedImage();
         return result;
     }
 
@@ -521,7 +519,11 @@ public class ZoomifyTiler {
         String xmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(xmlHeader);
-        lines.add("<IMAGE_PROPERTIES WIDTH=\"" + width + "\" HEIGHT=\"" + height + "\" NUMTILES=\"" + numTiles + "\" NUMIMAGES=\"1\" VERSION=\"1.8\" TILESIZE=\"" + tileSize + "\"/>");
+        lines.add("<IMAGE_PROPERTIES WIDTH=\"" + width
+                + "\" HEIGHT=\"" + height
+                + "\" NUMTILES=\"" + numTiles
+                + "\" NUMIMAGES=\"1\" VERSION=\"1.8\""
+                + "TILESIZE=\"" + tileSize + "\"/>");
         saveText(lines, file);
     }
 
