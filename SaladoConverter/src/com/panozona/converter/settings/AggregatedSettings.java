@@ -9,6 +9,7 @@ public class AggregatedSettings {
     public OPTSettings opt;
     public ECSettings ec;
     public RESSettings res;
+    public ERFSettings erf;
     public DZTSettings dzt;
     public ZYTSettings zyt;
     public SBMSettings sbm;
@@ -27,6 +28,7 @@ public class AggregatedSettings {
         opt = new OPTSettings();
         ec = new ECSettings(value);
         res = new RESSettings(value);
+        erf = new ERFSettings(value);
         dzt = new DZTSettings(value);
         zyt = new ZYTSettings(value);
         sbm = new SBMSettings(value);

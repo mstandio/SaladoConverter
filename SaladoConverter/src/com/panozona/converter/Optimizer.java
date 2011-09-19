@@ -6,12 +6,13 @@ import java.util.HashMap;
 
 public class Optimizer {
 
-    private Optimizer() {
+    private Optimizer(){
     }
 
     static void optimize(TaskData taskData) {
-        taskData.setNewCubeSize(optimizeCubeSize(taskData.getPanorama().getCubeSize()));
-        taskData.setNewTileSize(optimizeTileSize(taskData.getNewCubeSize()));
+        int optimalCubesize = optimizeCubeSize(taskData.getOriginalCubeSize());        
+        taskData.setNewOptimalCubeSize(optimalCubesize);
+        taskData.setNewOptimalTileSize(optimizeTileSize(optimalCubesize));
     }
 
     private static int optimizeCubeSize(int size) {

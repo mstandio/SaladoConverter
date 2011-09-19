@@ -7,9 +7,11 @@ import com.panozona.converter.settings.ECSettings;
 import com.panozona.converter.task.TaskData;
 import com.panozona.converter.task.Operation;
 import com.panozona.converter.maintable.TaskTableModel;
+import com.panozona.converter.settings.ERFSettings;
 import com.panozona.converter.settings.RESSettings;
 import com.panozona.converter.settings.SBMSettings;
 import com.panozona.converter.settings.ZYTSettings;
+import com.panozona.converter.task.TaskDataStates;
 import org.jdesktop.application.Task;
 import java.io.File;
 
@@ -59,7 +61,7 @@ public class TasksExecutor extends Task<Void, Void> {
             for (int m = 0; m < taskData.operations.size(); m++) {
                 taskOperation = taskData.operations.get(m);
                 if (!super.isCancelled()) {
-                    taskData.state = TaskData.STATE_PROCESSING;
+                    taskData.state = TaskDataStates.PROCESSING;
                     taskTableModel.fireTableDataChanged();
                     try {
                         if (taskOperation.type.equals(Operation.TYPE_DZT)) {
@@ -77,6 +79,9 @@ public class TasksExecutor extends Task<Void, Void> {
                         } else if (taskOperation.type.equals(Operation.TYPE_RES)) {
                             componentInvoker.run(aggstngs.res.getJarDir(), RESSettings.JAR_CLASSNAME, taskOperation.args);
                             numOperationsDone++;
+                        } else if (taskOperation.type.equals(Operation.TYPE_ERF)) {
+                            componentInvoker.run(aggstngs.erf.getJarDir(), ERFSettings.JAR_CLASSNAME, taskOperation.args);
+                            numOperationsDone++;
                         } else if (taskOperation.type.equals(Operation.TYPE_DEL)) {
                             file = new File(taskOperation.args[0]);
                             if (file.isDirectory()) {
@@ -92,13 +97,13 @@ public class TasksExecutor extends Task<Void, Void> {
                         numOperationsDone += numberOperations(taskData) - m;
                         setProgress(numOperationsDone, 0, numOperationsToRun);
                         System.out.println("ERROR: " + ex.getMessage());
-                        taskData.state = TaskData.STATE_ERROR;
+                        taskData.state = TaskDataStates.ERROR;
                         taskTableModel.fireTableDataChanged();
                     }
                 } else {
                     numOperationsDone += numberOperations(taskData);
                     setProgress(numOperationsDone, 0, numOperationsToRun);
-                    taskData.state = TaskData.STATE_CANCELED;
+                    taskData.state = TaskDataStates.CANCELED;
                     System.out.println("CANCELLED");
                     taskTableModel.fireTableDataChanged();
                     return null;
@@ -107,7 +112,7 @@ public class TasksExecutor extends Task<Void, Void> {
             if (taskData.operations.size() > 0) {
                 System.out.println("DONE");
                 taskData.checkBoxSelected = false;
-                taskData.state = TaskData.STATE_DONE;
+                taskData.state = TaskDataStates.DONE;
                 taskTableModel.fireTableDataChanged();
             }
         }

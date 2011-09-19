@@ -2,32 +2,30 @@ package com.panozona.converter.task;
 
 import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.utils.Messages;
-import java.io.File;
 import java.util.ArrayList;
 
 /**
  * @author Marek Standio
  */
-public class TaskData {
+public abstract class TaskData {
 
-    public static final String STATE_READY = "ready"; // TODO: enum, perhaps?
-    public static final String STATE_PROCESSING = "processing";
-    public static final String STATE_DONE = "done";
-    public static final String STATE_ERROR = "error";
-    public static final String STATE_CANCELED = "canceled";
-    public String state = STATE_READY;
+    public TaskDataStates state = TaskDataStates.READY;
     public Boolean checkBoxSelected = true;
     public Boolean checkBoxEnabled = false;
-    public boolean autosize = true;
-    private Panorama panorama;
+    public Boolean showCubeSize = true;
+    public Boolean showTizeSize = true;
+    protected Panorama panorama;
     private int newTileSize;
     private int newCubeSize;
+    public boolean optimalSize = true;
+    public boolean surpressOptimalSize = false;
+    private int newOptimalTileSize;
+    private int newOptimalCubeSize;
     public ArrayList<Operation> operations = new ArrayList<Operation>();
 
     public TaskData(Panorama panorama) {
         this.panorama = panorama;
-        newCubeSize = panorama.getCubeSize();
-        newTileSize = AggregatedSettings.getInstance().dzt.getTileSize();
+        newTileSize = AggregatedSettings.getInstance().zyt.getTileSize(); //TODO: change to dzt
     }
 
     public Panorama getPanorama() {
@@ -56,8 +54,17 @@ public class TaskData {
         }
     }
 
+    public void setNewOptimalTileSize(int value) {
+        newOptimalTileSize = value;
+    }
+
     public int getNewTileSize() {
-        return newTileSize;
+        if (!surpressOptimalSize && optimalSize) {
+            return newOptimalTileSize;
+        } else {
+            return newTileSize;
+        }
+
     }
 
     public void setNewCubeSize(String value) throws IllegalArgumentException {
@@ -82,31 +89,44 @@ public class TaskData {
         }
     }
 
+    public void setNewOptimalCubeSize(int value) {
+        newOptimalCubeSize = value;
+    }
+
     public int getNewCubeSize() {
-        return newCubeSize;
+        if (!surpressOptimalSize && optimalSize) {
+            return newOptimalCubeSize;
+        } else {
+            return newCubeSize;
+        }
+
     }
 
     public boolean cubeSizeChanged() {
-        return newCubeSize != panorama.getCubeSize();
+        return getNewCubeSize() != getOriginalCubeSize();
     }
 
+    public abstract int getOriginalCubeSize();
+
     public String getCubeSizeDescription() {
-        if (panorama.getCubeSize() != newCubeSize) {
-            return panorama.getCubeSize() + " to " + newCubeSize;
+        if (showCubeSize) {
+            if (getOriginalCubeSize() != getNewCubeSize()) {
+                return getOriginalCubeSize() + " to " + getNewCubeSize();
+            } else {
+                return Integer.toString(getNewCubeSize());
+            }
         } else {
-            return Integer.toString(newCubeSize);
+            return "-";
         }
     }
 
     public String getTileSizeDescription() {
-        return Integer.toString(newTileSize);
-    }
-
-    public String getPathDescription() {
-        if (panorama.getPanoramaType().equals(PanoramaTypes.equirectangular)) {
-            return panorama.getImages().get(0).path;
+        if (showTizeSize) {
+            return Integer.toString(getNewTileSize());
         } else {
-            return panorama.getImages().get(0).path.substring(0, panorama.getImages().get(0).path.lastIndexOf(File.separator));
+            return "-";
         }
     }
+
+    public abstract String getPathDescription();
 }

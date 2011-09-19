@@ -32,7 +32,7 @@ public class EquirectangularFiller {
             + "\n"
             + " Options:\n\n"
             + "-fov: horizontal field of view (in degrees) represented in input image.\n"
-            + "\tDefault is 360.\n\n"            
+            + "\tDefault is 360.\n\n"
             + "-offset: vertical offset (in pixels) of image. Usually means how far middle \n"
             + "\tof image is away from horizon.\n"
             + "\tDefault is 0\n\n"
@@ -109,6 +109,8 @@ public class EquirectangularFiller {
                         verboseMode = true;
                     } else if (arg.equals("-debug")) {
                         verboseMode = true;
+                    } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
+                        simpleOutput = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-fov")) {
@@ -167,17 +169,17 @@ public class EquirectangularFiller {
         if (verboseMode) {
             System.out.printf("filling image: %s\n", inFile);
         }
-        String outputName = (simpleOutput ? "" : "fiiled_") + inputFile.getName().substring(0, inputFile.getName().lastIndexOf(".")) + ".tif";
+        String outputName = (simpleOutput ? "" : "filled_") + inputFile.getName().substring(0, inputFile.getName().lastIndexOf(".")) + ".tif";
         BufferedImage input = loadImage(inputFile);
         Point outputDimension = getOutputDimension(input);
-        BufferedImage output = new BufferedImage(outputDimension.x, outputDimension.y, BufferedImage.TYPE_INT_RGB);        
+        BufferedImage output = new BufferedImage(outputDimension.x, outputDimension.y, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = output.getGraphics();
         graphics.drawImage(input, (int) Math.floor((double) (outputDimension.x - input.getWidth()) * 0.5d),
                 (int) Math.floor((double) (outputDimension.y - input.getHeight()) * 0.5d + offset), Color.BLACK, null);
         if (verboseMode) {
             System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath() + File.separator + outputName);
         }
-        JAI.create("filestore", output, outputName, "TIFF");
+        JAI.create("filestore", output, outputDir.getAbsolutePath() + File.separator + outputName, "TIFF");
         graphics.dispose();
     }
 

@@ -40,7 +40,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         aggstngs = AggregatedSettings.getInstance();
         allowCloseFlag = true;
 
-        jTabbedPane1.remove(DeepZoomTilerTab);
+        jTabbedPaneequirectangualrFiller.remove(DeepZoomTilerTab);
         jCheckBoxGERemoveObsoleteDZ.setVisible(false);
 
         ActionListener actionListenerESC = new ActionListener() {
@@ -98,7 +98,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldOPTMaxTileSize = new javax.swing.JTextField();
         jTextFieldOPTMinTileSize = new javax.swing.JTextField();
         ComponentsTab = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jTabbedPaneequirectangualrFiller = new javax.swing.JTabbedPane();
         EquirectangularToCubicTab = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -147,6 +147,12 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldSBMDirectory = new javax.swing.JTextField();
         jButtonSBMBrowseDirectory = new javax.swing.JButton();
         jButtonSBMRestoreDefault = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jButtonERFBrowseDirectory = new javax.swing.JButton();
+        jLabel21 = new javax.swing.JLabel();
+        jTextFieldERFDirectory = new javax.swing.JTextField();
+        jButtonERFRestoreDefault = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonOK = new javax.swing.JButton();
 
@@ -242,7 +248,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addComponent(jCheckBoxGERemoveObsoleteDZ)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBoxGEOverwriteOutput)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(jButtonGERestoreDefault)
                 .addContainerGap())
         );
@@ -331,7 +337,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(jTextFieldOPTMinTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                 .addComponent(jButtonOPTRestoreDefault)
                 .addContainerGap())
         );
@@ -357,7 +363,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         ComponentsTab.setName("ComponentsTab"); // NOI18N
 
-        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+        jTabbedPaneequirectangualrFiller.setAutoscrolls(true);
+        jTabbedPaneequirectangualrFiller.setName("jTabbedPaneequirectangualrFiller"); // NOI18N
 
         EquirectangularToCubicTab.setName("EquirectangularToCubicTab"); // NOI18N
 
@@ -435,7 +442,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jTextFieldECDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonECBrowseDirectory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                 .addComponent(jButtonECRestoreDefault)
                 .addContainerGap())
         );
@@ -457,7 +464,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("EquirectangularToCubicTab.TabConstraints.tabTitle"), EquirectangularToCubicTab); // NOI18N
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("EquirectangularToCubicTab.TabConstraints.tabTitle"), EquirectangularToCubicTab); // NOI18N
 
         DeepZoomTilerTab.setName("DeepZoomTilerTab"); // NOI18N
 
@@ -545,7 +552,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldDZTDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonDZTBrowseDirectory)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addComponent(jButtonDZTRestoreDefault)
                 .addContainerGap())
         );
@@ -567,7 +574,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("DeepZoomTilerTab.TabConstraints.tabTitle"), DeepZoomTilerTab); // NOI18N
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("DeepZoomTilerTab.TabConstraints.tabTitle"), DeepZoomTilerTab); // NOI18N
 
         ZoomifyTilerTab.setName("ZoomifyTilerTab"); // NOI18N
 
@@ -643,7 +650,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldZYTDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonZYTBrowseDirectory)
                     .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addComponent(jButtonZYTRestoreDefault)
                 .addContainerGap())
         );
@@ -665,7 +672,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("ZoomifyTilerTab.TabConstraints.tabTitle"), ZoomifyTilerTab); // NOI18N
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("ZoomifyTilerTab.TabConstraints.tabTitle"), ZoomifyTilerTab); // NOI18N
 
         ResizerTab.setName("ResizerTab"); // NOI18N
 
@@ -716,7 +723,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jTextFieldRESDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonRESBrowseDirectory))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addComponent(jButtonRESRestoreDefault)
                 .addContainerGap())
         );
@@ -738,7 +745,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("ResizerTab.TabConstraints.tabTitle"), ResizerTab); // NOI18N
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("ResizerTab.TabConstraints.tabTitle"), ResizerTab); // NOI18N
 
         SkyboxMakerTab.setName("SkyboxMakerTab"); // NOI18N
 
@@ -814,7 +821,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldSBMDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSBMBrowseDirectory)
                     .addComponent(jLabel19))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addComponent(jButtonSBMRestoreDefault)
                 .addContainerGap())
         );
@@ -823,7 +830,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
         SkyboxMakerTab.setLayout(SkyboxMakerTabLayout);
         SkyboxMakerTabLayout.setHorizontalGroup(
             SkyboxMakerTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
             .addGroup(SkyboxMakerTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -831,25 +837,101 @@ public class SettingsWindowView extends javax.swing.JFrame {
         );
         SkyboxMakerTabLayout.setVerticalGroup(
             SkyboxMakerTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 219, Short.MAX_VALUE)
             .addGroup(SkyboxMakerTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(resourceMap.getString("SkyboxMakerTab.TabConstraints.tabTitle"), SkyboxMakerTab); // NOI18N
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("SkyboxMakerTab.TabConstraints.tabTitle"), SkyboxMakerTab); // NOI18N
+
+        jPanel8.setName("jPanel8"); // NOI18N
+
+        jPanel9.setName("jPanel9"); // NOI18N
+
+        jButtonERFBrowseDirectory.setText(resourceMap.getString("jButtonERFBrowseDirectory.text")); // NOI18N
+        jButtonERFBrowseDirectory.setName("jButtonERFBrowseDirectory"); // NOI18N
+        jButtonERFBrowseDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonERFBrowseDirectoryActionPerformed(evt);
+            }
+        });
+
+        jLabel21.setText(resourceMap.getString("jLabel21.text")); // NOI18N
+        jLabel21.setName("jLabel21"); // NOI18N
+
+        jTextFieldERFDirectory.setName("jTextFieldERFDirectory"); // NOI18N
+
+        jButtonERFRestoreDefault.setText(resourceMap.getString("jButtonERFRestoreDefault.text")); // NOI18N
+        jButtonERFRestoreDefault.setName("jButtonERFRestoreDefault"); // NOI18N
+        jButtonERFRestoreDefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonERFRestoreDefaultActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 447, Short.MAX_VALUE)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonERFRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addGap(10, 10, 10)
+                        .addComponent(jTextFieldERFDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonERFBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 209, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(jTextFieldERFDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonERFBrowseDirectory))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addComponent(jButtonERFRestoreDefault)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPaneequirectangualrFiller.addTab(resourceMap.getString("jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
 
         javax.swing.GroupLayout ComponentsTabLayout = new javax.swing.GroupLayout(ComponentsTab);
         ComponentsTab.setLayout(ComponentsTabLayout);
         ComponentsTabLayout.setHorizontalGroup(
             ComponentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jTabbedPaneequirectangualrFiller, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
         ComponentsTabLayout.setVerticalGroup(
             ComponentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+            .addComponent(jTabbedPaneequirectangualrFiller, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
         );
+
+        jTabbedPaneequirectangualrFiller.getAccessibleContext().setAccessibleName(resourceMap.getString("jTabbedPane1.AccessibleContext.accessibleName")); // NOI18N
 
         TabbedPane.addTab(resourceMap.getString("ComponentsTab.TabConstraints.tabTitle"), ComponentsTab); // NOI18N
 
@@ -887,7 +969,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(TabbedPane)
+                .addComponent(TabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
@@ -924,45 +1006,6 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jCheckBoxGEOverwriteOutput.setSelected(aggstngs.ge.getDefaultOverwriteOutput());
     }//GEN-LAST:event_jButtonGERestoreDefaultActionPerformed
 
-    private void jButtonECRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECRestoreDefaultActionPerformed
-        jTextFieldECOverlap.setText(Integer.toString(aggstngs.ec.getDefaultWallOverlap()));
-        jComboBoxECInterpolation.setSelectedItem(aggstngs.ec.getDefaultInterpolation());
-        jTextFieldECDirectory.setText(aggstngs.ec.getDefaultJarDir());
-    }//GEN-LAST:event_jButtonECRestoreDefaultActionPerformed
-
-    private void jButtonDZTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTRestoreDefaultActionPerformed
-        jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getDefaultTileOverlap()));
-        jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getDefaultTileSize()));
-        jTextFieldDZTQuality.setText(Float.toString(aggstngs.dzt.getDefaultQuality()));
-        jTextFieldDZTDirectory.setText(aggstngs.dzt.getDefaultJarDir());
-    }//GEN-LAST:event_jButtonDZTRestoreDefaultActionPerformed
-
-    private void jButtonECBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for EquirectangularToCubic.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.ec.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldECDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
-    }//GEN-LAST:event_jButtonECBrowseDirectoryActionPerformed
-
-    private void jButtonDZTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for DeepZoomTiler.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.dzt.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldDZTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
-    }//GEN-LAST:event_jButtonDZTBrowseDirectoryActionPerformed
-
     private void jButtonGEBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGEBrowseDirectoryActionPerformed
         jFileChooser.resetChoosableFileFilters();
         jFileChooser.setSelectedFile(new File(""));
@@ -976,47 +1019,17 @@ public class SettingsWindowView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonGEBrowseDirectoryActionPerformed
 
-    private void jButtonRESRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESRestoreDefaultActionPerformed
-        jTextFieldRESDirectory.setText(aggstngs.res.getDefaultJarDir());
-    }//GEN-LAST:event_jButtonRESRestoreDefaultActionPerformed
-
-    private void jButtonRESBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for Resizer.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.res.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldRESDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
-    }//GEN-LAST:event_jButtonRESBrowseDirectoryActionPerformed
-
     private void jButtonOPTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOPTRestoreDefaultActionPerformed
         jTextFieldOPTResizePercent.setText(Integer.toString(aggstngs.opt.getDefaultResizePercent()));
         jTextFieldOPTMaxTileSize.setText(Integer.toString(aggstngs.opt.getDefaultMaxTileSize()));
         jTextFieldOPTMinTileSize.setText(Integer.toString(aggstngs.opt.getDefaultMinTileSize()));
     }//GEN-LAST:event_jButtonOPTRestoreDefaultActionPerformed
 
-private void jButtonZYTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonZYTBrowseDirectoryActionPerformed
-    jFileChooser.resetChoosableFileFilters();
-    jFileChooser.setSelectedFile(new File(""));
-    jFileChooser.setFileFilter(new FileFilterJar());
-    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    jFileChooser.setDialogTitle("Browse for ZoomifyTiler.jar");
-    jFileChooser.setCurrentDirectory(new File(aggstngs.zyt.getJarDir()));
-    int returnVal = jFileChooser.showOpenDialog(this);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-        jTextFieldZYTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-    }
-}//GEN-LAST:event_jButtonZYTBrowseDirectoryActionPerformed
-
-private void jButtonZYTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonZYTRestoreDefaultActionPerformed
-    jTextFieldZYTTileSize.setText(Integer.toString(aggstngs.zyt.getDefaultTileSize()));
-    jTextFieldZYTQuality.setText(Float.toString(aggstngs.zyt.getDefaultQuality()));
-    jTextFieldZYTDirectory.setText(aggstngs.zyt.getDefaultJarDir());
-}//GEN-LAST:event_jButtonZYTRestoreDefaultActionPerformed
+private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSBMRestoreDefaultActionPerformed
+    jTextFieldSBMPreviewSize.setText(Integer.toString(aggstngs.sbm.getDefaultPreviewSize()));
+    jTextFieldSBMQuality.setText(Float.toString(aggstngs.sbm.getDefaultQuality()));
+    jTextFieldSBMDirectory.setText(aggstngs.sbm.getDefaultJarDir());
+}//GEN-LAST:event_jButtonSBMRestoreDefaultActionPerformed
 
 private void jButtonSBMBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSBMBrowseDirectoryActionPerformed
     jFileChooser.resetChoosableFileFilters();
@@ -1031,11 +1044,88 @@ private void jButtonSBMBrowseDirectoryActionPerformed(java.awt.event.ActionEvent
     }
 }//GEN-LAST:event_jButtonSBMBrowseDirectoryActionPerformed
 
-private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSBMRestoreDefaultActionPerformed
-    jTextFieldSBMPreviewSize.setText(Integer.toString(aggstngs.sbm.getDefaultPreviewSize()));
-    jTextFieldSBMQuality.setText(Float.toString(aggstngs.sbm.getDefaultQuality()));
-    jTextFieldSBMDirectory.setText(aggstngs.sbm.getDefaultJarDir());
-}//GEN-LAST:event_jButtonSBMRestoreDefaultActionPerformed
+private void jButtonRESBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESBrowseDirectoryActionPerformed
+        jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
+        jFileChooser.setFileFilter(new FileFilterJar());
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setDialogTitle("Browse for Resizer.jar");
+        jFileChooser.setCurrentDirectory(new File(aggstngs.res.getJarDir()));
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            jTextFieldRESDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+        }
+}//GEN-LAST:event_jButtonRESBrowseDirectoryActionPerformed
+
+private void jButtonRESRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESRestoreDefaultActionPerformed
+        jTextFieldRESDirectory.setText(aggstngs.res.getDefaultJarDir());
+}//GEN-LAST:event_jButtonRESRestoreDefaultActionPerformed
+
+private void jButtonZYTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonZYTRestoreDefaultActionPerformed
+    jTextFieldZYTTileSize.setText(Integer.toString(aggstngs.zyt.getDefaultTileSize()));
+    jTextFieldZYTQuality.setText(Float.toString(aggstngs.zyt.getDefaultQuality()));
+    jTextFieldZYTDirectory.setText(aggstngs.zyt.getDefaultJarDir());
+}//GEN-LAST:event_jButtonZYTRestoreDefaultActionPerformed
+
+private void jButtonZYTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonZYTBrowseDirectoryActionPerformed
+    jFileChooser.resetChoosableFileFilters();
+    jFileChooser.setSelectedFile(new File(""));
+    jFileChooser.setFileFilter(new FileFilterJar());
+    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    jFileChooser.setDialogTitle("Browse for ZoomifyTiler.jar");
+    jFileChooser.setCurrentDirectory(new File(aggstngs.zyt.getJarDir()));
+    int returnVal = jFileChooser.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        jTextFieldZYTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+    }
+}//GEN-LAST:event_jButtonZYTBrowseDirectoryActionPerformed
+
+private void jButtonDZTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTRestoreDefaultActionPerformed
+        jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getDefaultTileOverlap()));
+        jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getDefaultTileSize()));
+        jTextFieldDZTQuality.setText(Float.toString(aggstngs.dzt.getDefaultQuality()));
+        jTextFieldDZTDirectory.setText(aggstngs.dzt.getDefaultJarDir());
+}//GEN-LAST:event_jButtonDZTRestoreDefaultActionPerformed
+
+private void jButtonDZTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTBrowseDirectoryActionPerformed
+        jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
+        jFileChooser.setFileFilter(new FileFilterJar());
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setDialogTitle("Browse for DeepZoomTiler.jar");
+        jFileChooser.setCurrentDirectory(new File(aggstngs.dzt.getJarDir()));
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            jTextFieldDZTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+        }
+}//GEN-LAST:event_jButtonDZTBrowseDirectoryActionPerformed
+
+private void jButtonECRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECRestoreDefaultActionPerformed
+        jTextFieldECOverlap.setText(Integer.toString(aggstngs.ec.getDefaultWallOverlap()));
+        jComboBoxECInterpolation.setSelectedItem(aggstngs.ec.getDefaultInterpolation());
+        jTextFieldECDirectory.setText(aggstngs.ec.getDefaultJarDir());
+}//GEN-LAST:event_jButtonECRestoreDefaultActionPerformed
+
+private void jButtonECBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECBrowseDirectoryActionPerformed
+        jFileChooser.resetChoosableFileFilters();
+        jFileChooser.setSelectedFile(new File(""));
+        jFileChooser.setFileFilter(new FileFilterJar());
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setDialogTitle("Browse for EquirectangularToCubic.jar");
+        jFileChooser.setCurrentDirectory(new File(aggstngs.ec.getJarDir()));
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            jTextFieldECDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+        }
+}//GEN-LAST:event_jButtonECBrowseDirectoryActionPerformed
+
+private void jButtonERFBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonERFBrowseDirectoryActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_jButtonERFBrowseDirectoryActionPerformed
+
+private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonERFRestoreDefaultActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_jButtonERFRestoreDefaultActionPerformed
 
     public void displayAggregatedSettings() {
 
@@ -1059,7 +1149,7 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
         jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getTileSize()));
         jTextFieldDZTQuality.setText(Float.toString(aggstngs.dzt.getQuality()));
         jTextFieldDZTDirectory.setText(aggstngs.dzt.getJarDir());
-        
+
         jTextFieldSBMPreviewSize.setText(Integer.toString(aggstngs.sbm.getPreviewSize()));
         jTextFieldSBMQuality.setText(Float.toString(aggstngs.sbm.getQuality()));
         jTextFieldSBMDirectory.setText(aggstngs.sbm.getJarDir());
@@ -1069,6 +1159,8 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
         jTextFieldECDirectory.setText(aggstngs.ec.getJarDir());
 
         jTextFieldRESDirectory.setText(aggstngs.res.getJarDir());
+        
+        jTextFieldERFDirectory.setText(aggstngs.erf.getJarDir());
     }
 
     private void collectAllData() {
@@ -1086,7 +1178,7 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());
             aggstngs.dzt.setQuality(jTextFieldDZTQuality.getText());
             aggstngs.dzt.setJarDir(jTextFieldDZTDirectory.getText());
-            
+
             aggstngs.sbm.setPreviewSize(jTextFieldSBMPreviewSize.getText());
             aggstngs.sbm.setQuality(jTextFieldSBMQuality.getText());
             aggstngs.sbm.setJarDir(jTextFieldSBMDirectory.getText());
@@ -1096,6 +1188,8 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
             aggstngs.ec.setJarDir(jTextFieldECDirectory.getText());
 
             aggstngs.res.setJarDir(jTextFieldRESDirectory.getText());
+            
+            aggstngs.erf.setJarDir(jTextFieldERFDirectory.getText());
 
 
         } catch (IllegalArgumentException ex) {
@@ -1126,6 +1220,8 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JButton jButtonDZTRestoreDefault;
     private javax.swing.JButton jButtonECBrowseDirectory;
     private javax.swing.JButton jButtonECRestoreDefault;
+    private javax.swing.JButton jButtonERFBrowseDirectory;
+    private javax.swing.JButton jButtonERFRestoreDefault;
     private javax.swing.JButton jButtonGEBrowseDirectory;
     private javax.swing.JButton jButtonGERestoreDefault;
     private javax.swing.JButton jButtonOK;
@@ -1152,6 +1248,7 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1166,13 +1263,16 @@ private void jButtonSBMRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JTabbedPane jTabbedPaneequirectangualrFiller;
     private javax.swing.JTextField jTextFieldDZTDirectory;
     private javax.swing.JTextField jTextFieldDZTQuality;
     private javax.swing.JTextField jTextFieldDZTTileOverlap;
     private javax.swing.JTextField jTextFieldDZTTileSize;
     private javax.swing.JTextField jTextFieldECDirectory;
     private javax.swing.JTextField jTextFieldECOverlap;
+    private javax.swing.JTextField jTextFieldERFDirectory;
     private javax.swing.JTextField jTextFieldGEDirectory;
     private javax.swing.JTextField jTextFieldGEMemoryLimit;
     private javax.swing.JTextField jTextFieldOPTMaxTileSize;

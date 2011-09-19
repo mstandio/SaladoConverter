@@ -8,10 +8,11 @@ package com.panozona.converter;
 import com.panozona.converter.maintable.TaskTableModel;
 import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.task.TaskData;
+import com.panozona.converter.task.TaskDataEquirectangular;
 import javax.swing.JOptionPane;
 
 /**
- * @author Marek
+ * @author Marek Standio
  */
 public class TaskSettingsView extends javax.swing.JFrame {
 
@@ -41,6 +42,8 @@ public class TaskSettingsView extends javax.swing.JFrame {
         buttonGroupCubeTileSize = new javax.swing.ButtonGroup();
         jButtonTaskOK = new javax.swing.JButton();
         jButtonTaskCancel = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        CubeAndTileTab = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jRadioButtonAutosize = new javax.swing.JRadioButton();
         jRadioButtonCustom = new javax.swing.JRadioButton();
@@ -53,6 +56,13 @@ public class TaskSettingsView extends javax.swing.JFrame {
         jLabelTileDefaultTileSize = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        EquirectangularTab = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jTextFieldEquiOffset = new javax.swing.JTextField();
+        jTextFieldEquiFov = new javax.swing.JTextField();
+        jButtonEquiRestoreFefault = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -75,6 +85,10 @@ public class TaskSettingsView extends javax.swing.JFrame {
                 jButtonTaskCancelActionPerformed(evt);
             }
         });
+
+        jTabbedPane1.setName("jTabbedPane1"); // NOI18N
+
+        CubeAndTileTab.setName("CubeAndTileTab"); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cube and tile size"));
         jPanel1.setName("jPanel1"); // NOI18N
@@ -106,15 +120,13 @@ public class TaskSettingsView extends javax.swing.JFrame {
                 .addComponent(jRadioButtonCustom)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButtonAutosize)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonCustom)
-                    .addComponent(jRadioButtonAutosize, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jRadioButtonCustom)
+                .addComponent(jRadioButtonAutosize, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.setName("jPanel2"); // NOI18N
@@ -162,8 +174,8 @@ public class TaskSettingsView extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldTileSize, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                    .addComponent(jTextFieldCubeSize, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+                    .addComponent(jTextFieldTileSize, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                    .addComponent(jTextFieldCubeSize, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -184,28 +196,125 @@ public class TaskSettingsView extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout CubeAndTileTabLayout = new javax.swing.GroupLayout(CubeAndTileTab);
+        CubeAndTileTab.setLayout(CubeAndTileTabLayout);
+        CubeAndTileTabLayout.setHorizontalGroup(
+            CubeAndTileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CubeAndTileTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(CubeAndTileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        CubeAndTileTabLayout.setVerticalGroup(
+            CubeAndTileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CubeAndTileTabLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("CubeAndTileTab.TabConstraints.tabTitle"), CubeAndTileTab); // NOI18N
+
+        EquirectangularTab.setName("EquirectangularTab"); // NOI18N
+
+        jPanel5.setName("jPanel5"); // NOI18N
+
+        jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
+        jLabel7.setName("jLabel7"); // NOI18N
+
+        jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
+        jLabel8.setName("jLabel8"); // NOI18N
+
+        jTextFieldEquiOffset.setName("jTextFieldEquiOffset"); // NOI18N
+
+        jTextFieldEquiFov.setName("jTextFieldEquiFov"); // NOI18N
+
+        jButtonEquiRestoreFefault.setText(resourceMap.getString("jButtonEquiRestoreFefault.text")); // NOI18N
+        jButtonEquiRestoreFefault.setName("jButtonEquiRestoreFefault"); // NOI18N
+        jButtonEquiRestoreFefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEquiRestoreFefaultActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldEquiOffset, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                            .addComponent(jTextFieldEquiFov, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)))
+                    .addComponent(jButtonEquiRestoreFefault, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jTextFieldEquiFov, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldEquiOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(jButtonEquiRestoreFefault)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout EquirectangularTabLayout = new javax.swing.GroupLayout(EquirectangularTab);
+        EquirectangularTab.setLayout(EquirectangularTabLayout);
+        EquirectangularTabLayout.setHorizontalGroup(
+            EquirectangularTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EquirectangularTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        EquirectangularTabLayout.setVerticalGroup(
+            EquirectangularTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(EquirectangularTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("EquirectangularTab.TabConstraints.tabTitle"), EquirectangularTab); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonTaskOK, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonTaskCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonTaskCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonTaskCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -219,7 +328,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
     private void jButtonTaskOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTaskOKActionPerformed
         collectAllData();
         if (allowCloseFlag) {
-            this.dispose();            
+            this.dispose();
             taskTableModel.fireTableDataChanged();
             controller.applyCommand();
         }
@@ -248,30 +357,50 @@ public class TaskSettingsView extends javax.swing.JFrame {
         }
 }//GEN-LAST:event_jRadioButtonAutosizeActionPerformed
 
+private void jButtonEquiRestoreFefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEquiRestoreFefaultActionPerformed
+    jTextFieldEquiFov.setText("360");
+    jTextFieldEquiOffset.setText("0");
+}//GEN-LAST:event_jButtonEquiRestoreFefaultActionPerformed
+
     public void displayTaskData(TaskData taskData) {
+
         currentTaskData = taskData;
 
-        jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getPanorama().getCubeSize()));
-        jLabelTileDefaultTileSize.setText(Integer.toString(AggregatedSettings.getInstance().dzt.getTileSize()));
+        jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getOriginalCubeSize()));
+        jLabelTileDefaultTileSize.setText(Integer.toString(AggregatedSettings.getInstance().zyt.getTileSize())); // TODO: change to dzt
 
         jTextFieldCubeSize.setText(Integer.toString(currentTaskData.getNewCubeSize()));
         jTextFieldTileSize.setText(Integer.toString(currentTaskData.getNewTileSize()));
 
-        if (currentTaskData.autosize) {
+        if (currentTaskData.optimalSize) {
             jRadioButtonAutosize.setSelected(true);
         } else {
             jRadioButtonCustom.setSelected(false);
         }
+        
         jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected());
         jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected());
+
+        if (taskData instanceof TaskDataEquirectangular) {
+            EquirectangularTab.setVisible(true);
+            jTextFieldEquiFov.setText(Integer.toString(((TaskDataEquirectangular) taskData).getFov()));
+            jTextFieldEquiOffset.setText(Integer.toString(((TaskDataEquirectangular) taskData).getOffset()));
+        } else {
+            EquirectangularTab.setVisible(false);
+        }
+
     }
 
     private void collectAllData() {
         try {
-            currentTaskData.autosize = jRadioButtonAutosize.isSelected();
-            if (!currentTaskData.autosize) {
+            currentTaskData.optimalSize = jRadioButtonAutosize.isSelected();
+            if (!currentTaskData.optimalSize) {
                 currentTaskData.setNewCubeSize(jTextFieldCubeSize.getText());
                 currentTaskData.setNewTileSize(jTextFieldTileSize.getText());
+            }
+            if (currentTaskData instanceof TaskDataEquirectangular) {
+                ((TaskDataEquirectangular) currentTaskData).setFov(jTextFieldEquiFov.getText());
+                ((TaskDataEquirectangular) currentTaskData).setOffset(jTextFieldEquiOffset.getText());
             }
         } catch (IllegalArgumentException ex) {
             showOptionPane(ex.getMessage());
@@ -283,20 +412,29 @@ public class TaskSettingsView extends javax.swing.JFrame {
         allowCloseFlag = false;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel CubeAndTileTab;
+    private javax.swing.JPanel EquirectangularTab;
     private javax.swing.ButtonGroup buttonGroupCubeTileSize;
+    private javax.swing.JButton jButtonEquiRestoreFefault;
     private javax.swing.JButton jButtonTaskCancel;
     private javax.swing.JButton jButtonTaskOK;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelTileDefaultCubeSize;
     private javax.swing.JLabel jLabelTileDefaultTileSize;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButton jRadioButtonAutosize;
     private javax.swing.JRadioButton jRadioButtonCustom;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextFieldCubeSize;
+    private javax.swing.JTextField jTextFieldEquiFov;
+    private javax.swing.JTextField jTextFieldEquiOffset;
     private javax.swing.JTextField jTextFieldTileSize;
     // End of variables declaration//GEN-END:variables
 }
