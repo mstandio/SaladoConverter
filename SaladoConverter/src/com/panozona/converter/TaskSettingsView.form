@@ -32,66 +32,51 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jTabbedPane1" alignment="1" pref="261" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane2" alignment="0" pref="275" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jButtonTaskOK" min="-2" pref="68" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonTaskCancel" min="-2" pref="68" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" min="-2" pref="188" max="-2" attributes="1"/>
+              <Component id="jTabbedPane2" pref="170" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonTaskCancel" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                  <Component id="jButtonTaskOK" alignment="3" pref="23" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jButtonTaskOK" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonTaskCancel" alignment="0" min="-2" pref="23" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="jButtonTaskOK">
+    <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="jButtonTaskOK.text"/>
-        <Property name="name" type="java.lang.String" value="jButtonTaskOK" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTaskOKActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButtonTaskCancel">
-      <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="jButtonTaskCancel.text"/>
-        <Property name="name" type="java.lang.String" value="jButtonTaskCancel" noResource="true"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTaskCancelActionPerformed"/>
-      </Events>
-    </Component>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="jTabbedPane1" noResource="true"/>
-      </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="jTabbedPane2.AccessibleContext.accessibleName"/>
+      </AccessibilityProperties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="CubeAndTileTab">
+        <Container class="javax.swing.JPanel" name="ctstab">
           <Properties>
-            <Property name="name" type="java.lang.String" value="CubeAndTileTab" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="ct" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Cube and tile size">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="CubeAndTileTab.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" resourceKey="ct.TabConstraints.tabTitle"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -101,9 +86,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel1" alignment="1" max="32767" attributes="1"/>
-                          <Component id="jPanel2" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
+                          <Component id="jPanel2" alignment="0" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -112,11 +97,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="33" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -138,15 +123,15 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jRadioButtonCustom" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jRadioButtonAutosize" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="88" max="32767" attributes="0"/>
+                          <EmptySpace pref="86" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="jRadioButtonCustom" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jRadioButtonAutosize" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
@@ -209,8 +194,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jTextFieldTileSize" pref="94" max="32767" attributes="1"/>
-                              <Component id="jTextFieldCubeSize" alignment="0" pref="94" max="32767" attributes="3"/>
+                              <Component id="jTextFieldTileSize" pref="108" max="32767" attributes="1"/>
+                              <Component id="jTextFieldCubeSize" alignment="0" pref="108" max="32767" attributes="3"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -289,14 +274,14 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="EquirectangularTab">
+        <Container class="javax.swing.JPanel" name="eqtab">
           <Properties>
-            <Property name="name" type="java.lang.String" value="EquirectangularTab" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="eq" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Equirectangular">
-                <Property name="tabTitle" type="java.lang.String" resourceKey="EquirectangularTab.TabConstraints.tabTitle"/>
+                <Property name="tabTitle" type="java.lang.String" resourceKey="eq.TabConstraints.tabTitle"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -304,9 +289,9 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel5" max="32767" attributes="0"/>
+                      <Component id="jPanel3" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -315,16 +300,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel5" max="32767" attributes="0"/>
+                      <Component id="jPanel3" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel5">
+            <Container class="javax.swing.JPanel" name="jPanel3">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jPanel5" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
               </Properties>
 
               <Layout>
@@ -333,18 +318,18 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jTextFieldEquiOffset" pref="134" max="32767" attributes="1"/>
-                                      <Component id="jTextFieldEquiFov" pref="134" max="32767" attributes="3"/>
+                                      <Component id="jTextFieldEquiOffset" pref="148" max="32767" attributes="1"/>
+                                      <Component id="jTextFieldEquiFov" pref="148" max="32767" attributes="3"/>
                                   </Group>
                               </Group>
-                              <Component id="jButtonEquiRestoreFefault" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonEquiApplyChanges" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -366,24 +351,24 @@
                                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="50" max="32767" attributes="0"/>
-                          <Component id="jButtonEquiRestoreFefault" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="32" max="32767" attributes="0"/>
+                          <Component id="jButtonEquiApplyChanges" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel7">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jLabel7.text"/>
-                    <Property name="name" type="java.lang.String" value="jLabel7" noResource="true"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="jLabel8.text"/>
                     <Property name="name" type="java.lang.String" value="jLabel8" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel7">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jLabel7.text"/>
+                    <Property name="name" type="java.lang.String" value="jLabel7" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTextFieldEquiOffset">
@@ -396,13 +381,17 @@
                     <Property name="name" type="java.lang.String" value="jTextFieldEquiFov" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButtonEquiRestoreFefault">
+                <Component class="javax.swing.JButton" name="jButtonEquiApplyChanges">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jButtonEquiRestoreFefault.text"/>
-                    <Property name="name" type="java.lang.String" value="jButtonEquiRestoreFefault" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="jButtonEquiApplyChanges.text"/>
+                    <Property name="actionCommand" type="java.lang.String" resourceKey="jButtonEquiApplyChanges.actionCommand"/>
+                    <Property name="name" type="java.lang.String" value="jButtonEquiApplyChanges" noResource="true"/>
                   </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="jButtonEquiApplyChanges.AccessibleContext.accessibleName"/>
+                  </AccessibilityProperties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonEquiRestoreFefaultActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonEquiApplyChangesActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -411,5 +400,23 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="jButtonTaskCancel">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jButtonTaskCancel.text"/>
+        <Property name="name" type="java.lang.String" value="jButtonTaskCancel" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTaskCancelActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonTaskOK">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jButtonTaskOK.text"/>
+        <Property name="name" type="java.lang.String" value="jButtonTaskOK" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTaskOKActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

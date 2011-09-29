@@ -18,31 +18,30 @@ import javax.media.jai.PlanarImage;
 public class EquirectangularFiller {
 
     static final String help = "\nEquirectangularFiller v1.0 \n\n Usage: \n\n"
-            + "java [-java_options] -jar path/to/EquirectangularFiller.jar [-options] [args...]\n"
-            + "For a list of java options try: java -help or java -X for a list of less common\n"
-            + "options. Loading large images for conversion takes a lot of RAM so you will\n"
-            + "find the -Xmx option useful to raise Java's maximum heap size. The -Xmx command\n"
-            + "is followed immediately by an integer specifying RAM size and a unit indicator.\n"
-            + "For example, -Xmx1024m means to use 1024 megabytes. If you see an error about\n"
-            + "heap size, then you will need to increase this value.\n\n"
+            + "java [-java_options] -jar path/to/EquirectangularFiller.jar [-options] [args...]\n\n"
+            + "For a list of java options try: java -help or java -X for a list of less\n"
+            + "common options. Loading large images for conversion takes a lot of RAM,\n"
+            + "so you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
+            + "and a unit indicator. For example: -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an heap size error, then you will need to increase this value.\n\n"
             + " Basic usage example for the jar file:\n\n"
-            + "java -Xmx1024m -jar path/to/EquirectangularFiller.jar -fov 120 path/to/image\n"
-            + "This will generate file with 'filled_' prepended onto its name. This file will have\n"
-            + "proportions width:height as 2:1 and will represent full equirectangular image.\n"
-            + "\n"
+            + "java -Xmx1024m -jar path/to/EquirectangularFiller.jar -fov 120 path/to/image\n\n"
+            + "This will generate file with 'filled_' prepended onto its name. So in the\n"
+            + "basic example above, the output file would be in path/to/filled_image.\n"
+            + "This file will have proportions width:height as 2:1 and will represent\n"
+            + "full equirectangular image.\n\n"
             + " Options:\n\n"
-            + "-fov: horizontal field of view (in degrees) represented in input image.\n"
-            + "\tDefault is 360.\n\n"
-            + "-offset: vertical offset (in pixels) of image. Usually means how far middle \n"
-            + "\tof image is away from horizon.\n"
-            + "\tDefault is 0\n\n"
-            + "-outputdir or -o: the output directory for the converted image. It\n"
-            + "\tneed not exist. Default is the input folder.\n\n"
-            + "-simpleoutput or -s: output file will not have 'filled_' prepended to its name.\n\n"
-            + "-verbose or -v: makes the utility more 'chatty' during processing. \n\n"
+            + "-fov: horizontal field of view (in degrees) of input image. Default is 360.\n\n"
+            + "-offset: vertical offset (in pixels) of input image. Usually means how far\n"
+            + "\tmiddle of image is away from horizon. Default is 0.\n\n"
+            + "-outputdir or -o: the output directory for the converted image. It need not\n"
+            + "\texist. Default is the input folder.\n\n"
+            + "-simpleoutput or -s: output will not have 'filled_' prepended to its name.\n\n"
             + " Arguments:\n\n"
-            + "The argument following any options is single input partial equirectangular image that\n"
-            + "will be filled with black background to match proportions of full equirectangular image.\n";
+            + "The argument following any options is single input partial equirectangular\n"
+            + "image that will be filled with black background to match proportions of\n"
+            + "full equirectangular image.";
 
     private enum CmdParseState {
 
@@ -53,8 +52,7 @@ public class EquirectangularFiller {
     static int fov = 360;                         // -fov
     static int offset = 0;                        // -offset
     static File outputDir = null;                 // -outputdir | -o
-    static boolean simpleOutput = false;          // -simpleoutput | -s
-    static boolean verboseMode = false;           // -verbose
+    static boolean simpleOutput = false;          // -simpleoutput | -s    
     static File inputFile = null;                 // must follow all other args
 
     /**
@@ -75,14 +73,14 @@ public class EquirectangularFiller {
                         }
                     }
                 } else {
-                    File parentFile = inputFile.getAbsoluteFile().getParentFile();
-                    outputDir = parentFile;
+                    outputDir = inputFile.getAbsoluteFile().getParentFile();
                 }
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
                 System.out.println("type -h to get list of supported commands");
                 return;
             }
+
             System.setProperty("com.sun.media.jai.disableMediaLib", "true");
             // can be problematic in non-admin accounts
             // java -Dcom.sun.media.jai.disableMediaLib=true YourApp
@@ -105,10 +103,6 @@ public class EquirectangularFiller {
                     if (arg.equals("-help") || arg.equals("-h")) {
                         showHelp = true;
                         return;
-                    } else if (arg.equals("-verbose")) {
-                        verboseMode = true;
-                    } else if (arg.equals("-debug")) {
-                        verboseMode = true;
                     } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
                         simpleOutput = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
@@ -166,21 +160,25 @@ public class EquirectangularFiller {
     }
 
     private static void processImageFile(File inFile, File outputDir) throws IOException {
-        if (verboseMode) {
-            System.out.printf("filling image: %s\n", inFile);
-        }
-        String outputName = (simpleOutput ? "" : "filled_") + inputFile.getName().substring(0, inputFile.getName().lastIndexOf(".")) + ".tif";
+
+        String outputName = outputDir.getAbsolutePath()
+                + File.separator
+                + (simpleOutput ? "" : "filled_")
+                + inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."))
+                + ".tif";
         BufferedImage input = loadImage(inputFile);
         Point outputDimension = getOutputDimension(input);
         BufferedImage output = new BufferedImage(outputDimension.x, outputDimension.y, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = output.getGraphics();
         graphics.drawImage(input, (int) Math.floor((double) (outputDimension.x - input.getWidth()) * 0.5d),
                 (int) Math.floor((double) (outputDimension.y - input.getHeight()) * 0.5d + offset), Color.BLACK, null);
-        if (verboseMode) {
-            System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath() + File.separator + outputName);
-        }
-        JAI.create("filestore", output, outputDir.getAbsolutePath() + File.separator + outputName, "TIFF");
+        input.flush();
+
+        System.out.println("Filling image: " + inFile.getAbsolutePath() + " to: " + outputName);
+
+        JAI.create("filestore", output, outputName, "TIFF");
         graphics.dispose();
+        output.flush();
     }
 
     /**

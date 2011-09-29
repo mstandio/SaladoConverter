@@ -8,8 +8,7 @@ import java.io.File;
 public class TaskDataCubic extends TaskData {
 
     public TaskDataCubic(Panorama panorama) {
-        super(panorama);
-        setNewCubeSize(getOriginalCubeSize());
+        super(panorama);        
     }
 
     @Override
@@ -20,5 +19,5 @@ public class TaskDataCubic extends TaskData {
     @Override
     public final String getPathDescription() {
         return panorama.getImages().get(0).path.substring(0, panorama.getImages().get(0).path.lastIndexOf(File.separator));
-    }
+    }    
 }

@@ -19,38 +19,39 @@ import java.awt.Graphics;
 public class SkyboxMaker {
 
     static final String help = "\nSkyboxMaker v1.0 \n\n Usage: \n\n"
-            + "java [-java_options] -jar path/to/SkyboxMaker.jar [-options] [args...]\n"
+            + "java [-java_options] -jar path/to/SkyboxMaker.jar [-options] [args...]\n\n"
             + "For a list of java options try: java -help or java -X for a list of less\n"
-            + "common options. Loading large images for conversion takes a lot of RAM so\n"
-            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "common options. Loading large images for conversion takes a lot of RAM,\n"
+            + "so you will find the -Xmx option useful to raise Java's maximum heap size.\n"
             + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
-            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
-            + "If you see an error about heap size, then you will need to increase this\n"
-            + "value.\n\n" + " Basic usage example for the jar file:\n\n"
-            + "java -Xmx1024m -jar path/to/SkyboxMaker.jar path/to/directory/of/images/\n"
-            + "This will generate a folder beside the input directory or file with\n"
-            + "'skybox_' prepended onto its name.\n"
-            + "\n"
+            + "and a unit indicator. For example: -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an heap size error, then you will need to increase this value.\n\n"
+            + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/SkyboxMaker.jar path/to/directory/of/images/\n\n"
+            + "This will generate a folder beside the input directory with 'skybox_'\n"
+            + "prepended onto the name. So in the basic example above, the output files\n"
+            + "would be in path/to/directory/of/skybox_images/\n\n"
             + " Options:\n\n"
-            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
-            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
-            + "\t1.0 is least compression, highest quality, largest file.\n"
-            + "\tDefault is 0.8.\n\n"
-            + "-previewSize: width of low resolution skybox image outputed along\n"
-            + "\twith main outputed image, with 'preview_' prefix.\n"
-            + "\tDefault is 200.\n\n"
-            + "-previewOnly: only preview image is outputed.\n\n"
-            + "-outputdir or -o: the output directory for the converted images.\n"
-            + "\tIt need not exist. Default is a folder next to the input folder\n"
-            + "\tor files, with 'skybox_' prepended to the name of the input files.\n\n"
+            + "-quality: output JPEG compression. 0.0 is maximum compression, lowest\n"
+            + "\tquality, smallest file. 1.0 is least compression, highest quality,\n"
+            + "\tlargest file. Default is 0.8\n\n"
+            + "-previewsize: width of low resolution image with 'preview_' prepended to\n"
+            + "\tits name, that is outputed along with main outputed image. Default\n"
+            + "\tis 200"
+            + "-previewonly: when set, only preview image is outputed.\n\n"
+            + "-outputdir or -o: the output directory for the converted images.It need\n"
+            + "\tnot exist. Default is a folder next to the input folder with \n"
+            + "\t'skybox_' prepended to the name of the input files.\n\n"
             + "-verbose or -v: makes the utility more 'chatty' during processing.\n\n"
             + " Arguments:\n\n"
-            + "The arguments following any options are the input images or folder.\n"
-            + "If there are multiple input images, each should be separated by a space.\n"
-            + "Input folder will NOT be recursed. Only images immediately inside\n"
-            + "the folder will be processed. Application has to be able to recognize\n"
-            + "six cube walls, which need to be square, have exactly same size\n"
-            + "and their naming has to follow one of common naming conventions.\n";
+            + "The arguments following any options are 6 input images or folder. If there\n"
+            + "are multiple input images, each should be separated by a space. Input\n"
+            + "folder will NOT be recursed. Only images immediately inside the folder\n"
+            + "will be processed. Application has to be able to recognize six cube walls,\n"
+            + "which need to be square, have exactly same size and their naming has to\n"
+            + "folow one of common naming conventions, for instance: name_front,\n"
+            + "name_right, name_back, name_up, name_down or name_f, name_r, name_b,\n"
+            + "name_l, name_u, name_d or name_0, name_1, name_2, name_3, name_4, name_5.\n";
 
     private enum CmdParseState {
 
@@ -61,8 +62,7 @@ public class SkyboxMaker {
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
     static int previewSize = 200;	           // -previewSize
     static boolean previewOnly = false;	           // -previewOnly
-    static File outputDir = null;                  // -outputdir | -o
-    static boolean verboseMode = false;            // -verbose
+    static File outputDir = null;                  // -outputdir | -o    
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
 
     /**
@@ -86,11 +86,13 @@ public class SkyboxMaker {
                 } else {
                     outputDir = inputFiles.get(0).getAbsoluteFile().getParentFile();
                 }
+
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
                 System.out.println("For avaible options type: -help or -h");
                 return;
             }
+
             System.setProperty("com.sun.media.jai.disableMediaLib", "true");
             // it probably can be problematic in non-admin accounts
             // java -D com.sun.media.jai.disableMediaLib=true YourApp
@@ -113,15 +115,13 @@ public class SkyboxMaker {
                     if (arg.equals("-h") || arg.equals("-help")) {
                         showHelp = true;
                         return;
-                    } else if (arg.equals("-previewOnly")) {
+                    } else if (arg.equals("-previewonly")) {
                         previewOnly = true;
-                    } else if (arg.equals("-verbose")) {
-                        verboseMode = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-quality")) {
                         state = CmdParseState.QUALITY;
-                    } else if (arg.equals("-previewSize")) {
+                    } else if (arg.equals("-previewsize")) {
                         state = CmdParseState.PREVIEWSIZE;
                     } else {
                         state = CmdParseState.INPUTFILE;
@@ -142,7 +142,7 @@ public class SkyboxMaker {
                 case PREVIEWSIZE:
                     int size = Integer.parseInt(args[count]);
                     if (size <= 0) {
-                        throw new Exception("-previewSize");
+                        throw new Exception("-previewsize");
                     }
                     previewSize = size;
                     state = CmdParseState.DEFAULT;
@@ -190,22 +190,19 @@ public class SkyboxMaker {
     private static void processImageFiles() throws IOException {
         String nameWithoutDescription = inputFiles.get(0).getName().substring(0, inputFiles.get(0).getName().lastIndexOf("_"));
         BufferedImage input = loadImage(inputFiles.get(0));
+        System.out.printf("Skyboxing image: %s\n", inputFiles.get(0).getAbsolutePath());
         int inputSize = input.getWidth();
-
         BufferedImage output = new BufferedImage(inputSize, inputSize * 6, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = output.getGraphics();
         graphics.drawImage(input, 0, getImagePosition(inputFiles.get(0).getName()) * inputSize, null);
         for (int i = 1; i < 6; i++) {
-            if (verboseMode) {
-                System.out.printf("Processing image: %s\n", inputFiles.get(i).getAbsolutePath());
-            }
+            System.out.printf("Skyboxing image: %s\n", inputFiles.get(i).getAbsolutePath());
             input = loadImage(inputFiles.get(i));
             graphics.drawImage(input, 0, getImagePosition(inputFiles.get(i).getName()) * inputSize, null);
+            input.flush();
         }
 
-        if (verboseMode) {
-            System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath() + File.separator + nameWithoutDescription);
-        }
+        System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath());
 
         if (!previewOnly) {
             saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
@@ -213,8 +210,8 @@ public class SkyboxMaker {
 
         output = resizeImage(output, previewSize, previewSize * 6);
         saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + "preview_" + nameWithoutDescription, quality);
-
         graphics.dispose();
+        output.flush();
     }
 
     private static int getImagePosition(String name) {

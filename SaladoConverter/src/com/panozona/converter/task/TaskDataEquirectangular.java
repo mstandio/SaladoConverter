@@ -12,8 +12,7 @@ public class TaskDataEquirectangular extends TaskData{
     private int offset = 0;
     
     public TaskDataEquirectangular(Panorama panorama){
-        super(panorama);
-        setNewCubeSize(getOriginalCubeSize());
+        super(panorama);        
     }
     
     public boolean requiresFilling(){

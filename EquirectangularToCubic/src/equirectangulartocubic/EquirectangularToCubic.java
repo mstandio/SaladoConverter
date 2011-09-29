@@ -272,7 +272,7 @@ public class EquirectangularToCubic {
      */
     private static void processImageFile(File inFile, File outputDir) throws IOException {
         if (verboseMode) {
-            System.out.printf("Processing image: %s\n", inFile);
+            System.out.printf("Converting to cube: %s\n", inFile);
         }
 
         String fileName = inFile.getName();
@@ -408,13 +408,10 @@ public class EquirectangularToCubic {
      * @param img the image to be saved
      * @param path the path of the file to which it is saved (less the extension)     
      */
-    private static void saveImage(BufferedImage img, String path) throws IOException {
+    private static void saveImage(BufferedImage img, String path) throws IOException {        
+        JAI.create("filestore", img, path + ".tif", "TIFF");        
         if (verboseMode) {
-            System.out.print("Saving image...");
-        }
-        JAI.create("filestore", img, path + ".tif", "TIFF");
-        if (verboseMode) {
-            System.out.print("Created: " + path + ".tif");
+            System.out.print("\nSaving cube wall: " + path + ".tif");
         }
     }
 }

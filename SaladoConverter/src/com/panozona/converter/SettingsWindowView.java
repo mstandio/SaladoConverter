@@ -988,8 +988,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
             if (!initialmemoryLimitValue.equals(jTextFieldGEMemoryLimit.getText())) {
                 JOptionPane.showMessageDialog(this, Messages.GE_MEMORY_LIMIT_WARNING);
             }
-            Controller.getInstance().Optimize();
-            taskTableModel.fireTableDataChanged();
+            Controller.getInstance().applyCommand();            
             onClose();
         }
         allowCloseFlag = true;

@@ -87,9 +87,7 @@ public class Resizer {
                     } else {
                         outputDir = createDir(parentFolder.getParentFile(), "resized_" + parentFolder.getName());
                     }
-                }
-                
-                System.out.print("\n");
+                }               
 
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
@@ -184,7 +182,7 @@ public class Resizer {
                         }
                     }
                 }
-
+                break;
             }
         }
         if (inputFiles.isEmpty() && showHelp) {
@@ -196,11 +194,11 @@ public class Resizer {
     }
 
     private static void processImageFile(File inFile, File outputDir) throws IOException {
-        
+
         FileSeekableStream stream = null;
 
         try {
-            
+
             double resultWidth = width;
             double resultHeight = height;
 
@@ -221,13 +219,13 @@ public class Resizer {
             paramBlock.add(new InterpolationNearest());
             planarImage = JAI.create("scale", paramBlock);
 
-            String outputFileName = outputDir.getAbsolutePath() 
-                    + File.separator 
-                    + inFile.getName().substring(0, inFile.getName().lastIndexOf('.')) 
+            String outputFileName = outputDir.getAbsolutePath()
+                    + File.separator
+                    + inFile.getName().substring(0, inFile.getName().lastIndexOf('.'))
                     + ".tif";
-            
-            System.out.printf("Resizing image: %s to: "+ outputFileName +"\n", inFile);
-            
+
+            System.out.println("Resizing image: "+inFile.getAbsolutePath()+" to: " + outputFileName);
+
             JAI.create("filestore", planarImage, outputFileName, "TIFF");
         } catch (Exception e) {
             e.printStackTrace();

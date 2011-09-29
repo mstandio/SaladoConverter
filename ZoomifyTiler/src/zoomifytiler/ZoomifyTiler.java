@@ -34,46 +34,36 @@ import java.awt.geom.Point2D;
 public class ZoomifyTiler {
 
     static final String help = "\nZoomifyTiler v1.0 \n\n Usage: \n\n"
-            + "java [-java_options] -jar path/to/ZoomifyTiler.jar [-options] [args...]\n"
+            + "java [-java_options] -jar path/to/ZoomifyTiler.jar [-options] [args...]\n\n"
             + "For a list of java options try: java -help or java -X for a list of less\n"
-            + "common options. Loading large images for conversion takes a lot of RAM so\n"
-            + "you will find the -Xmx option useful to raise Java's maximum heap size.\n"
+            + "common options. Loading large images for conversion takes a lot of RAM,\n"
+            + "so you will find the -Xmx option useful to raise Java's maximum heap size.\n"
             + "The -Xmx command is followed immediately by an integer specifying RAM size\n"
-            + "and a unit indicator. For example, -Xmx1024m means to use 1024 megabytes.\n"
-            + "If you see an error about heap size, then you will need to increase this \n"
-            + "value.\n\n" + " Basic usage example for the jar file:\n\n"
-            + "java -Xmx1024m -jar path/to/ZoomifyTiler.jar path/to/directory/of/images/\n"
-            + "This will generate a folder of tiles beside the input directory or file \n"
-            + "with 'tiles_' prepended onto the name. So in the basic example above, \n"
-            + "the output files would be in path/to/directory/of/tiles_images/.\n"
-            + "\n"
+            + "and a unit indicator. For example: -Xmx1024m means to use 1024 megabytes.\n"
+            + "If you see an heap size error, then you will need to increase this value.\n\n"
+            + " Basic usage example for the jar file:\n\n"
+            + "java -Xmx1024m -jar path/to/ZoomifyTiler.jar path/to/image\n\n"
+            + "This will generate a folder besides input image with 'tiles_' prepended\n"
+            + "onto its name. So, in basic example above the output folder for image\n"
+            + "would be in path/to/image/tiles_image.\n\n"
             + " Options:\n\n"
-            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
-            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
-            + "\t1.0 is least compression, highest quality, tlargest file.\n"
-            + "\tDefault is 0.8.\n\n"
-            + "-tilesize: target pixel tile size. Tiling starts at the top left\n"
-            + "\tof an image, so tiles at the right and bottom to the image\n"
-            + "\tmay not be this width or height, respectively, unless the\n"
-            + "\tinput image's size is divisible by the tileSize.\n"
-            + "\tDefault is 512.\n\n"
-            + "-outputdir or -o: the output directory for the converted images. It\n"
-            + "\tneed not exist. Default is a folder next to the input folder\n"
-            + "\tor file, with 'tiles_' prepended to the name of the input\n"
-            + "\t(input files will have the extension removed). \n\n"
-            + "-simpleoutput or -s: 'tiles_' parent directory for output files is not\n"
-            + "\tcreated. Both .xml file and folder containing tiles are saved\n"
-            + "\tdirectly into output folder.\n\n"
-            + "-verbose or -v: makes the utility more 'chatty' during processing.\n\n"
-            + "-debug: print various debugging messages during processing.\n\n"
+            + "-quality: output JPEG compression. 0.0 is maximum compression, lowest\n"
+            + "\tquality, smallest file. 1.0 is least compression, highest quality,\n"
+            + "\tlargest file. Default is 0.8\n\n"
+            + "-tilesize: target pixel tile size. Tiling starts at the top left corner\n"
+            + "\tof an image, so tiles at the right and bottom to the image may not\n"
+            + "\tbe this size, respectively, unless the input image's size is\n"
+            + "\tdivisible by the tileSize value. Default is 512\n\n"
+            + "-outputdir or -o: the output directory for the converted images. It need\n"
+            + "\tnot exist. Default is a folder next to the input file twith\n"
+            + "\t'tiles_' prepended to the name of the input image.\n\n"
+            + "-simpleoutput or -s: when processing single image 'tiles_' parent directory\n"
+            + "\tfor output file is not created. Both xml file and folder containing\n"
+            + "\ttiles are saved directly into output folder.\n\n"
             + " Arguments:\n\n"
-            + "The arguments following any options are the input images or folders.\n"
-            + "(or both) If there are multiple input folders or images, each should\n"
-            + "be separated by a space. Input folders will not be NOT be recursed.\n"
-            + "Only images immediately inside the folder will be processed.\n"
-            + "All inputs will be processed into the one output directory,\n"
-            + "so general usage is to process one folder containing multiples images\n"
-            + "or to process one singe image file.\n";
+            + "The argument following any options is input image or folder that contains\n"
+            + "images. Input folder will not be NOT be recursed. Only images immediately\n"
+            + "inside the folder will be processed.\n";
 
     private enum CmdParseState {
 
@@ -86,9 +76,7 @@ public class ZoomifyTiler {
     static File outputDir = null;                  // -outputdir | -o
     static boolean simpleoutput = false;           // -simpleoutput | -s
     static boolean verboseMode = false;            // -verbose
-    static boolean debugMode = false;              // -debug
-    static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
-    static ArrayList<File> outputFiles = new ArrayList<File>();
+    static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args    
 
     /**
      * @param args the command line arguments
@@ -101,48 +89,14 @@ public class ZoomifyTiler {
                     System.out.println(help);
                     return;
                 }
-                //when output file is given, output are folders with names of input file in that directory
-                if (outputFiles.size() == 1) {
-                    outputDir = outputFiles.get(0);
-                    outputFiles.clear();
-
+                if (outputDir != null) {
                     if (!outputDir.exists() || !outputDir.isDirectory()) {
                         if (!outputDir.mkdir()) {
                             throw new IOException("Unable to create directory: " + outputDir);
                         }
                     }
-
-                    Iterator<File> itr = inputFiles.iterator();
-                    while (itr.hasNext()) {
-                        File inputFile = itr.next();
-                        String fileName = inputFile.getName();
-                        String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
-                        if (simpleoutput) {
-                            outputFiles.add(outputDir);
-                        } else {
-                            File outputFile = createDir(outputDir, "tiles_" + nameWithoutExtension);
-                            outputFiles.add(outputFile);
-                        }
-                    }
-                }
-
-                // default location for output files is folder beside input files with the name of the input file
-                if (outputFiles.isEmpty()) {
-                    Iterator<File> itr = inputFiles.iterator();
-                    while (itr.hasNext()) {
-                        File inputFile = itr.next();
-                        File parentFile = inputFile.getAbsoluteFile().getParentFile();
-                        String fileName = inputFile.getName();
-                        String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
-
-                        File outputFile = createDir(parentFile, "tiles_" + nameWithoutExtension);
-                        outputFiles.add(outputFile);
-                    }
-                }
-
-                if (debugMode) {
-                    System.out.printf("tileSize=%d ", tileSize);
-                    System.out.printf("quality=%.2f ", quality);
+                } else {
+                    outputDir = inputFiles.get(0).getAbsoluteFile().getParentFile();
                 }
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
@@ -152,8 +106,20 @@ public class ZoomifyTiler {
             System.setProperty("com.sun.media.jai.disableMediaLib", "true");
             // it probably can be problematic in non-admin accounts
             // java -D com.sun.media.jai.disableMediaLib=true YourApp
+
+            if (inputFiles.size() > 1) {
+                simpleoutput = false;
+            }
             for (int i = 0; i < inputFiles.size(); i++) {
-                processImageFile(inputFiles.get(i), outputFiles.get(i));
+                if (simpleoutput) {
+                    processImageFile(inputFiles.get(i), outputDir);
+                } else {
+                    String fileName = inputFiles.get(i).getName();
+                    String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
+                    processImageFile(inputFiles.get(i),
+                            createDir(outputDir,
+                            "tiles_" + nameWithoutExtension));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -175,9 +141,6 @@ public class ZoomifyTiler {
                         return;
                     } else if (arg.equals("-verbose")) {
                         verboseMode = true;
-                    } else if (arg.equals("-debug")) {
-                        verboseMode = true;
-                        debugMode = true;
                     } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
                         simpleoutput = true;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
@@ -191,7 +154,7 @@ public class ZoomifyTiler {
                     }
                     break;
                 case OUTPUTDIR:
-                    outputFiles.add(new File(args[count]));
+                    outputDir = new File(args[count]);
                     state = CmdParseState.DEFAULT;
                     break;
                 case TILESIZE:
@@ -237,6 +200,7 @@ public class ZoomifyTiler {
                         }
                     }
                 }
+                break;
             }
         }
         if (inputFiles.isEmpty()) {
@@ -288,10 +252,10 @@ public class ZoomifyTiler {
         for (int currentTier = numTiers; currentTier >= 0; currentTier--) {
             int nCols = (int) Math.ceil(width / tileSize);
             int nRows = (int) Math.ceil(height / tileSize);
-            if (debugMode) {
-                System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
-                        numTiers, width, height, nCols, nRows);
-            }
+
+            //System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
+            //numTiers, width, height, nCols, nRows);
+
             for (int row = nRows - 1; row >= 0; row--) {
                 for (int col = nCols - 1; col >= 0; col--) {
                     saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' + col + '-' + row, quality);
@@ -440,12 +404,10 @@ public class ZoomifyTiler {
         if (y + h > img.getHeight()) {
             h = img.getHeight() - y;
         }
-        if (debugMode) {
-            System.out.printf("getTile: row=%d, col=%d, x=%d, y=%d, w=%d, h=%d\n",
-                    row, col, x, y, w, h);
-        }
-        assert (w > 0);
-        assert (h > 0);
+
+        //System.out.printf("getTile: row=%d, col=%d, x=%d, y=%d, w=%d, h=%d\n",
+        //      row, col, x, y, w, h);
+
         BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = result.createGraphics();
         g.drawImage(img, 0, 0, w, h, x, y, x + w, y + h, null);

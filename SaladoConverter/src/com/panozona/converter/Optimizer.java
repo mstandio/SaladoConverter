@@ -9,10 +9,10 @@ public class Optimizer {
     private Optimizer(){
     }
 
-    static void optimize(TaskData taskData) {
-        int optimalCubesize = optimizeCubeSize(taskData.getOriginalCubeSize());        
-        taskData.setNewOptimalCubeSize(optimalCubesize);
-        taskData.setNewOptimalTileSize(optimizeTileSize(optimalCubesize));
+    public static void optimize(TaskData taskData) {
+        int optimalCubesize = optimizeCubeSize(taskData.getOriginalCubeSize());
+        taskData.setOptimalCubeSize(optimalCubesize);
+        taskData.setOptimalTileSize(optimizeTileSize(optimalCubesize));
     }
 
     private static int optimizeCubeSize(int size) {

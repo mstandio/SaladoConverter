@@ -1,5 +1,6 @@
 package com.panozona.converter.task;
 
+import com.panozona.converter.Optimizer;
 import com.panozona.converter.settings.AggregatedSettings;
 import com.panozona.converter.utils.Messages;
 import java.util.ArrayList;
@@ -15,17 +16,28 @@ public abstract class TaskData {
     public Boolean showCubeSize = true;
     public Boolean showTizeSize = true;
     protected Panorama panorama;
-    private int newTileSize;
-    private int newCubeSize;
-    public boolean optimalSize = true;
-    public boolean surpressOptimalSize = false;
-    private int newOptimalTileSize;
-    private int newOptimalCubeSize;
+    private int newTileSize = 0;
+    private int newCubeSize = 0;
+    private int optimalTileSize = 0;
+    private int optimalCubeSize = 0;
     public ArrayList<Operation> operations = new ArrayList<Operation>();
+    public boolean surpressOptimalisation = false;
+    private boolean isOptimalisated = true;
 
     public TaskData(Panorama panorama) {
         this.panorama = panorama;
-        newTileSize = AggregatedSettings.getInstance().zyt.getTileSize(); //TODO: change to dzt
+    }
+
+    public void optimalize() {
+        Optimizer.optimize(this);
+    }
+
+    public boolean getIsOptimalisated() {
+        return isOptimalisated;
+    }
+
+    public void setIsOptimalisated(boolean value) {
+        isOptimalisated = value;
     }
 
     public Panorama getPanorama() {
@@ -34,6 +46,10 @@ public abstract class TaskData {
 
     public void setNewTileSize(String value) throws IllegalArgumentException {
         if (value != null) {
+            if (value.trim().length() == 0) {
+                newTileSize = 0;
+                return;
+            }
             try {
                 if (Integer.parseInt(value) > 0) {
                     newTileSize = Integer.parseInt(value);
@@ -54,21 +70,23 @@ public abstract class TaskData {
         }
     }
 
-    public void setNewOptimalTileSize(int value) {
-        newOptimalTileSize = value;
-    }
-
     public int getNewTileSize() {
-        if (!surpressOptimalSize && optimalSize) {
-            return newOptimalTileSize;
-        } else {
-            return newTileSize;
+        if (isOptimalisated && !surpressOptimalisation) {
+            return optimalTileSize;
         }
-
+        if (newTileSize == 0) {
+            return getOriginalTileSize();
+        }
+        return newTileSize;
     }
 
     public void setNewCubeSize(String value) throws IllegalArgumentException {
         if (value != null) {
+            if (value.trim().length() == 0) {
+                newCubeSize = 0;
+                return;
+            }
+
             try {
                 if (Integer.parseInt(value) > 0) {
                     newCubeSize = Integer.parseInt(value);
@@ -89,43 +107,61 @@ public abstract class TaskData {
         }
     }
 
-    public void setNewOptimalCubeSize(int value) {
-        newOptimalCubeSize = value;
-    }
-
     public int getNewCubeSize() {
-        if (!surpressOptimalSize && optimalSize) {
-            return newOptimalCubeSize;
-        } else {
-            return newCubeSize;
+        if (isOptimalisated && !surpressOptimalisation) {
+            return optimalCubeSize;
         }
-
+        if (newCubeSize == 0) {
+            return getOriginalCubeSize();
+        }
+        return newCubeSize;
     }
 
     public boolean cubeSizeChanged() {
         return getNewCubeSize() != getOriginalCubeSize();
     }
 
+    public boolean tileSizeChanged() {
+        return getNewTileSize() != getOriginalTileSize();
+    }
+
     public abstract int getOriginalCubeSize();
+
+    public int getOriginalTileSize() {
+        return AggregatedSettings.getInstance().zyt.getTileSize(); // TODO: change to dzt    
+    }
 
     public String getCubeSizeDescription() {
         if (showCubeSize) {
             if (getOriginalCubeSize() != getNewCubeSize()) {
                 return getOriginalCubeSize() + " to " + getNewCubeSize();
             } else {
-                return Integer.toString(getNewCubeSize());
+                return Integer.toString(getOriginalCubeSize());
             }
         } else {
-            return "-";
+            return "";
         }
     }
 
     public String getTileSizeDescription() {
         if (showTizeSize) {
-            return Integer.toString(getNewTileSize());
+            if (tileSizeChanged()) {
+                return Integer.toString(getNewTileSize());
+            } else {
+                return Integer.toString(getOriginalTileSize());
+            }
+
         } else {
-            return "-";
+            return "";
         }
+    }
+
+    public void setOptimalCubeSize(int value) {
+        optimalCubeSize = value;
+    }
+
+    public void setOptimalTileSize(int value) {
+        optimalTileSize = value;
     }
 
     public abstract String getPathDescription();

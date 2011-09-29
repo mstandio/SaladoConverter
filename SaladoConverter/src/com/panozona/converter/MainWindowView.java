@@ -42,45 +42,45 @@ import javax.swing.event.ListSelectionListener;
  * The application's main frame.
  */
 public class MainWindowView extends FrameView {
-
+    
     public MainWindowView(SingleFrameApplication app) {
         super(app);
         initComponents();
         CurrentDirectoryFinder finder = new CurrentDirectoryFinder();
-
+        
         aggstngs = AggregatedSettings.getInstance();
         aggstngs.setCurrentDirectory(finder.currentDir);
-
+        
         taskTableModel = new TaskTableModel();
         jTableTasks.getTableHeader().setReorderingAllowed(false);
         jTableTasks.setModel(taskTableModel);
-
+        
         TaskTableCheckBoxCellRenderer taskTableCheckBoxCellRenderer = new TaskTableCheckBoxCellRenderer();
         TaskTableCheckBoxCellEditor taskTableCheckBoxCellEditor = new TaskTableCheckBoxCellEditor();
         taskTableCheckBoxCellEditor.setMainWindowViewReference(this);
-
+        
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setCellRenderer(taskTableCheckBoxCellRenderer);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setCellEditor(taskTableCheckBoxCellEditor);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMaxWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setMinWidth(20);
         jTableTasks.getColumn(taskTableModel.columnNames[0]).setResizable(false);
-
+        
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setMaxWidth(60);
-        jTableTasks.getColumn(taskTableModel.columnNames[1]).setMinWidth(60);
+        jTableTasks.getColumn(taskTableModel.columnNames[1]).setMinWidth(60);        
         jTableTasks.getColumn(taskTableModel.columnNames[1]).setResizable(false);
-
+        
         jTableTasks.getColumn(taskTableModel.columnNames[2]).setMaxWidth(100);
         jTableTasks.getColumn(taskTableModel.columnNames[2]).setMinWidth(100);
         jTableTasks.getColumn(taskTableModel.columnNames[2]).setResizable(false);
-
+        
         jTableTasks.getColumn(taskTableModel.columnNames[3]).setMaxWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[3]).setMinWidth(60);
         jTableTasks.getColumn(taskTableModel.columnNames[3]).setResizable(false);
-
+        
         jTableTasks.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-
+        
         jTableTasks.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
+            
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (jTableTasks.getSelectionModel().isSelectionEmpty()) {
@@ -92,9 +92,9 @@ public class MainWindowView extends FrameView {
                 }
             }
         });
-
+        
         jTableTasks.addKeyListener(new java.awt.event.KeyAdapter() {
-
+            
             @Override
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -107,56 +107,56 @@ public class MainWindowView extends FrameView {
                 }
             }
         });
-
+        
         jButtonEdit.setEnabled(false);
         jButtonRemoveTask.setEnabled(false);
         jButtonClearTasks.setEnabled(false);
         jButtonRunTasks.setEnabled(false);
-
+        
         controller = Controller.getInstance();
         controller.setTaskTableModel(taskTableModel);
         controller.setMainWindowView(this);
         controller.readSettingsFromFile();
-
+        
         jComboBoxCommand.setModel(new DefaultComboBoxModel(aggstngs.ge.getCommandNames()));
         jComboBoxCommand.setSelectedItem(aggstngs.ge.getSelectedCommand());
-
+        
         jTextFieldOutputDir.setText(aggstngs.ge.getOutputDir());
-
+        
         this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getFrame().addWindowListener(new WindowListener() {
-
+            
             @Override
             public void windowOpened(WindowEvent e) {
             }
-
+            
             @Override
             public void windowClosing(WindowEvent e) {
                 controller.saveSettingsToFile();
                 SaladoConverter.getApplication().exit();
             }
-
+            
             @Override
             public void windowClosed(WindowEvent e) {
             }
-
+            
             @Override
             public void windowIconified(WindowEvent e) {
             }
-
+            
             @Override
             public void windowDeiconified(WindowEvent e) {
             }
-
+            
             @Override
             public void windowActivated(WindowEvent e) {
             }
-
+            
             @Override
             public void windowDeactivated(WindowEvent e) {
             }
         });
-
+        
         redirectSystemStreams();
         logWindowView = new LogWindowView(this);
         logWindowView.setLocationRelativeTo(SaladoConverter.getApplication().getMainFrame());
@@ -168,7 +168,7 @@ public class MainWindowView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
@@ -180,7 +180,7 @@ public class MainWindowView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
@@ -194,11 +194,11 @@ public class MainWindowView extends FrameView {
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-
+            
             @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
-
+                
                 if ("started".equals(propertyName)) {
                     if (!busyIconTimer.isRunning()) {
                         statusAnimationLabel.setIcon(busyIcons[0]);
@@ -229,7 +229,7 @@ public class MainWindowView extends FrameView {
         });
         controller.setTaskMonitor(taskMonitor);
     }
-
+    
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -554,20 +554,22 @@ public class MainWindowView extends FrameView {
             }
         }
         jTableTasks.removeEditor();
-        controller.Optimize();
-        controller.applyCommand();
+        controller.applyCommand();        
         analyseTasks();
     }//GEN-LAST:event_jButtonAddTaskActionPerformed
-
+    
     private void jButtonClearTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearTasksActionPerformed
         if (interfaceLocked) {
             return;
+        }
+        if (taskSettingsView != null) {
+            taskSettingsView.dispose();
         }
         controller.clearTasks();
         analyseTasks();
         jButtonAddTask.requestFocusInWindow();
     }//GEN-LAST:event_jButtonClearTasksActionPerformed
-
+    
     private void jButtonRemoveTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveTaskActionPerformed
         if (interfaceLocked) {
             return;
@@ -579,20 +581,23 @@ public class MainWindowView extends FrameView {
         }
         TaskData[] tasksToRemove = new TaskData[selectedRows.length];
         for (int i = 0; i < selectedRows.length; i++) {
-            tasksToRemove[i] = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(selectedRows[i]));
+            tasksToRemove[i] = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(selectedRows[i]));            
+            if (taskSettingsView != null) {
+                taskSettingsView.removeTaskData(tasksToRemove[i]);
+            }            
         }
-
+        
         controller.removeTasks(tasksToRemove);
         analyseTasks();
         jButtonAddTask.requestFocusInWindow();
-
+        
         if (beginIndex >= 0) {
             jTableTasks.getSelectionModel().setSelectionInterval(beginIndex, beginIndex);
             jTableTasks.requestFocusInWindow();
         }
-
+        
     }//GEN-LAST:event_jButtonRemoveTaskActionPerformed
-
+    
     private void fileMenuSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuSettingsActionPerformed
         if (interfaceLocked) {
             return;
@@ -605,15 +610,15 @@ public class MainWindowView extends FrameView {
         SaladoConverter.getApplication().show(settingsWindowView);
         settingsWindowView.displayAggregatedSettings();
     }//GEN-LAST:event_fileMenuSettingsActionPerformed
-
+    
     private void fileMenuLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuLogActionPerformed
         showLog();
     }//GEN-LAST:event_fileMenuLogActionPerformed
-
+    
     private void showLog() {
         SaladoConverter.getApplication().show(logWindowView);
     }
-
+    
     private void showTaskSettings() {
         if (interfaceLocked) {
             return;
@@ -627,8 +632,17 @@ public class MainWindowView extends FrameView {
             SaladoConverter.getApplication().show(taskSettingsView);
             taskSettingsView.displayTaskData(taskData);
         }
+        
     }
 
+    public void rfreshTaskSettings() {
+        if (interfaceLocked || taskSettingsView == null) {
+            return;
+        } else {
+            taskSettingsView.refreshTaskData();
+        }
+    }
+    
     private void jComboBoxCommandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCommandActionPerformed
         if (interfaceLocked) {
             return;
@@ -642,7 +656,7 @@ public class MainWindowView extends FrameView {
         controller.applyCommand();
         analyseTasks();
     }//GEN-LAST:event_jComboBoxCommandActionPerformed
-
+    
     private void jButtonSelectOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectOutputActionPerformed
         if (interfaceLocked) {
             return;
@@ -664,12 +678,12 @@ public class MainWindowView extends FrameView {
             }
         }
     }//GEN-LAST:event_jButtonSelectOutputActionPerformed
-
+    
     private void fileMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuExitActionPerformed
         controller.saveSettingsToFile();
         SaladoConverter.getApplication().exit();
     }//GEN-LAST:event_fileMenuExitActionPerformed
-
+    
     private void jButtonRunTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunTasksActionPerformed
         if (interfaceLocked) {
             return;
@@ -686,7 +700,7 @@ public class MainWindowView extends FrameView {
             showOptionPane(ex.getMessage());
         }
     }//GEN-LAST:event_jButtonRunTasksActionPerformed
-
+    
     private void jMenuItemOnlineHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOnlineHelpActionPerformed
         String url = "http://panozona.com/saladoconverter";
         try {
@@ -695,11 +709,11 @@ public class MainWindowView extends FrameView {
             JOptionPane.showMessageDialog(this.getFrame(), "Could not openurl: " + url);
         }
     }//GEN-LAST:event_jMenuItemOnlineHelpActionPerformed
-
+    
     private void jButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditActionPerformed
         showTaskSettings();
     }//GEN-LAST:event_jButtonEditActionPerformed
-
+    
     public void cancelRunningTasks() {
         controller.cancelRunningTasks();
         if (logWindowView != null) {
@@ -707,7 +721,7 @@ public class MainWindowView extends FrameView {
         }
         InterfaceEnable();
     }
-
+    
     private void InterfaceDisable() {
         //TODO: disable table sorting
         interfaceLocked = true;
@@ -728,7 +742,7 @@ public class MainWindowView extends FrameView {
         fileMenuSettings.setEnabled(false);
         jTableTasks.setEnabled(false);
     }
-
+    
     private void InterfaceEnable() {
         // TODO: enable table sorting
         interfaceLocked = false;
@@ -744,7 +758,7 @@ public class MainWindowView extends FrameView {
         jTableTasks.setEnabled(true);
         analyseTasks();
     }
-
+    
     public void analyseTasks() {
         jTableTasks.getColumn(taskTableModel.columnNames[0]).getCellEditor().stopCellEditing();
         if (taskTableModel.getRowCount() > 0) {
@@ -752,17 +766,17 @@ public class MainWindowView extends FrameView {
         } else {
             jButtonClearTasks.setEnabled(false);
         }
-
+        
         if (taskTableModel.hasActiveTasks()) {
             jButtonRunTasks.setEnabled(true);
         } else {
             jButtonRunTasks.setEnabled(false);
         }
     }
-
+    
     private void updateTextArea(final String text) {
         SwingUtilities.invokeLater(new Runnable() {
-
+            
             @Override
             public void run() {
                 if (logWindowView != null) {
@@ -771,20 +785,20 @@ public class MainWindowView extends FrameView {
             }
         });
     }
-
+    
     private void redirectSystemStreams() {
         OutputStream out = new OutputStream() {
-
+            
             @Override
             public void write(int b) throws IOException {
                 updateTextArea(String.valueOf((char) b));
             }
-
+            
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
                 updateTextArea(new String(b, off, len));
             }
-
+            
             @Override
             public void write(byte[] b) throws IOException {
                 write(b, 0, b.length);
@@ -793,10 +807,10 @@ public class MainWindowView extends FrameView {
         System.setOut(new PrintStream(out, true));
         System.setErr(new PrintStream(out, true));
     }
-
+    
     public void showOptionPane(String message) {
         JOptionPane.showMessageDialog(this.getFrame(), message);
-
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem fileMenuLog;
