@@ -341,11 +341,12 @@ public class TaskSettingsView extends javax.swing.JFrame {
 
     private void jButtonTaskCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTaskCancelActionPerformed
         this.dispose();
+        currentTaskData.setIsOptimalisated(tmpIsOptimilised);        
 }//GEN-LAST:event_jButtonTaskCancelActionPerformed
 
     private void jRadioButtonCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCustomActionPerformed
-        jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected());
-        jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected() && !currentTaskData.surpressOptimalisation);
+        jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected() && currentTaskData.showCubeSize);
+        jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected() && currentTaskData.showTizeSize);
         if (jRadioButtonCustom.isSelected()) {
             currentTaskData.setIsOptimalisated(false);
             jTextFieldCubeSize.setText("");
@@ -354,8 +355,8 @@ public class TaskSettingsView extends javax.swing.JFrame {
 }//GEN-LAST:event_jRadioButtonCustomActionPerformed
 
     private void jRadioButtonAutosizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonAutosizeActionPerformed
-        jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected());
-        jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected() && !currentTaskData.surpressOptimalisation);
+        jTextFieldCubeSize.setEditable(jRadioButtonCustom.isSelected() && currentTaskData.showCubeSize);
+        jTextFieldTileSize.setEditable(jRadioButtonCustom.isSelected() && currentTaskData.showTizeSize);
         if (jRadioButtonAutosize.isSelected()) {
             currentTaskData.setIsOptimalisated(true);
             currentTaskData.optimalize();
@@ -376,12 +377,17 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
     }
 }//GEN-LAST:event_jButtonEquiApplyChangesActionPerformed
 
+
+    private boolean tmpIsOptimilised;
+
     public void displayTaskData(TaskData taskData) {
 
         currentTaskData = taskData;
 
         jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getOriginalCubeSize()));
         jLabelTileDefaultTileSize.setText(Integer.toString(currentTaskData.getOriginalTileSize()));
+        
+        tmpIsOptimilised = currentTaskData.getIsOptimalisated();
 
         if (currentTaskData.surpressOptimalisation) {
             jRadioButtonCustom.setSelected(true);
@@ -399,9 +405,8 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
         }
         jRadioButtonAutosizeActionPerformed(null);
         jRadioButtonCustomActionPerformed(null);
-
-        if (taskData instanceof TaskDataEquirectangular) {
-            jPanel3.setEnabled(true);
+//)
+        if (taskData instanceof TaskDataEquirectangular && !(taskData.showTizeSize && !taskData.showCubeSize)) {
             jTextFieldEquiFov.setText(Integer.toString(((TaskDataEquirectangular) taskData).getFov()));
             jTextFieldEquiOffset.setText(Integer.toString(((TaskDataEquirectangular) taskData).getOffset()));
             jTextFieldEquiFov.setEnabled(true);
@@ -413,27 +418,27 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
             jButtonEquiApplyChanges.setEnabled(false);
         }
     }
-    
-    public void refreshTaskData(){
-        if(currentTaskData != null){
+
+    public void refreshTaskData() {
+        if (currentTaskData != null) {
             displayTaskData(currentTaskData);
         }
     }
-    
-    public void removeTaskData(TaskData taskData){
-        if(currentTaskData.equals(taskData)){
+
+    public void removeTaskData(TaskData taskData) {
+        if (currentTaskData.equals(taskData)) {
             dispose();
         }
     }
 
     private void collectAllData() {
         try {
-            if (!currentTaskData.surpressOptimalisation && jRadioButtonCustom.isSelected()) {
-                currentTaskData.setIsOptimalisated(true);
-            } else {
+            if (jRadioButtonCustom.isSelected()) {
                 currentTaskData.setIsOptimalisated(false);
                 currentTaskData.setNewCubeSize(jTextFieldCubeSize.getText());
                 currentTaskData.setNewTileSize(jTextFieldTileSize.getText());
+            } else {
+                currentTaskData.setIsOptimalisated(true);
             }
         } catch (IllegalArgumentException ex) {
             showOptionPane(ex.getMessage());

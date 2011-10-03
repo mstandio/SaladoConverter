@@ -42,6 +42,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
 
         jTabbedPaneequirectangualrFiller.remove(DeepZoomTilerTab);
         jCheckBoxGERemoveObsoleteDZ.setVisible(false);
+        jCheckBoxGEOverwriteOutput.setVisible(false);
 
         ActionListener actionListenerESC = new ActionListener() {
 

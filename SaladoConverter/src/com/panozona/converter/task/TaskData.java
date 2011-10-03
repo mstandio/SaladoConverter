@@ -132,6 +132,9 @@ public abstract class TaskData {
     }
 
     public String getCubeSizeDescription() {
+        if (!checkBoxEnabled) {
+            return "";
+        }
         if (showCubeSize) {
             if (getOriginalCubeSize() != getNewCubeSize()) {
                 return getOriginalCubeSize() + " to " + getNewCubeSize();
@@ -144,6 +147,9 @@ public abstract class TaskData {
     }
 
     public String getTileSizeDescription() {
+        if (!checkBoxEnabled) {
+            return "";
+        }
         if (showTizeSize) {
             if (tileSizeChanged()) {
                 return Integer.toString(getNewTileSize());

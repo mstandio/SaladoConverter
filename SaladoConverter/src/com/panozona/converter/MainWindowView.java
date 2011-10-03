@@ -584,7 +584,7 @@ public class MainWindowView extends FrameView {
             tasksToRemove[i] = (TaskData) taskTableModel.rows.get(jTableTasks.convertRowIndexToModel(selectedRows[i]));            
             if (taskSettingsView != null) {
                 taskSettingsView.removeTaskData(tasksToRemove[i]);
-            }            
+            }
         }
         
         controller.removeTasks(tasksToRemove);

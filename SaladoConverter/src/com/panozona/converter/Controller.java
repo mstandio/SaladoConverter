@@ -199,30 +199,33 @@ public class Controller {
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX);
 
         boolean surpressOptimalisationEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
-                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX);
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY);
         boolean surpressOptimalisationCubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
 
         boolean ignoreTileSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX);
-        
         boolean ignoreTileSizeCubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
+
+        boolean ignoreCubeSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY);
 
         // boolean ignoreCubeSize //TODO: flat
 
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             if (taskTableModel.rows.get(i) instanceof TaskDataEquirectangular) {
                 taskTableModel.rows.get(i).checkBoxEnabled = !cubic;
-                
-            taskTableModel.rows.get(i).surpressOptimalisation = surpressOptimalisationEqui;
-            taskTableModel.rows.get(i).showTizeSize = !ignoreTileSizeEqui;
-                                
+
+                taskTableModel.rows.get(i).surpressOptimalisation = surpressOptimalisationEqui;
+                taskTableModel.rows.get(i).showTizeSize = !ignoreTileSizeEqui;
+                taskTableModel.rows.get(i).showCubeSize = !ignoreCubeSizeEqui;
+
             } else {
-                
+
                 taskTableModel.rows.get(i).surpressOptimalisation = surpressOptimalisationCubic;
                 taskTableModel.rows.get(i).showTizeSize = !ignoreTileSizeCubic;
-                
+
                 if (aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC)) {
                     if (taskTableModel.rows.get(i).cubeSizeChanged()) {
                         taskTableModel.rows.get(i).checkBoxEnabled = cubic;
@@ -232,7 +235,7 @@ public class Controller {
                 } else {
                     taskTableModel.rows.get(i).checkBoxEnabled = cubic;
                 }
-            }            
+            }
             taskTableModel.rows.get(i).optimalize();
         }
 
@@ -267,6 +270,8 @@ public class Controller {
                     generateOpETSB(taskData);
                 } else if (selection.equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)) {
                     generateOpCTSB(taskData);
+                } else if (selection.equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY)) {
+                    generateOpFTZ(taskData);
                 }
             }
             taskTableModel.fireTableDataChanged();
@@ -704,6 +709,17 @@ public class Controller {
             }
             taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
         }
+    }
+
+    //Flat to Zoomify 
+    private void generateOpFTZ(TaskData taskData) {
+        Image image =taskData.getPanorama().getImages().get(0);        
+        String[] tmp = image.path.split(Pattern.quote(File.separator));
+        String parentFolderName = tmp[tmp.length - 2];
+        String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + parentFolderName);
+        new File(outputDir).mkdir();         
+        String nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));        
+        taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir, taskData.getNewTileSize())));
     }
 
     private void removeObsoleteDeepZoomImages(TaskData taskData, String path) {
