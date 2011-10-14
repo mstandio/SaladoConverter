@@ -16,7 +16,7 @@ public class SBMSettings {
     private int previewSize;
     private float quality;
     private String jarDir;    
-    private final int defaultPreviewSize = 200;
+    private final int defaultPreviewSize = 150;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
 

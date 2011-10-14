@@ -41,6 +41,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
         allowCloseFlag = true;
 
         jTabbedPaneequirectangualrFiller.remove(DeepZoomTilerTab);
+        jTabbedPaneequirectangualrFiller.remove(AutosizeTab);
         jCheckBoxGERemoveObsoleteDZ.setVisible(false);
         jCheckBoxGEOverwriteOutput.setVisible(false);
 
@@ -989,7 +990,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
             if (!initialmemoryLimitValue.equals(jTextFieldGEMemoryLimit.getText())) {
                 JOptionPane.showMessageDialog(this, Messages.GE_MEMORY_LIMIT_WARNING);
             }
-            Controller.getInstance().applyCommand();            
+            Controller.getInstance().applyCommand();
             onClose();
         }
         allowCloseFlag = true;
@@ -1045,20 +1046,20 @@ private void jButtonSBMBrowseDirectoryActionPerformed(java.awt.event.ActionEvent
 }//GEN-LAST:event_jButtonSBMBrowseDirectoryActionPerformed
 
 private void jButtonRESBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for Resizer.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.res.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldRESDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
+    jFileChooser.resetChoosableFileFilters();
+    jFileChooser.setSelectedFile(new File(""));
+    jFileChooser.setFileFilter(new FileFilterJar());
+    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    jFileChooser.setDialogTitle("Browse for Resizer.jar");
+    jFileChooser.setCurrentDirectory(new File(aggstngs.res.getJarDir()));
+    int returnVal = jFileChooser.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        jTextFieldRESDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+    }
 }//GEN-LAST:event_jButtonRESBrowseDirectoryActionPerformed
 
 private void jButtonRESRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRESRestoreDefaultActionPerformed
-        jTextFieldRESDirectory.setText(aggstngs.res.getDefaultJarDir());
+    jTextFieldRESDirectory.setText(aggstngs.res.getDefaultJarDir());
 }//GEN-LAST:event_jButtonRESRestoreDefaultActionPerformed
 
 private void jButtonZYTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonZYTRestoreDefaultActionPerformed
@@ -1081,50 +1082,59 @@ private void jButtonZYTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent
 }//GEN-LAST:event_jButtonZYTBrowseDirectoryActionPerformed
 
 private void jButtonDZTRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTRestoreDefaultActionPerformed
-        jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getDefaultTileOverlap()));
-        jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getDefaultTileSize()));
-        jTextFieldDZTQuality.setText(Float.toString(aggstngs.dzt.getDefaultQuality()));
-        jTextFieldDZTDirectory.setText(aggstngs.dzt.getDefaultJarDir());
+    jTextFieldDZTTileOverlap.setText(Integer.toString(aggstngs.dzt.getDefaultTileOverlap()));
+    jTextFieldDZTTileSize.setText(Integer.toString(aggstngs.dzt.getDefaultTileSize()));
+    jTextFieldDZTQuality.setText(Float.toString(aggstngs.dzt.getDefaultQuality()));
+    jTextFieldDZTDirectory.setText(aggstngs.dzt.getDefaultJarDir());
 }//GEN-LAST:event_jButtonDZTRestoreDefaultActionPerformed
 
 private void jButtonDZTBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDZTBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for DeepZoomTiler.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.dzt.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldDZTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
+    jFileChooser.resetChoosableFileFilters();
+    jFileChooser.setSelectedFile(new File(""));
+    jFileChooser.setFileFilter(new FileFilterJar());
+    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    jFileChooser.setDialogTitle("Browse for DeepZoomTiler.jar");
+    jFileChooser.setCurrentDirectory(new File(aggstngs.dzt.getJarDir()));
+    int returnVal = jFileChooser.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        jTextFieldDZTDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+    }
 }//GEN-LAST:event_jButtonDZTBrowseDirectoryActionPerformed
 
 private void jButtonECRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECRestoreDefaultActionPerformed
-        jTextFieldECOverlap.setText(Integer.toString(aggstngs.ec.getDefaultWallOverlap()));
-        jComboBoxECInterpolation.setSelectedItem(aggstngs.ec.getDefaultInterpolation());
-        jTextFieldECDirectory.setText(aggstngs.ec.getDefaultJarDir());
+    jTextFieldECOverlap.setText(Integer.toString(aggstngs.ec.getDefaultWallOverlap()));
+    jComboBoxECInterpolation.setSelectedItem(aggstngs.ec.getDefaultInterpolation());
+    jTextFieldECDirectory.setText(aggstngs.ec.getDefaultJarDir());
 }//GEN-LAST:event_jButtonECRestoreDefaultActionPerformed
 
 private void jButtonECBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonECBrowseDirectoryActionPerformed
-        jFileChooser.resetChoosableFileFilters();
-        jFileChooser.setSelectedFile(new File(""));
-        jFileChooser.setFileFilter(new FileFilterJar());
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle("Browse for EquirectangularToCubic.jar");
-        jFileChooser.setCurrentDirectory(new File(aggstngs.ec.getJarDir()));
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTextFieldECDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
-        }
+    jFileChooser.resetChoosableFileFilters();
+    jFileChooser.setSelectedFile(new File(""));
+    jFileChooser.setFileFilter(new FileFilterJar());
+    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    jFileChooser.setDialogTitle("Browse for EquirectangularToCubic.jar");
+    jFileChooser.setCurrentDirectory(new File(aggstngs.ec.getJarDir()));
+    int returnVal = jFileChooser.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        jTextFieldECDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+    }
 }//GEN-LAST:event_jButtonECBrowseDirectoryActionPerformed
 
 private void jButtonERFBrowseDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonERFBrowseDirectoryActionPerformed
-// TODO add your handling code here:
+    jFileChooser.resetChoosableFileFilters();
+    jFileChooser.setSelectedFile(new File(""));
+    jFileChooser.setFileFilter(new FileFilterJar());
+    jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    jFileChooser.setDialogTitle("Browse for EquirectangularFiller.jar");
+    jFileChooser.setCurrentDirectory(new File(aggstngs.erf.getJarDir()));
+    int returnVal = jFileChooser.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        jTextFieldECDirectory.setText(jFileChooser.getSelectedFile().getAbsolutePath());
+    }
 }//GEN-LAST:event_jButtonERFBrowseDirectoryActionPerformed
 
 private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonERFRestoreDefaultActionPerformed
-// TODO add your handling code here:
+    jTextFieldERFDirectory.setText(aggstngs.erf.getDefaultJarDir());
 }//GEN-LAST:event_jButtonERFRestoreDefaultActionPerformed
 
     public void displayAggregatedSettings() {
@@ -1159,7 +1169,7 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
         jTextFieldECDirectory.setText(aggstngs.ec.getJarDir());
 
         jTextFieldRESDirectory.setText(aggstngs.res.getJarDir());
-        
+
         jTextFieldERFDirectory.setText(aggstngs.erf.getJarDir());
     }
 
@@ -1188,7 +1198,7 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
             aggstngs.ec.setJarDir(jTextFieldECDirectory.getText());
 
             aggstngs.res.setJarDir(jTextFieldRESDirectory.getText());
-            
+
             aggstngs.erf.setJarDir(jTextFieldERFDirectory.getText());
 
 

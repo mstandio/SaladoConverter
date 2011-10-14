@@ -19,7 +19,7 @@ public class ECSettings {
     private int wallOverlap;
     private String interpolation;
     private String jarDir;
-    private final int defaultWallOverlap = 1;
+    private final int defaultWallOverlap = 0;
     private final String defaultInterpolation = INTERPOLATION_LANCZOS2;
     private String defaultJarDir = "";
 

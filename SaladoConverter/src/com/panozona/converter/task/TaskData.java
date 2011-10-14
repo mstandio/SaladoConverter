@@ -22,22 +22,24 @@ public abstract class TaskData {
     private int optimalCubeSize = 0;
     public ArrayList<Operation> operations = new ArrayList<Operation>();
     public boolean surpressOptimalisation = false;
-    private boolean isOptimalisated = true;
+    //private boolean isOptimalisated = true;
+    private boolean isOptimalisated = false;
 
     public TaskData(Panorama panorama) {
         this.panorama = panorama;
     }
 
     public void optimalize() {
-        Optimizer.optimize(this);
+        //Optimizer.optimize(this);
     }
 
     public boolean getIsOptimalisated() {
-        return isOptimalisated;
+        //return isOptimalisated;
+        return false;
     }
 
     public void setIsOptimalisated(boolean value) {
-        isOptimalisated = value;
+        //isOptimalisated = value;
     }
 
     public Panorama getPanorama() {

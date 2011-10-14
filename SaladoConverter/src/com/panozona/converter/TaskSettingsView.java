@@ -19,14 +19,15 @@ public class TaskSettingsView extends javax.swing.JFrame {
     private TaskTableModel taskTableModel;
     private TaskData currentTaskData;
     private boolean allowCloseFlag;
-
+        
     /** Creates new form TaskSettingsView */
     public TaskSettingsView(TaskTableModel taskTableModel) {
         initComponents();
         setTitle("Edit task");
         this.taskTableModel = taskTableModel;
         controller = Controller.getInstance();
-        allowCloseFlag = true;
+        allowCloseFlag = true;               
+        ctstab.remove(jPanel1);
     }
 
     /** This method is called from within the constructor to
@@ -63,7 +64,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
         jButtonTaskCancel = new javax.swing.JButton();
         jButtonTaskOK = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setName("Form"); // NOI18N
         setResizable(false);
@@ -163,8 +164,8 @@ public class TaskSettingsView extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldCubeSize, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -176,7 +177,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabelTileDefaultTileSize)
                     .addComponent(jLabel2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout ctstabLayout = new javax.swing.GroupLayout(ctstab);
@@ -185,10 +186,10 @@ public class TaskSettingsView extends javax.swing.JFrame {
             ctstabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ctstabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(ctstabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(ctstabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         ctstabLayout.setVerticalGroup(
             ctstabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,8 +239,8 @@ public class TaskSettingsView extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldEquiOffset, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                            .addComponent(jTextFieldEquiFov, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)))
+                            .addComponent(jTextFieldEquiOffset, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                            .addComponent(jTextFieldEquiFov, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)))
                     .addComponent(jButtonEquiApplyChanges, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -256,7 +257,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel8)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jButtonEquiApplyChanges)
                 .addContainerGap())
         );
@@ -316,7 +317,7 @@ public class TaskSettingsView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonTaskOK)
@@ -387,7 +388,7 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
         jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getOriginalCubeSize()));
         jLabelTileDefaultTileSize.setText(Integer.toString(currentTaskData.getOriginalTileSize()));
         
-        tmpIsOptimilised = currentTaskData.getIsOptimalisated();
+        tmpIsOptimilised = currentTaskData.getIsOptimalisated();        
 
         if (currentTaskData.surpressOptimalisation) {
             jRadioButtonCustom.setSelected(true);
@@ -405,7 +406,7 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
         }
         jRadioButtonAutosizeActionPerformed(null);
         jRadioButtonCustomActionPerformed(null);
-//)
+
         if (taskData instanceof TaskDataEquirectangular && !(taskData.showTizeSize && !taskData.showCubeSize)) {
             jTextFieldEquiFov.setText(Integer.toString(((TaskDataEquirectangular) taskData).getFov()));
             jTextFieldEquiOffset.setText(Integer.toString(((TaskDataEquirectangular) taskData).getOffset()));
@@ -417,6 +418,12 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
             jTextFieldEquiOffset.setEnabled(false);
             jButtonEquiApplyChanges.setEnabled(false);
         }
+                
+        
+        jTextFieldCubeSize.setEditable(currentTaskData.checkBoxEnabled);
+        jTextFieldTileSize.setEditable(currentTaskData.checkBoxEnabled);
+        jRadioButtonCustom.setEnabled(currentTaskData.checkBoxEnabled);
+        jRadioButtonAutosize.setEnabled(currentTaskData.checkBoxEnabled);
     }
 
     public void refreshTaskData() {

@@ -18,7 +18,7 @@ import java.awt.Graphics;
 
 public class SkyboxMaker {
 
-    static final String help = "\nSkyboxMaker v1.0 \n\n Usage: \n\n"
+    static final String help = "\nSkyboxMaker v1.1 \n\n Usage: \n\n"
             + "java [-java_options] -jar path/to/SkyboxMaker.jar [-options] [args...]\n\n"
             + "For a list of java options try: java -help or java -X for a list of less\n"
             + "common options. Loading large images for conversion takes a lot of RAM,\n"
@@ -192,13 +192,15 @@ public class SkyboxMaker {
         BufferedImage input = loadImage(inputFiles.get(0));
         System.out.printf("Skyboxing image: %s\n", inputFiles.get(0).getAbsolutePath());
         int inputSize = input.getWidth();
-        BufferedImage output = new BufferedImage(inputSize, inputSize * 6, BufferedImage.TYPE_INT_RGB);
+        BufferedImage output = new BufferedImage(inputSize * 3, inputSize * 2, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = output.getGraphics();
-        graphics.drawImage(input, 0, getImagePosition(inputFiles.get(0).getName()) * inputSize, null);
+        graphics.drawImage(input, (getImagePosition(inputFiles.get(0).getName()) % 3) * inputSize,
+                (int) Math.floor((double) getImagePosition(inputFiles.get(0).getName()) / 3d) * inputSize, null);
         for (int i = 1; i < 6; i++) {
             System.out.printf("Skyboxing image: %s\n", inputFiles.get(i).getAbsolutePath());
             input = loadImage(inputFiles.get(i));
-            graphics.drawImage(input, 0, getImagePosition(inputFiles.get(i).getName()) * inputSize, null);
+            graphics.drawImage(input, (getImagePosition(inputFiles.get(i).getName()) % 3) * inputSize, 
+                    (int) Math.floor((double) getImagePosition(inputFiles.get(i).getName()) / 3d) * inputSize, null);
             input.flush();
         }
 
@@ -208,7 +210,7 @@ public class SkyboxMaker {
             saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
         }
 
-        output = resizeImage(output, previewSize, previewSize * 6);
+        output = resizeImage(output, previewSize * 3, previewSize * 2);
         saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + "preview_" + nameWithoutDescription, quality);
         graphics.dispose();
         output.flush();

@@ -121,12 +121,23 @@ public class Controller {
                     newTask.state = TaskDataStates.READY;
                     appendTask(newTask);
                 } else {
-                    StringBuilder sb = new StringBuilder("Not enough walls (" + cubeWalls.size() + ")");
-                    for (Image cubeWall : cubeWalls) {
-                        sb.append("\n");
-                        sb.append(cubeWall.path.substring(cubeWall.path.lastIndexOf(File.separator) + 1));
+                    //StringBuilder sb = new StringBuilder("Not enough walls (" + cubeWalls.size() + ")");
+                    //for (Image cubeWall : cubeWalls) {
+                    //    sb.append("\n");
+                    //    sb.append(cubeWall.path.substring(cubeWall.path.lastIndexOf(File.separator) + 1));
+                    //}
+                    //mainWindowView.showOptionPane(sb.toString());
+                    for (Image image : collectedImages) {
+                        TaskData newTask = new TaskDataEquirectangular(new Panorama(image));
+                        newTask.state = TaskDataStates.READY;
+                        appendTask(newTask);
                     }
-                    mainWindowView.showOptionPane(sb.toString());
+                }
+            } else {
+                for (Image image : collectedImages) {
+                    TaskData newTask = new TaskDataEquirectangular(new Panorama(image));
+                    newTask.state = TaskDataStates.READY;
+                    appendTask(newTask);
                 }
             }
         }
@@ -196,23 +207,30 @@ public class Controller {
         boolean cubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_DEEPZOOM_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC)
-                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX);
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW);
 
         boolean surpressOptimalisationEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY);
         boolean surpressOptimalisationCubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
 
         boolean ignoreTileSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
-                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX);
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW);
+
         boolean ignoreTileSizeCubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
 
-        boolean ignoreCubeSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY);
+        boolean ignoreCubeSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW);
 
-        // boolean ignoreCubeSize //TODO: flat
-
+        boolean ignoreCubeSizeCubic = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW);
+        
         for (int i = 0; i < taskTableModel.getRowCount(); i++) {
             if (taskTableModel.rows.get(i) instanceof TaskDataEquirectangular) {
                 taskTableModel.rows.get(i).checkBoxEnabled = !cubic;
@@ -225,6 +243,7 @@ public class Controller {
 
                 taskTableModel.rows.get(i).surpressOptimalisation = surpressOptimalisationCubic;
                 taskTableModel.rows.get(i).showTizeSize = !ignoreTileSizeCubic;
+                taskTableModel.rows.get(i).showCubeSize = !ignoreCubeSizeCubic;
 
                 if (aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC)) {
                     if (taskTableModel.rows.get(i).cubeSizeChanged()) {
@@ -267,9 +286,13 @@ public class Controller {
                 } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_ZOOMIFY_CUBIC)) {
                     generateOpETZYC(taskData);
                 } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)) {
-                    generateOpETSB(taskData);
+                    generateOpETSB(taskData, false);
+                } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW)) {
+                    generateOpETSB(taskData, true);
                 } else if (selection.equals(GESettings.COMMAND_CUBIC_TO_SKYBOX)) {
-                    generateOpCTSB(taskData);
+                    generateOpCTSB(taskData, false);
+                } else if (selection.equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW)) {
+                    generateOpCTSB(taskData, true);
                 } else if (selection.equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY)) {
                     generateOpFTZ(taskData);
                 }
@@ -542,7 +565,7 @@ public class Controller {
     }
 
     //Equirectangular to Skybox
-    private void generateOpETSB(TaskData taskData) {
+    private void generateOpETSB(TaskData taskData, boolean previewOnly) {
 
         Image image = taskData.getPanorama().getImages().get(0);
         TaskDataEquirectangular taskDataEquirectangular = (TaskDataEquirectangular) taskData;
@@ -561,8 +584,12 @@ public class Controller {
         }
 
         new File(outputDir).mkdir();
+        
+        if (taskData.getNewCubeSize()*3 > 8000){
+            taskData.setNewCubeSize(2666);
+        }
 
-        if (taskData.cubeSizeChanged()) {
+        if (taskData.cubeSizeChanged() && !previewOnly) {
             String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
             String resizedFile = resDir + File.separator + nameWithoutExtension;
 
@@ -580,7 +607,7 @@ public class Controller {
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getUp() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getDown() + ".tif"}));
 
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(new String[]{resDir}, outputDir)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(new String[]{resDir}, outputDir, false)));
 
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getFront() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -598,7 +625,7 @@ public class Controller {
                 cubeFile + aggstngs.ge.naming.getUp() + ".tif",
                 cubeFile + aggstngs.ge.naming.getDown() + ".tif"};
 
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, true)));
 
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -680,7 +707,7 @@ public class Controller {
     }
 
     //Cubic to Skybox
-    private void generateOpCTSB(TaskData taskData) {
+    private void generateOpCTSB(TaskData taskData, boolean previewOnly) {
         String parentFolderName;
         String[] tmp;
         String outputDir;
@@ -690,15 +717,19 @@ public class Controller {
         tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));
         parentFolderName = tmp[tmp.length - 2];
         outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + parentFolderName);
+        
+        if (taskData.getNewCubeSize()*3 > 8000){
+            taskData.setNewCubeSize(2666);
+        }
 
-        if (taskData.cubeSizeChanged()) {
+        if (taskData.cubeSizeChanged() && !previewOnly) {
             String[] input = new String[6];
             for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {
                 taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(taskData.getPanorama().getImages().get(i).path, resDir, taskData.getNewCubeSize())));
                 nameWithoutExtension = taskData.getPanorama().getImages().get(i).path.substring(taskData.getPanorama().getImages().get(i).path.lastIndexOf(File.separator) + 1, taskData.getPanorama().getImages().get(i).path.lastIndexOf('.'));
                 input[i] = resDir + File.separator + nameWithoutExtension + ".tif";
             }
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, false)));
             for (String resized : input) {
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resized}));
             }
@@ -707,18 +738,18 @@ public class Controller {
             for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {
                 input[i] = taskData.getPanorama().getImages().get(i).path;
             }
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, true)));
         }
     }
 
     //Flat to Zoomify 
     private void generateOpFTZ(TaskData taskData) {
-        Image image =taskData.getPanorama().getImages().get(0);        
+        Image image = taskData.getPanorama().getImages().get(0);
         String[] tmp = image.path.split(Pattern.quote(File.separator));
         String parentFolderName = tmp[tmp.length - 2];
         String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + parentFolderName);
-        new File(outputDir).mkdir();         
-        String nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));        
+        new File(outputDir).mkdir();
+        String nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
         taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir, taskData.getNewTileSize())));
     }
 
@@ -800,8 +831,11 @@ public class Controller {
         return argsZYT;
     }
 
-    private String[] generateArgsSBM(String[] input, String output) {
+    private String[] generateArgsSBM(String[] input, String output, boolean previewOnly) {
         ArrayList tmpArgsSBM = new ArrayList();
+        if (previewOnly) {
+            tmpArgsSBM.add("-previewonly");
+        }
         tmpArgsSBM.add("-quality");
         tmpArgsSBM.add(Float.toString(aggstngs.sbm.getQuality()));
         tmpArgsSBM.add("-previewsize");

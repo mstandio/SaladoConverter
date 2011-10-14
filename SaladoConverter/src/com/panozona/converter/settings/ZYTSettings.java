@@ -16,7 +16,7 @@ public class ZYTSettings {
     private int tileSize;
     private float quality;
     private String jarDir;
-    private final int defaultTileSize = 512;
+    private final int defaultTileSize = 896;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
 

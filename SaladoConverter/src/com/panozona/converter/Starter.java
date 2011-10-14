@@ -17,7 +17,7 @@ import java.util.Properties;
 public class Starter {
 
     //hey change developmentMode value
-    public final static boolean developmentMode = false;
+    public final static boolean developmentMode = true;
 
     public static void main(String[] args) {
 
