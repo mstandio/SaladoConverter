@@ -388,6 +388,9 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
         jLabelTileDefaultCubeSize.setText(Integer.toString(currentTaskData.getOriginalCubeSize()));
         jLabelTileDefaultTileSize.setText(Integer.toString(currentTaskData.getOriginalTileSize()));
         
+        jTextFieldCubeSize.setText(Integer.toString(currentTaskData.getNewCubeSize()));
+        jTextFieldTileSize.setText(Integer.toString(currentTaskData.getNewTileSize()));
+        
         tmpIsOptimilised = currentTaskData.getIsOptimalisated();        
 
         if (currentTaskData.surpressOptimalisation) {
@@ -404,8 +407,8 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
                 jRadioButtonAutosize.setSelected(false);
             }
         }
-        jRadioButtonAutosizeActionPerformed(null);
-        jRadioButtonCustomActionPerformed(null);
+        //jRadioButtonAutosizeActionPerformed(null);
+        //jRadioButtonCustomActionPerformed(null);
 
         if (taskData instanceof TaskDataEquirectangular && !(taskData.showTizeSize && !taskData.showCubeSize)) {
             jTextFieldEquiFov.setText(Integer.toString(((TaskDataEquirectangular) taskData).getFov()));

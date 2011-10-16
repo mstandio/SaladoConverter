@@ -35,9 +35,9 @@ public class SkyboxMaker {
             + "-quality: output JPEG compression. 0.0 is maximum compression, lowest\n"
             + "\tquality, smallest file. 1.0 is least compression, highest quality,\n"
             + "\tlargest file. Default is 0.8\n\n"
-            + "-previewsize: width of low resolution image with 'preview_' prepended to\n"
+            + "-previewsize: width of low resolution image with '_preview' appepended to\n"
             + "\tits name, that is outputed along with main outputed image. Default\n"
-            + "\tis 200"
+            + "\tis 150"
             + "-previewonly: when set, only preview image is outputed.\n\n"
             + "-outputdir or -o: the output directory for the converted images.It need\n"
             + "\tnot exist. Default is a folder next to the input folder with \n"
@@ -60,9 +60,9 @@ public class SkyboxMaker {
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
-    static int previewSize = 200;	           // -previewSize
+    static int previewSize = 150;	           // -previewSize
     static boolean previewOnly = false;	           // -previewOnly
-    static File outputDir = null;                  // -outputdir | -o    
+    static File outputDir = null;                  // -outputdir | -o
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
 
     /**
@@ -196,22 +196,43 @@ public class SkyboxMaker {
         Graphics graphics = output.getGraphics();
         graphics.drawImage(input, (getImagePosition(inputFiles.get(0).getName()) % 3) * inputSize,
                 (int) Math.floor((double) getImagePosition(inputFiles.get(0).getName()) / 3d) * inputSize, null);
+        input.flush();
         for (int i = 1; i < 6; i++) {
             System.out.printf("Skyboxing image: %s\n", inputFiles.get(i).getAbsolutePath());
             input = loadImage(inputFiles.get(i));
-            graphics.drawImage(input, (getImagePosition(inputFiles.get(i).getName()) % 3) * inputSize, 
+            graphics.drawImage(input, (getImagePosition(inputFiles.get(i).getName()) % 3) * inputSize,
                     (int) Math.floor((double) getImagePosition(inputFiles.get(i).getName()) / 3d) * inputSize, null);
             input.flush();
         }
-
         System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath());
-
         if (!previewOnly) {
             saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
         }
+        // this is how this should work:
+        //output = resizeImage(output, previewSize * 3, previewSize * 2);
+        //saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription + "_preview" , quality);
+        graphics.dispose();
+        output.flush();
 
-        output = resizeImage(output, previewSize * 3, previewSize * 2);
-        saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + "preview_" + nameWithoutDescription, quality);
+        makePreview();
+    }
+
+    private static void makePreview() throws IOException {
+        String nameWithoutDescription = inputFiles.get(0).getName().substring(0, inputFiles.get(0).getName().lastIndexOf("_"));
+        BufferedImage input = loadImage(inputFiles.get(0));
+        System.out.printf("Skyboxing image for preview: %s\n", inputFiles.get(0).getAbsolutePath());
+        int inputSize = input.getWidth();
+        BufferedImage output = new BufferedImage(inputSize, inputSize * 6, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = output.getGraphics();
+        graphics.drawImage(input, 0, getImagePosition(inputFiles.get(0).getName()) * inputSize, null);
+        input.flush();
+        for (int i = 1; i < 6; i++) {
+            System.out.printf("Skyboxing image for preview: %s\n", inputFiles.get(i).getAbsolutePath());
+            input = loadImage(inputFiles.get(i));
+            graphics.drawImage(input, 0, getImagePosition(inputFiles.get(i).getName()) * inputSize, null);
+            input.flush();
+        }
+        saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription + "_preview", quality);
         graphics.dispose();
         output.flush();
     }

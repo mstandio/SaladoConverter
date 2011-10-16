@@ -19,6 +19,8 @@ public class LogWindowView extends javax.swing.JFrame {
         setTitle("SaladoConverter log");
         //setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindowView.class.getResource("resources/icons/appicon.png")));
         setRunning(false);
+        
+        //remove(jButtonClose);
     }
 
     /** This method is called from within the constructor to

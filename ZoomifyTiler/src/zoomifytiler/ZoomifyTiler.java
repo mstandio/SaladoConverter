@@ -485,7 +485,7 @@ public class ZoomifyTiler {
                 + "\" HEIGHT=\"" + height
                 + "\" NUMTILES=\"" + numTiles
                 + "\" NUMIMAGES=\"1\" VERSION=\"1.8\""
-                + "TILESIZE=\"" + tileSize + "\"/>");
+                + " TILESIZE=\"" + tileSize + "\"/>");
         saveText(lines, file);
     }
 

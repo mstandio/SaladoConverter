@@ -37,7 +37,7 @@ public class GESettings {
     private String inputDir;
     private String selectedCommand;
     private String defaultTmpDir = "";
-    private int defaultMemoryLimit = 1024;
+    private int defaultMemoryLimit = 1500;
     private boolean defaultRemObsolete = true;
     private boolean defaultOverwriteOutput = false;
     private String defaultOutputDir = "";

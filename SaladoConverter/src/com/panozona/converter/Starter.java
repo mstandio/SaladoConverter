@@ -11,13 +11,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-/** 
+/**
  * @author Marek
  */
 public class Starter {
 
     //hey change developmentMode value
-    public final static boolean developmentMode = true;
+    public final static boolean developmentMode = false;
 
     public static void main(String[] args) {
 
@@ -39,10 +39,13 @@ public class Starter {
         if (developmentMode) {
             SaladoConverter.main(args);
         } else {
-            try {                
+            int memoryLimit = aggstngs.ge.getMemoryLimit();
+            ProcessBuilder pb = null;
+            Process proc = null;
+            try {
                 String pathToJar = SaladoConverter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                ProcessBuilder pb = new ProcessBuilder("java", "-Xmx" + aggstngs.ge.getMemoryLimit() + "m", "-classpath", pathToJar, "com.panozona.converter.SaladoConverter");
-                pb.start();
+                pb = new ProcessBuilder("java", "-Xmx" + memoryLimit + "m", "-classpath", pathToJar, "com.panozona.converter.SaladoConverter");
+                proc = pb.start();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
