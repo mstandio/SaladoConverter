@@ -53,7 +53,10 @@ public class ZoomifyTiler {
             + "-tilesize: target pixel tile size. Tiling starts at the top left corner\n"
             + "\tof an image, so tiles at the right and bottom to the image may not\n"
             + "\tbe this size, respectively, unless the input image's size is\n"
-            + "\tdivisible by the tileSize value. Default is 512\n\n"
+            + "-zerotilesize: size of longer side of 0-0-0 tile, which is single tile\n"
+            + "\tshowing entire image. Such tile can be used as preview and it can be too\n"
+            + "\tbig for big value of tile size. Setting 0 value is interpreted as using\n"
+            + "\tdefault zoomify size. Default is 0\n\n"
             + "-outputdir or -o: the output directory for the converted images. It need\n"
             + "\tnot exist. Default is a folder next to the input file twith\n"
             + "\t'tiles_' prepended to the name of the input image.\n\n"
@@ -67,20 +70,18 @@ public class ZoomifyTiler {
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, TILESIZE, QUALITY, INPUTFILE
+        DEFAULT, OUTPUTDIR, TILESIZE, ZEROTILESIZE, QUALITY, INPUTFILE
     }
     // The following can be overriden/set by the indicated command line arguments
     static boolean showHelp = false;               // -help | -h
     static int tileSize = 512;                     // -tilesize
+    static int zeroTileSize = 0;                  // -zerotilesize
     static float quality = 0.8f;	           // -quality (0.0 to 1.0)
-    static File outputDir = null;                  // -outputdir | -o
+    static File outputDir = null;                  // -outputdir | -o    
     static boolean simpleoutput = false;           // -simpleoutput | -s
     static boolean verboseMode = false;            // -verbose
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args    
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         try {
             try {
@@ -126,10 +127,6 @@ public class ZoomifyTiler {
         }
     }
 
-    /**
-     * Process the command line arguments
-     * @param args the command line arguments
-     */
     private static void parseCommandLine(String[] args) throws Exception {
         CmdParseState state = CmdParseState.DEFAULT;
         for (int count = 0; count < args.length; count++) {
@@ -147,6 +144,8 @@ public class ZoomifyTiler {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-tilesize")) {
                         state = CmdParseState.TILESIZE;
+                    } else if (arg.equals("-zerotilesize")) {
+                        state = CmdParseState.ZEROTILESIZE;
                     } else if (arg.equals("-quality")) {
                         state = CmdParseState.QUALITY;
                     } else {
@@ -159,6 +158,10 @@ public class ZoomifyTiler {
                     break;
                 case TILESIZE:
                     tileSize = Integer.parseInt(args[count]);
+                    state = CmdParseState.DEFAULT;
+                    break;
+                case ZEROTILESIZE:
+                    zeroTileSize = Integer.parseInt(args[count]);
                     state = CmdParseState.DEFAULT;
                     break;
                 case QUALITY:
@@ -253,9 +256,6 @@ public class ZoomifyTiler {
             int nCols = (int) Math.ceil(width / tileSize);
             int nRows = (int) Math.ceil(height / tileSize);
 
-            //System.out.printf("level=%d \t w/h=%.0f/%.0f \t cols/rows=%d/%d\n",
-            //numTiers, width, height, nCols, nRows);
-
             for (int row = nRows - 1; row >= 0; row--) {
                 for (int col = nCols - 1; col >= 0; col--) {
                     saveImageAtQuality(getTile(image, row, col), dir + File.separator + currentTier + '-' + col + '-' + row, quality);
@@ -266,15 +266,35 @@ public class ZoomifyTiler {
                     }
                 }
             }
-            // Scale down image for next level
-            width = Math.floor(width / 2d);
-            height = Math.floor(height / 2d);
+
+            if (currentTier == 1 && zeroTileSize > 0) {
+                // scale for zero tile
+                if (width > height) {
+                    height = (int) Math.floor((double) (zeroTileSize * height) / (double) width);
+                    width = zeroTileSize;
+                } else if (width < height) {
+                    width = (int) Math.floor((double) (zeroTileSize * width) / (double) height);
+                    height = zeroTileSize;
+                } else {
+                    width = height = zeroTileSize;
+                }
+            } else {
+                // Scale down image for next level
+                width = Math.floor(width / 2d);
+                height = Math.floor(height / 2d);
+            }
+
             if (width > 10 && height > 10) {
                 // resize in stages to improve quality
                 image = resizeImage(image, width * 1.66d, height * 1.66d);
                 image = resizeImage(image, width * 1.33d, height * 1.33d);
             }
             image = resizeImage(image, width, height);
+
+            if (currentTier == 1 && zeroTileSize > 0) {
+                saveImageAtQuality(getTile(image, 0, 0), dir + File.separator + 0 + '-' + 0 + '-' + 0, quality);
+                break;
+            }
         }
         saveImageDescriptor(originalWidth, originalHeight, totalTiles, descriptor);
     }
@@ -318,20 +338,12 @@ public class ZoomifyTiler {
         return result;
     }
 
-    /**
-     * Delete a file
-     * @param path the path of the directory to be deleted
-     */
     private static void deleteFile(File file) throws IOException {
         if (!file.delete()) {
             throw new IOException("Failed to delete file: " + file);
         }
     }
 
-    /**
-     * Recursively deletes a directory
-     * @param path the path of the directory to be deleted
-     */
     private static void deleteDir(File dir) throws IOException {
         if (!dir.isDirectory()) {
             deleteFile(dir);
@@ -349,11 +361,6 @@ public class ZoomifyTiler {
         }
     }
 
-    /**
-     * Creates a directory
-     * @param parent the parent directory for the new directory
-     * @param name the new directory name
-     */
     private static File createDir(File parent, String name) throws IOException {
         assert (parent.isDirectory());
         File result = new File(parent + File.separator + name);
@@ -363,10 +370,6 @@ public class ZoomifyTiler {
         return result;
     }
 
-    /**
-     * Loads image from file
-     * @param file the file containing the image
-     */
     private static BufferedImage loadImage(File file) throws IOException {
         FileSeekableStream stream = null;
         BufferedImage result = null;
@@ -386,13 +389,6 @@ public class ZoomifyTiler {
         return result;
     }
 
-    /**
-     * Gets an image containing the tile at the given row and column
-     * for the given image.
-     * @param img - the input image from whihc the tile is taken
-     * @param row - the tile's row (i.e. y) index
-     * @param col - the tile's column (i.e. x) index
-     */
     private static BufferedImage getTile(BufferedImage img, int row, int col) {
         int x = col * tileSize;
         int y = row * tileSize;
@@ -405,9 +401,6 @@ public class ZoomifyTiler {
             h = img.getHeight() - y;
         }
 
-        //System.out.printf("getTile: row=%d, col=%d, x=%d, y=%d, w=%d, h=%d\n",
-        //      row, col, x, y, w, h);
-
         BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = result.createGraphics();
         g.drawImage(img, 0, 0, w, h, x, y, x + w, y + h, null);
@@ -415,14 +408,6 @@ public class ZoomifyTiler {
         return result;
     }
 
-    /**
-     * Returns resized image
-     * NB - useful reference on high quality image resizing can be found here:
-     *   http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
-     * @param width the required width
-     * @param height the frequired height
-     * @param img the image to be resized
-     */
     private static BufferedImage resizeImage(BufferedImage img, double width, double height) {
         int w = (int) width;
         int h = (int) height;
@@ -430,6 +415,7 @@ public class ZoomifyTiler {
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
+        //also: http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html        
         //surprisingly following code gives worse results
         //RenderingHints qualityHints = new RenderingHints(
         //    RenderingHints.KEY_RENDERING,
@@ -441,12 +427,6 @@ public class ZoomifyTiler {
         return result;
     }
 
-    /**
-     * Saves image to the given file
-     * @param img the image to be saved
-     * @param path the path of the file to which it is saved (less the extension)
-     * @param quality the compression quality to use (0-1)
-     */
     private static void saveImageAtQuality(BufferedImage img, String path, float quality) throws IOException {
         File outputFile = new File(path + ".jpg");
         Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");
@@ -471,12 +451,6 @@ public class ZoomifyTiler {
         }
     }
 
-    /**
-     * Write image descriptor XML file
-     * @param width image width
-     * @param height image height
-     * @param file the file to which it is saved
-     */
     private static void saveImageDescriptor(int width, int height, int numTiles, File file) throws IOException {
         String xmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
         ArrayList<String> lines = new ArrayList<String>();
@@ -489,11 +463,6 @@ public class ZoomifyTiler {
         saveText(lines, file);
     }
 
-    /**
-     * Saves strings as text to the given file
-     * @param lines the image to be saved
-     * @param file the file to which it is saved
-     */
     private static void saveText(ArrayList lines, File file) throws IOException {
         if (verboseMode) {
             System.out.printf("Writing file: %s\n", file);

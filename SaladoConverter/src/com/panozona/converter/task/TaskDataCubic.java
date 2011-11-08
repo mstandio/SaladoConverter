@@ -1,14 +1,12 @@
 package com.panozona.converter.task;
 
-import java.io.File;
-
 /**
  * @author Marek Standio
  */
 public class TaskDataCubic extends TaskData {
 
     public TaskDataCubic(Panorama panorama) {
-        super(panorama);        
+        super(panorama);
     }
 
     @Override
@@ -18,6 +16,6 @@ public class TaskDataCubic extends TaskData {
 
     @Override
     public final String getPathDescription() {
-        return panorama.getImages().get(0).path.substring(0, panorama.getImages().get(0).path.lastIndexOf(File.separator));
-    }    
+        return panorama.getImages().get(0).path.substring(0, panorama.getImages().get(0).path.lastIndexOf("_"));
+    }
 }

@@ -102,10 +102,6 @@ public class SkyboxMaker {
         }
     }
 
-    /**
-     * Process the command line arguments
-     * @param args the command line arguments
-     */
     private static void parseCommandLine(String[] args) throws Exception {
         CmdParseState state = CmdParseState.DEFAULT;
         for (int count = 0; count < args.length; count++) {
@@ -188,32 +184,32 @@ public class SkyboxMaker {
     }
 
     private static void processImageFiles() throws IOException {
-        String nameWithoutDescription = inputFiles.get(0).getName().substring(0, inputFiles.get(0).getName().lastIndexOf("_"));
-        BufferedImage input = loadImage(inputFiles.get(0));
-        System.out.printf("Skyboxing image: %s\n", inputFiles.get(0).getAbsolutePath());
-        int inputSize = input.getWidth();
-        BufferedImage output = new BufferedImage(inputSize * 3, inputSize * 2, BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = output.getGraphics();
-        graphics.drawImage(input, (getImagePosition(inputFiles.get(0).getName()) % 3) * inputSize,
-                (int) Math.floor((double) getImagePosition(inputFiles.get(0).getName()) / 3d) * inputSize, null);
-        input.flush();
-        for (int i = 1; i < 6; i++) {
-            System.out.printf("Skyboxing image: %s\n", inputFiles.get(i).getAbsolutePath());
-            input = loadImage(inputFiles.get(i));
-            graphics.drawImage(input, (getImagePosition(inputFiles.get(i).getName()) % 3) * inputSize,
-                    (int) Math.floor((double) getImagePosition(inputFiles.get(i).getName()) / 3d) * inputSize, null);
-            input.flush();
-        }
-        System.out.printf("Writing to directory: %s\n", outputDir.getAbsolutePath());
         if (!previewOnly) {
-            saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
-        }
-        // this is how this should work:
-        //output = resizeImage(output, previewSize * 3, previewSize * 2);
-        //saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription + "_preview" , quality);
-        graphics.dispose();
-        output.flush();
+            String nameWithoutDescription = inputFiles.get(0).getName().substring(0, inputFiles.get(0).getName().lastIndexOf("_"));
+            BufferedImage input = loadImage(inputFiles.get(0));
+            System.out.printf("Skyboxing image: %s\n", inputFiles.get(0).getAbsolutePath());
+            int inputSize = input.getWidth();
+            BufferedImage output = new BufferedImage(inputSize * 3, inputSize * 2, BufferedImage.TYPE_INT_RGB);
+            Graphics graphics = output.getGraphics();
+            graphics.drawImage(input, (getImagePosition(inputFiles.get(0).getName()) % 3) * inputSize,
+                    (int) Math.floor((double) getImagePosition(inputFiles.get(0).getName()) / 3d) * inputSize, null);
+            input.flush();
+            for (int i = 1; i < 6; i++) {
+                System.out.printf("Skyboxing image: %s\n", inputFiles.get(i).getAbsolutePath());
+                input = loadImage(inputFiles.get(i));
+                graphics.drawImage(input, (getImagePosition(inputFiles.get(i).getName()) % 3) * inputSize,
+                        (int) Math.floor((double) getImagePosition(inputFiles.get(i).getName()) / 3d) * inputSize, null);
+                input.flush();
+            }
+            System.out.printf("Writing skybox to directory: %s\n", outputDir.getAbsolutePath());
 
+            saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription, quality);
+            // this is how this should work:
+            //output = resizeImage(output, previewSize * 3, previewSize * 2);
+            //saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription + "_preview" , quality);
+            graphics.dispose();
+            output.flush();
+        }
         makePreview();
     }
 
@@ -232,6 +228,8 @@ public class SkyboxMaker {
             graphics.drawImage(input, 0, getImagePosition(inputFiles.get(i).getName()) * inputSize, null);
             input.flush();
         }
+        output = resizeImage(output, previewSize * 1, previewSize * 6);
+        System.out.printf("Writing skybox preview to directory: %s\n", outputDir.getAbsolutePath());
         saveImageAtQuality(output, outputDir.getAbsolutePath() + File.separator + nameWithoutDescription + "_preview", quality);
         graphics.dispose();
         output.flush();
@@ -260,10 +258,6 @@ public class SkyboxMaker {
         throw new IllegalArgumentException("Cannot resolve name: " + name);
     }
 
-    /**
-     * Loads image from file
-     * @param file the file containing the image
-     */
     private static BufferedImage loadImage(File file) throws IOException {
         FileSeekableStream stream = null;
         BufferedImage result = null;
@@ -283,14 +277,6 @@ public class SkyboxMaker {
         return result;
     }
 
-    /**
-     * Returns resized image
-     * NB - useful reference on high quality image resizing can be found here:
-     *   http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
-     * @param width the required width
-     * @param height the frequired height
-     * @param img the image to be resized
-     */
     private static BufferedImage resizeImage(BufferedImage img, double width, double height) {
         int w = (int) width;
         int h = (int) height;
@@ -298,6 +284,7 @@ public class SkyboxMaker {
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
+        //also: http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
         //surprisingly following code gives worse results
         //RenderingHints qualityHints = new RenderingHints(
         //    RenderingHints.KEY_RENDERING,
@@ -309,12 +296,6 @@ public class SkyboxMaker {
         return result;
     }
 
-    /**
-     * Saves image to the given file
-     * @param img the image to be saved
-     * @param path the path of the file to which it is saved (less the extension)
-     * @param quality the compression quality to use (0-1)
-     */
     private static void saveImageAtQuality(BufferedImage img, String path, float quality) throws IOException {
         File outputFile = new File(path + ".jpg");
         Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");

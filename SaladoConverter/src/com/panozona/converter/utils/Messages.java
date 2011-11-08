@@ -14,6 +14,7 @@ public class Messages {
     public final static String DZT_JAR_DIR_ERROR = "Invalid DeepZoomTiler *.jar directory";    
     public final static String ZYT_QUALITY_ERROR = "Invalid ZoomifyTiler Quality value";
     public final static String ZYT_TILESIZE_ERROR = "Invalid ZoomifyTiler Tile size value";
+    public final static String ZYT_ZEROTILESIZE_ERROR = "Invalid ZoomifyTiler Zero tile size value";
     public final static String ZYT_JAR_DIR_ERROR = "Invalid ZoomifyTiler *.jar directory";
     public final static String SBM_QUALITY_ERROR = "Invalid SkyboxMaker Quality value";
     public final static String SBM_PREVIEWSIZE_ERROR = "Invalid SkyboxMaker preview size value";

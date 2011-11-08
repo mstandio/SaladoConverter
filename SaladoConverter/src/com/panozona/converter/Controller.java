@@ -302,7 +302,7 @@ public class Controller {
     }
 
     private String getOutputFolderName(String outputFolderName) {
-        if (aggstngs.ge.getOverwriteOutput() || !new File(outputFolderName).exists()) {
+        if (!new File(outputFolderName).exists()) {
             return outputFolderName;
         } else {
             String result = outputFolderName;
@@ -593,7 +593,7 @@ public class Controller {
         if (newCubeSize * 3 > 8000) {
             newCubeSize = 2666;
         }
-        if (taskData.cubeSizeChanged() && !previewOnly) {
+        if ((newCubeSize != taskData.getNewCubeSize() || taskData.cubeSizeChanged()) && !previewOnly) {
             String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
             String resizedFile = resDir + File.separator + nameWithoutExtension;
 
@@ -611,7 +611,7 @@ public class Controller {
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getUp() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getDown() + ".tif"}));
 
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(new String[]{resDir}, outputDir, false)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(new String[]{resDir}, outputDir, previewOnly)));
 
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getFront() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resizedFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -629,7 +629,7 @@ public class Controller {
                 cubeFile + aggstngs.ge.naming.getUp() + ".tif",
                 cubeFile + aggstngs.ge.naming.getDown() + ".tif"};
 
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, true)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, previewOnly)));
 
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getFront() + ".tif"}));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFile + aggstngs.ge.naming.getRight() + ".tif"}));
@@ -641,20 +641,20 @@ public class Controller {
     }
 
     //Cubic to Zoomify cubic
-    private void generateOpCTZYC(TaskData taskData) {        
+    private void generateOpCTZYC(TaskData taskData) {
         String nameWithoutExtension;
         String nameWithoutDescription;
         String[] tmp;
         String outputDir;
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
-        tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));        
+        tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));
         nameWithoutExtension = taskData.getPanorama().getImages().get(0).path.substring(
-                taskData.getPanorama().getImages().get(0).path.lastIndexOf(File.separator) + 1, 
+                taskData.getPanorama().getImages().get(0).path.lastIndexOf(File.separator) + 1,
                 taskData.getPanorama().getImages().get(0).path.lastIndexOf('.'));
-        nameWithoutDescription = nameWithoutExtension.substring(0, nameWithoutExtension.lastIndexOf("_"));        
+        nameWithoutDescription = nameWithoutExtension.substring(0, nameWithoutExtension.lastIndexOf("_"));
         outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + nameWithoutDescription);
         new File(outputDir).mkdir();
-        
+
         int newCubeSize = taskData.getNewCubeSize();
         if (newCubeSize % 2 != 0) {
             newCubeSize -= 1;
@@ -717,28 +717,21 @@ public class Controller {
 
     //Cubic to Skybox
     private void generateOpCTSB(TaskData taskData, boolean previewOnly) {
-        String parentFolderName;
-        String[] tmp;
-        String outputDir;
+        String nameWithoutExtension = taskData.getPanorama().getImages().get(0).path.substring(taskData.getPanorama().getImages().get(0).path.lastIndexOf(File.separator) + 1, taskData.getPanorama().getImages().get(0).path.lastIndexOf('_'));
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
-        String nameWithoutExtension;
-
-        tmp = taskData.getPanorama().getImages().get(0).path.split(Pattern.quote(File.separator));
-        parentFolderName = tmp[tmp.length - 2];
-        outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + parentFolderName);
-
+        String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + nameWithoutExtension);        
         int newCubeSize = taskData.getNewCubeSize();
         if (newCubeSize * 3 > 8000) {
             newCubeSize = 2666;
         }
-        if (taskData.cubeSizeChanged() && !previewOnly) {
+        if ((newCubeSize != taskData.getNewCubeSize() || taskData.cubeSizeChanged()) && !previewOnly) {
             String[] input = new String[6];
             for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {
                 taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(taskData.getPanorama().getImages().get(i).path, resDir, newCubeSize)));
                 nameWithoutExtension = taskData.getPanorama().getImages().get(i).path.substring(taskData.getPanorama().getImages().get(i).path.lastIndexOf(File.separator) + 1, taskData.getPanorama().getImages().get(i).path.lastIndexOf('.'));
                 input[i] = resDir + File.separator + nameWithoutExtension + ".tif";
             }
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, false)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, previewOnly)));
             for (String resized : input) {
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{resized}));
             }
@@ -747,7 +740,7 @@ public class Controller {
             for (int i = 0; i < taskData.getPanorama().getImages().size(); i++) {
                 input[i] = taskData.getPanorama().getImages().get(i).path;
             }
-            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, true)));
+            taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, previewOnly)));
         }
     }
 
@@ -757,7 +750,7 @@ public class Controller {
         String[] tmp = image.path.split(Pattern.quote(File.separator));
         String nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
         String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "zoomify_" + nameWithoutExtension);
-        new File(outputDir).mkdir();        
+        new File(outputDir).mkdir();
         taskData.operations.add(new Operation(Operation.TYPE_ZYT, generateArgsZYT(image.path, outputDir, taskData.getNewTileSize())));
     }
 
@@ -831,6 +824,8 @@ public class Controller {
         tmpArgsZYT.add(Float.toString(aggstngs.zyt.getQuality()));
         tmpArgsZYT.add("-tilesize");
         tmpArgsZYT.add(Integer.toString(tileSize));
+        tmpArgsZYT.add("-zerotilesize");
+        tmpArgsZYT.add(Integer.toString(aggstngs.zyt.getDefaultZeroTileSize()));
         tmpArgsZYT.add("-outputdir");
         tmpArgsZYT.add(output);
         tmpArgsZYT.add(input);
@@ -909,6 +904,7 @@ public class Controller {
                 aggstngs.dzt.setJarDir(prop.getProperty(DZTSettings.VALUE_JAR_DIR));
 
                 aggstngs.zyt.setTileSize(prop.getProperty(ZYTSettings.VALUE_TILE_SIZE));
+                aggstngs.zyt.setZeroTileSize(prop.getProperty(ZYTSettings.VALUE_ZERO_TILE_SIZE));
                 aggstngs.zyt.setQuality(prop.getProperty(ZYTSettings.VALUE_QUALITY));
                 aggstngs.zyt.setJarDir(prop.getProperty(ZYTSettings.VALUE_JAR_DIR));
 
@@ -969,6 +965,9 @@ public class Controller {
 
         if (aggstngs.zyt.tileSizeChanged()) {
             prop.put(ZYTSettings.VALUE_TILE_SIZE, Integer.toString(aggstngs.zyt.getTileSize()));
+        }
+        if (aggstngs.zyt.zertoTileSizeChanged()) {
+            prop.put(ZYTSettings.VALUE_ZERO_TILE_SIZE, Integer.toString(aggstngs.zyt.getZeroTileSize()));
         }
         if (aggstngs.zyt.qualityChanged()) {
             prop.put(ZYTSettings.VALUE_QUALITY, Float.toString(aggstngs.zyt.getQuality()));

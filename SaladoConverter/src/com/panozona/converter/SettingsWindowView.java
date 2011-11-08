@@ -121,6 +121,8 @@ public class SettingsWindowView extends javax.swing.JFrame {
         jTextFieldZYTDirectory = new javax.swing.JTextField();
         jButtonZYTBrowseDirectory = new javax.swing.JButton();
         jButtonZYTRestoreDefault = new javax.swing.JButton();
+        jTextFieldZYTZeroTileSize = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
         ResizerTab = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jButtonRESRestoreDefault = new javax.swing.JButton();
@@ -500,6 +502,11 @@ public class SettingsWindowView extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldZYTZeroTileSize.setName("jTextFieldZYTZeroTileSize"); // NOI18N
+
+        jLabel20.setText(resourceMap.getString("jLabel20.text")); // NOI18N
+        jLabel20.setName("jLabel20"); // NOI18N
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -507,11 +514,16 @@ public class SettingsWindowView extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonZYTRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(45, 45, 45)
+                        .addComponent(jTextFieldZYTTileSize, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
                             .addComponent(jLabel13)
-                            .addComponent(jLabel17))
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel20))
                         .addGap(13, 13, 13)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
@@ -519,8 +531,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonZYTBrowseDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTextFieldZYTQuality, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                            .addComponent(jTextFieldZYTTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)))
-                    .addComponent(jButtonZYTRestoreDefault, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jTextFieldZYTZeroTileSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -532,6 +543,10 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldZYTTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldZYTZeroTileSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldZYTQuality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -539,7 +554,7 @@ public class SettingsWindowView extends javax.swing.JFrame {
                     .addComponent(jTextFieldZYTDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonZYTBrowseDirectory)
                     .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addComponent(jButtonZYTRestoreDefault)
                 .addContainerGap())
         );
@@ -1152,6 +1167,7 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
         jTextFieldOPTMinTileSize.setText(Integer.toString(aggstngs.opt.getMinTileSize()));
 
         jTextFieldZYTTileSize.setText(Integer.toString(aggstngs.zyt.getTileSize()));
+        jTextFieldZYTZeroTileSize.setText(Integer.toString(aggstngs.zyt.getZeroTileSize()));
         jTextFieldZYTQuality.setText(Float.toString(aggstngs.zyt.getQuality()));
         jTextFieldZYTDirectory.setText(aggstngs.zyt.getJarDir());
 
@@ -1188,6 +1204,11 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
             aggstngs.dzt.setTileSize(jTextFieldDZTTileSize.getText());
             aggstngs.dzt.setQuality(jTextFieldDZTQuality.getText());
             aggstngs.dzt.setJarDir(jTextFieldDZTDirectory.getText());
+
+            aggstngs.zyt.setTileSize(jTextFieldZYTTileSize.getText());
+            aggstngs.zyt.setZeroTileSize(jTextFieldZYTZeroTileSize.getText());
+            aggstngs.zyt.setQuality(jTextFieldZYTQuality.getText());
+            aggstngs.zyt.setJarDir(jTextFieldZYTDirectory.getText());
 
             aggstngs.sbm.setPreviewSize(jTextFieldSBMPreviewSize.getText());
             aggstngs.sbm.setQuality(jTextFieldSBMQuality.getText());
@@ -1258,6 +1279,7 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1295,5 +1317,6 @@ private void jButtonERFRestoreDefaultActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JTextField jTextFieldZYTDirectory;
     private javax.swing.JTextField jTextFieldZYTQuality;
     private javax.swing.JTextField jTextFieldZYTTileSize;
+    private javax.swing.JTextField jTextFieldZYTZeroTileSize;
     // End of variables declaration//GEN-END:variables
 }

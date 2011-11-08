@@ -11,12 +11,15 @@ public class ZYTSettings {
     public static final String JAR_CLASSNAME = "zoomifytiler.ZoomifyTiler";
     public static final String JAR_FILENAME = "ZoomifyTiler.jar";
     public static final String VALUE_TILE_SIZE = "ZYT_tileSize";
+    public static final String VALUE_ZERO_TILE_SIZE = "ZYT_zeroTileSize";
     public static final String VALUE_QUALITY = "ZYT_quality";
     public static final String VALUE_JAR_DIR = "ZYT_jarDir";
     private int tileSize;
+    private int zeroTileSize;
     private float quality;
     private String jarDir;
     private final int defaultTileSize = 896;
+    private final int defaultZeroTileSize = 150;
     private final float defaultQuality = 0.8f;
     private String defaultJarDir = "";
 
@@ -25,6 +28,7 @@ public class ZYTSettings {
             defaultJarDir = currentDirectory + File.separator + "components" + File.separator + JAR_FILENAME;
         }
         tileSize = defaultTileSize;
+        zeroTileSize = defaultZeroTileSize;
         quality = defaultQuality;
         jarDir = defaultJarDir;
     }
@@ -34,7 +38,7 @@ public class ZYTSettings {
             try {
                 setTileSize(Integer.parseInt(value));
             } catch (Exception ex) {
-                throw new IllegalArgumentException(Messages.DZT_TILESIZE_ERROR);
+                throw new IllegalArgumentException(Messages.ZYT_TILESIZE_ERROR);
             }
         }
     }
@@ -57,6 +61,36 @@ public class ZYTSettings {
 
     public boolean tileSizeChanged() {
         return (tileSize != defaultTileSize);
+    }
+
+    public void setZeroTileSize(String value) throws IllegalArgumentException {
+        if (value != null) {
+            try {
+                setZeroTileSize(Integer.parseInt(value));
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.ZYT_ZEROTILESIZE_ERROR);
+            }
+        }
+    }
+
+    public void setZeroTileSize(int value) throws IllegalArgumentException {
+        if (value >= 0) {
+            zeroTileSize = value;
+        } else {
+            throw new IllegalArgumentException(Messages.ZYT_TILESIZE_ERROR);
+        }
+    }
+
+    public int getZeroTileSize() {
+        return zeroTileSize;
+    }
+
+    public int getDefaultZeroTileSize() {
+        return defaultZeroTileSize;
+    }
+
+    public boolean zertoTileSizeChanged() {
+        return (zeroTileSize != defaultZeroTileSize);
     }
 
     public void setQuality(String value) throws IllegalArgumentException {
