@@ -18,6 +18,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.media.jai.JAI;
 
 /**
@@ -26,7 +31,7 @@ import javax.media.jai.JAI;
  */
 public class EquirectangularToCubic {
 
-    static final String help = "\nEquirectangularToCubic v1.5\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n"
+    static final String help = "\nEquirectangularToCubic v1.6\n\nUsage:\n\n" + "java [-java_options] -jar path/to/EquirectangularToCubic.jar [-options]\n"
             + "[args...] For a list of java options try: java -help or java -X for a\n"
             + "list of less comon options. Loading large images for conversion takes a\n"
             + "lot of RAM so you will find the -Xmx option useful to raise Java's maximum\n"
@@ -41,8 +46,7 @@ public class EquirectangularToCubic {
             + "path/to/directory/of/cubic_images/. \n\n" + " Options:\n\n"
             + "-overlap: number of pixels of overlap added around the cubefaces. A value\n"
             + "\tof 1 causes the cube faces to be 90 degrees wide in pixels (dependent\n"
-            + "\ton the size of the input equirectangular) plus 1 pixel. \n"
-            + "\tDefault is 1. \n\n"
+            + "\ton the size of the input equirectangular) plus 1 pixel.Default is 1. \n\n"
             + "-interpolation: possible values are: lanczos2, bilinear, nearest-neighbor.\n"
             + "\tSets the interpolation algorithm to use during remapping. Lanczos2 \n"
             + "\tand bilinear are the highest quality. Nearest-neighbor is faster \n"
@@ -53,6 +57,11 @@ public class EquirectangularToCubic {
             + "\t(front, right, back, left, top, bottom) \"letters\" value gives\n"
             + "\t(_f _r _b _l _t _b) and \"numbers\" value gives (_0 _1 _2 _3 _4 _5)\n"
             + "\tDefault is letters. \n\n"
+            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
+            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
+            + "\t1.0 is least compression, highest quality, largest file.\n"
+            + "-outputformat: output format of converted images. Possible values\n"
+            + "\tare: tif, jpg. Default is tif. \n\n"
             + "-outputdir or -o: the output directory for the converted images. It need\n"
             + "\tnot exist. Default is a folder next to the input folder or file, with \n"
             + "\t'cubic_' prepended to the name of the input (input files will have the \n"
@@ -74,16 +83,20 @@ public class EquirectangularToCubic {
     static final String LETTERS = "letters";
     static final String NUMBERS = "numbers";
     static final String NEAREST_NEIGHBOUR = "nearest-neighbor";
+    static final String FORMAT_TIF = "tif";
+    static final String FORMAT_JPG = "jpg";
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, OVERLAP, INPUTFILE, INTERPOLATION, NAMING, QUALITY, RESIZE
+        DEFAULT, OUTPUTDIR, OVERLAP, INPUTFILE, INTERPOLATION, NAMING, QUALITY, RESIZE, OUTPUTFORMAT
     }
     // The following can be overriden/set by the indicated command line arguments    
     static boolean showHelp = false;            // -help | -h
     static String interpolation = LANCZOS2;     // -interpolation (lanczos2, bilinear, nearest-neighbor)
     static String naming = LETTERS;             // -naming (letters, numbers)
     static int overlap = 1;           	        // -overlap
+    static float quality = 0.8f;	        // -quality (0.0 to 1.0)
+    static String outputFormat = FORMAT_TIF;    // -outputformat (tif or jpg)
     static File outputDir = null;               // -outputdir | -o
     static boolean simpleoutput = false;        // -simpleoutput | -s
     static boolean verboseMode = false;         // -verbose
@@ -92,9 +105,6 @@ public class EquirectangularToCubic {
     static ArrayList<File> outputFiles = new ArrayList<File>();
     static ImageBuffer imgBuf;
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
 
         try {
@@ -175,10 +185,6 @@ public class EquirectangularToCubic {
         }
     }
 
-    /**
-     * Process the command line arguments
-     * @param args the command line arguments
-     */
     private static void parseCommandLine(String[] args) throws Exception {
         CmdParseState state = CmdParseState.DEFAULT;
         for (int count = 0; count < args.length; count++) {
@@ -200,6 +206,10 @@ public class EquirectangularToCubic {
                         state = CmdParseState.OVERLAP;
                     } else if (arg.equals("-interpolation")) {
                         state = CmdParseState.INTERPOLATION;
+                    } else if (arg.equals("-outputformat")) {
+                        state = CmdParseState.OUTPUTFORMAT;
+                    } else if (arg.equals("-quality")) {
+                        state = CmdParseState.QUALITY;
                     } else if (arg.equals("-naming")) {
                         state = CmdParseState.NAMING;
                     } else {
@@ -220,8 +230,22 @@ public class EquirectangularToCubic {
                     interpolation = args[count];
                     state = CmdParseState.DEFAULT;
                     break;
-               case NAMING:
+                case NAMING:
                     naming = args[count];
+                    state = CmdParseState.DEFAULT;
+                    break;
+                case OUTPUTFORMAT:
+                    if (args[count].toLowerCase().equals(FORMAT_JPG) || args[count].toLowerCase().equals(FORMAT_TIF)) {
+                        outputFormat = args[count].toLowerCase();
+                    }
+                    state = CmdParseState.DEFAULT;
+                    break;
+                case QUALITY:
+                    float qtmp = Float.parseFloat(args[count]);
+                    if (qtmp < 0 || qtmp > 1) {
+                        throw new Exception("-quality");
+                    }
+                    quality = qtmp;
                     state = CmdParseState.DEFAULT;
                     break;
             }
@@ -264,12 +288,6 @@ public class EquirectangularToCubic {
         }
     }
 
-    /**
-     * Process the given equirectangular image file, producing its cubic output files
-     * in a subdirectory of the given output directory.
-     * @param inFile the file containing the image
-     * @param outputDir the output directory
-     */
     private static void processImageFile(File inFile, File outputDir) throws IOException {
         if (verboseMode) {
             System.out.printf("Converting to cube: %s\n", inFile);
@@ -328,7 +346,7 @@ public class EquirectangularToCubic {
         imgBuf.init(yaw, pitch);
         Equi2Rect.extractRectilinear(yaw, pitch, fov, imgBuf, rectSize, equiWidth, bilinear, lanczos2, rectData);
         imgBuf.reset();
-        output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);        
+        output.setRGB(0, 0, rectSize, rectSize, rectData, 0, rectSize);
         saveImage(output, outputDir + File.separator + nameWithoutExtension + (naming.equals(NUMBERS) ? "_0" : "_f"));
         output.flush();
         Arrays.fill(rectData, 0);
@@ -389,11 +407,6 @@ public class EquirectangularToCubic {
         imgBuf.printStats();
     }
 
-    /**
-     * Creates a directory
-     * @param parent the parent directory for the new directory
-     * @param name the new directory name
-     */
     private static File createDir(File parent, String name) throws IOException {
         assert (parent.isDirectory());
         File result = new File(parent + File.separator + name);
@@ -403,15 +416,38 @@ public class EquirectangularToCubic {
         return result;
     }
 
-    /**
-     * Saves image to the given file
-     * @param img the image to be saved
-     * @param path the path of the file to which it is saved (less the extension)     
-     */
-    private static void saveImage(BufferedImage img, String path) throws IOException {        
-        JAI.create("filestore", img, path + ".tif", "TIFF");        
+    private static void saveImage(BufferedImage img, String path) throws IOException {
         if (verboseMode) {
-            System.out.print("\nSaving cube wall: " + path + ".tif");
+            System.out.print("\nSaving cube wall: " + path + "." + outputFormat);
+        }
+        if (outputFormat.equals(FORMAT_TIF)){
+            JAI.create("filestore", img, path + ".tif", "TIFF");
+        }else if (outputFormat.equals(FORMAT_JPG)){
+            saveImageAtQuality(img, path, quality);
+        }
+    }
+    
+    private static void saveImageAtQuality(BufferedImage img, String path, float quality) throws IOException {
+        File outputFile = new File(path + ".jpg");
+        Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");
+        ImageWriter writer = (ImageWriter) iter.next();
+        ImageWriteParam iwp = writer.getDefaultWriteParam();
+        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        iwp.setCompressionQuality(quality);
+        FileImageOutputStream output = new FileImageOutputStream(outputFile);
+        writer.setOutput(output);
+        IIOImage image = new IIOImage(img, null, null);
+        try {
+            writer.write(null, image, iwp);
+        } catch (IOException e) {
+            throw new IOException("Unable to save image file: " + outputFile);
+        } finally {
+            if (writer != null) {
+                writer.dispose();
+            }
+            if (output != null) {
+                output.close();
+            }
         }
     }
 }

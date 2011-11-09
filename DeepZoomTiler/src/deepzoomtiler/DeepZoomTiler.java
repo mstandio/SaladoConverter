@@ -53,7 +53,7 @@ public class DeepZoomTiler {
             + "\tDefault is 1. \n\n"
             + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
             + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
-            + "\t1.0 is least compression, highest quality, tlargest file.\n"
+            + "\t1.0 is least compression, highest quality, largest file.\n"
             + "\tDefault is 0.8.\n\n"
             + "-tilesize: target pixel tile size. Tiling starts at the top left \n"
             + "\tof an image, so tiles at the right and bottom to the image\n"
@@ -95,9 +95,6 @@ public class DeepZoomTiler {
     static ArrayList<File> inputFiles = new ArrayList<File>(); // must follow all other args
     static ArrayList<File> outputFiles = new ArrayList<File>();
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         try {
             try {
@@ -169,10 +166,6 @@ public class DeepZoomTiler {
         }
     }
 
-    /**
-     * Process the command line arguments
-     * @param args the command line arguments
-     */
     private static void parseCommandLine(String[] args) throws Exception {
         CmdParseState state = CmdParseState.DEFAULT;
         for (int count = 0; count < args.length; count++) {
@@ -259,12 +252,6 @@ public class DeepZoomTiler {
         }
     }
 
-    /**
-     * Process the given image file, producing its Deep Zoom output files
-     * in a subdirectory of the given output directory.
-     * @param inFile the file containing the image
-     * @param outputDir the output directory
-     */
     private static void processImageFile(File inFile, File outputDir) throws IOException {
         if (verboseMode) {
             System.out.printf("Processing image: %s\n", inFile);
@@ -341,20 +328,12 @@ public class DeepZoomTiler {
         saveImageDescriptor(originalWidth, originalHeight, descriptor);
     }
 
-    /**
-     * Delete a file
-     * @param path the path of the directory to be deleted
-     */
     private static void deleteFile(File file) throws IOException {
         if (!file.delete()) {
             throw new IOException("Failed to delete file: " + file);
         }
     }
 
-    /**
-     * Recursively deletes a directory
-     * @param path the path of the directory to be deleted
-     */
     private static void deleteDir(File dir) throws IOException {
         if (!dir.isDirectory()) {
             deleteFile(dir);
@@ -372,11 +351,6 @@ public class DeepZoomTiler {
         }
     }
 
-    /**
-     * Creates a directory
-     * @param parent the parent directory for the new directory
-     * @param name the new directory name
-     */
     private static File createDir(File parent, String name) throws IOException {
         assert (parent.isDirectory());
         File result = new File(parent + File.separator + name);
@@ -386,10 +360,6 @@ public class DeepZoomTiler {
         return result;
     }
 
-    /**
-     * Loads image from file
-     * @param file the file containing the image
-     */
     private static BufferedImage loadImage(File file) throws IOException {
         FileSeekableStream stream = null;
         BufferedImage result = null;
@@ -409,13 +379,6 @@ public class DeepZoomTiler {
         return result;
     }
 
-    /**
-     * Gets an image containing the tile at the given row and column
-     * for the given image.
-     * @param img - the input image from whihc the tile is taken
-     * @param row - the tile's row (i.e. y) index
-     * @param col - the tile's column (i.e. x) index
-     */
     private static BufferedImage getTile(BufferedImage img, int row, int col) {
         int x = col * tileSize - (col == 0 ? 0 : tileOverlap);
         int y = row * tileSize - (row == 0 ? 0 : tileOverlap);
@@ -440,14 +403,6 @@ public class DeepZoomTiler {
         return result;
     }
 
-    /**
-     * Returns resized image
-     * NB - useful reference on high quality image resizing can be found here:
-     *   http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
-     * @param width the required width
-     * @param height the frequired height
-     * @param img the image to be resized
-     */
     private static BufferedImage resizeImage(BufferedImage img, double width, double height) {
         int w = (int) width;
         int h = (int) height;
@@ -455,18 +410,13 @@ public class DeepZoomTiler {
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(img, 0, 0, w, h, 0, 0, img.getWidth(), img.getHeight(), null);
+        //also: http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
         //surprisingly this gives worse results
         //RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         //BufferedImage result = JAI.create("SubsampleAverage", img, width / (double) img.getWidth(), height / (double) img.getHeight(), qualityHints).getAsBufferedImage();
         return result;
     }
 
-    /**
-     * Saves image to the given file
-     * @param img the image to be saved
-     * @param path the path of the file to which it is saved (less the extension)
-     * @param quality the compression quality to use (0-1)
-     */
     private static void saveImageAtQuality(BufferedImage img, String path, float quality) throws IOException {
         File outputFile = new File(path + ".jpg");
         Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");
@@ -491,28 +441,16 @@ public class DeepZoomTiler {
         }
     }
 
-    /**
-     * Write image descriptor XML file
-     * @param width image width
-     * @param height image height
-     * @param file the file to which it is saved
-     */
     private static void saveImageDescriptor(int width, int height, File file) throws IOException {
         String xmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-        String schemaName = "http://schemas.microsoft.com/deepzoom/2009";
         ArrayList<String> lines = new ArrayList<String>();
         lines.add(xmlHeader);
-        lines.add("<Image TileSize=\"" + tileSize + "\" Overlap=\"" + tileOverlap + "\" Format=\"jpg\" ServerFormat=\"Default\" xmnls=\"" + schemaName + "\">");
+        lines.add("<Image TileSize=\"" + tileSize + "\" Overlap=\"" + tileOverlap + "\" Format=\"jpg\" ServerFormat=\"Default\">");
         lines.add("<Size Width=\"" + width + "\" Height=\"" + height + "\" />");
         lines.add("</Image>");
         saveText(lines, file);
     }
 
-    /**
-     * Saves strings as text to the given file
-     * @param lines the image to be saved
-     * @param file the file to which it is saved
-     */
     private static void saveText(ArrayList lines, File file) throws IOException {
         if (verboseMode) {
             System.out.printf("Writing file: %s\n", file);

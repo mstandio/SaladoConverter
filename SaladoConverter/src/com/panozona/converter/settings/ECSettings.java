@@ -13,15 +13,18 @@ public class ECSettings {
     public static final String VALUE_WALL_OVERLAP = "EC_wallOverlap";
     public static final String VALUE_INTERPOLATION = "EC_interpolation";
     public static final String VALUE_JAR_DIR = "EC_jarDir";
+    public static final String VALUE_QUALITY = "EC_quality";
     private static final String INTERPOLATION_LANCZOS2 = "lanczos2";
     private static final String INTERPOLATION_BILINEAR = "bilinear";
     private static final String INTERPOLATION_NEAREST_NEIGHBOUR = "nearest-neighbour";
     private int wallOverlap;
     private String interpolation;
     private String jarDir;
+    private float quality;
     private final int defaultWallOverlap = 0;
     private final String defaultInterpolation = INTERPOLATION_LANCZOS2;
     private String defaultJarDir = "";
+    private final float defaultQuality = 0.8f;
 
     public ECSettings(String currentDirectory) {
         if (currentDirectory != null) {
@@ -34,6 +37,7 @@ public class ECSettings {
         wallOverlap = defaultWallOverlap;
         interpolation = defaultInterpolation;
         jarDir = defaultJarDir;
+        quality = defaultQuality;
     }
 
     public String[] getInterpolationNames() {
@@ -90,6 +94,36 @@ public class ECSettings {
 
     public boolean interpolationChanged() {
         return !(interpolation.equals(defaultInterpolation));
+    }
+
+    public void setQuality(String value) throws IllegalArgumentException {
+        if (value != null) {
+            try {
+                setQuality(Float.parseFloat(value));
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(Messages.EC_QUALITY_ERROR);
+            }
+        }
+    }
+
+    public void setQuality(float value) throws IllegalArgumentException {
+        if (value > 0f && value <= 1f) {
+            quality = value;
+        } else {
+            throw new IllegalArgumentException(Messages.EC_QUALITY_ERROR);
+        }
+    }
+
+    public float getQuality() {
+        return quality;
+    }
+
+    public float getDefaultQuality() {
+        return defaultQuality;
+    }
+
+    public boolean qualityChanged() {
+        return (quality != defaultQuality);
     }
 
     public void setJarDir(String value) throws IllegalArgumentException {

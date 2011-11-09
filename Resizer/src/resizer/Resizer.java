@@ -1,6 +1,7 @@
 package resizer;
 
 import com.sun.media.jai.codec.FileSeekableStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -10,6 +11,11 @@ import java.util.Iterator;
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import java.awt.image.renderable.ParameterBlock;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.media.jai.InterpolationNearest;
 
 /** *
@@ -17,7 +23,7 @@ import javax.media.jai.InterpolationNearest;
  */
 public class Resizer {
 
-    static final String help = "\nResizer v1.0 \n\n Usage: \n\n"
+    static final String help = "\nResizer v1.1 \n\n Usage: \n\n"
             + "java [-java_options] -jar path/to/Resizer.jar [-options] [args...]\n\n"
             + "For a list of java options try: java -help or java -X for a list of less\n"
             + "common options. Loading large images for conversion takes a lot of RAM,\n"
@@ -37,6 +43,11 @@ public class Resizer {
             + "\tDefault is 0\n\n"
             + "-height: height of output image. If only height is set, aspect ratio\n"
             + "\tof result image will be preserved.\n\n"
+            + "-quality: output JPEG compression. Value must be between 0.0 and 1.0.\n"
+            + "\t0.0 is maximum compression, lowest quality, smallest file.\n"
+            + "\t1.0 is least compression, highest quality, largest file.\n"
+            + "-outputformat: output format of converted images. Possible values\n"
+            + "\tare: tif, jpg. Default is tif. \n\n"
             + "-outputdir or -o: the output directory for the converted images. It\n"
             + "\tneed not exist. Default is a folder next to the input folder\n"
             + "\tor file, with 'resized_' prepended to the name of the input.\n\n"
@@ -46,22 +57,23 @@ public class Resizer {
             + "The argument following any options is input image or folder that contains\n"
             + "images. Input folder will not be NOT be recursed. Only images immediately\n"
             + "inside the folder will be processed.\n";
+    static final String FORMAT_TIF = "tif";
+    static final String FORMAT_JPG = "jpg";
 
     private enum CmdParseState {
 
-        DEFAULT, OUTPUTDIR, INPUTFILE, WIDTH, HEIGHT
+        DEFAULT, OUTPUTDIR, INPUTFILE, WIDTH, HEIGHT, QUALITY, OUTPUTFORMAT
     }
     // The following can be overriden/set by the indicated command line arguments    
     static boolean showHelp = false;              // -help | -h
     static int width = 0;                         // -width
     static int height = 0;                        // -height
+    static float quality = 0.8f;	          // -quality (0.0 to 1.0)
+    static String outputFormat = FORMAT_TIF;      // -outputformat (tif or jpg)
     static File outputDir = null;                 // -outputdir | -o
     static boolean simpleOutput = false;          // -simpleoutput | -s
     static ArrayList<File> inputFiles = new ArrayList<File>();  // must follow all other args    
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         try {
             try {
@@ -87,7 +99,7 @@ public class Resizer {
                     } else {
                         outputDir = createDir(parentFolder.getParentFile(), "resized_" + parentFolder.getName());
                     }
-                }               
+                }
 
             } catch (Exception e) {
                 System.out.println("Invalid command: " + e.getMessage());
@@ -105,10 +117,6 @@ public class Resizer {
         }
     }
 
-    /**
-     * Process the command line arguments
-     * @param args the command line arguments
-     */
     private static void parseCommandLine(String[] args) throws Exception {
         CmdParseState state = CmdParseState.DEFAULT;
         for (int count = 0; count < args.length; count++) {
@@ -120,6 +128,10 @@ public class Resizer {
                         return;
                     } else if (arg.equals("-simpleoutput") || arg.equals("-s")) {
                         simpleOutput = true;
+                    } else if (arg.equals("-outputformat")) {
+                        state = CmdParseState.OUTPUTFORMAT;
+                    } else if (arg.equals("-quality")) {
+                        state = CmdParseState.QUALITY;
                     } else if (arg.equals("-outputdir") || arg.equals("-o")) {
                         state = CmdParseState.OUTPUTDIR;
                     } else if (arg.equals("-width")) {
@@ -148,6 +160,20 @@ public class Resizer {
                     break;
                 case OUTPUTDIR:
                     outputDir = new File(args[count]);
+                    state = CmdParseState.DEFAULT;
+                    break;
+                case OUTPUTFORMAT:
+                    if (args[count].toLowerCase().equals(FORMAT_JPG) || args[count].toLowerCase().equals(FORMAT_TIF)) {
+                        outputFormat = args[count].toLowerCase();
+                    }
+                    state = CmdParseState.DEFAULT;
+                    break;
+                case QUALITY:
+                    float qtmp = Float.parseFloat(args[count]);
+                    if (qtmp < 0 || qtmp > 1) {
+                        throw new Exception("-quality");
+                    }
+                    quality = qtmp;
                     state = CmdParseState.DEFAULT;
                     break;
             }
@@ -221,12 +247,17 @@ public class Resizer {
 
             String outputFileName = outputDir.getAbsolutePath()
                     + File.separator
-                    + inFile.getName().substring(0, inFile.getName().lastIndexOf('.'))
-                    + ".tif";
+                    + inFile.getName().substring(0, inFile.getName().lastIndexOf('.'));
 
-            System.out.println("Resizing image: "+inFile.getAbsolutePath()+" to: " + outputFileName);
+            System.out.println("Resizing image to: " + outputDir.getAbsolutePath());
 
-            JAI.create("filestore", planarImage, outputFileName, "TIFF");
+            if (outputFormat.equals(FORMAT_TIF)) {
+                JAI.create("filestore", planarImage, outputFileName + ".tif", "TIFF");
+            } else if (outputFormat.equals(FORMAT_JPG)) {
+                saveImageAtQuality(planarImage.getAsBufferedImage(), outputFileName, quality);
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new IOException("Cannot read image file: " + inFile);
@@ -237,11 +268,30 @@ public class Resizer {
         }
     }
 
-    /**
-     * Creates a directory
-     * @param parent the parent directory for the new directory
-     * @param name the new directory name
-     */
+    private static void saveImageAtQuality(BufferedImage img, String path, float quality) throws IOException {
+        File outputFile = new File(path + ".jpg");
+        Iterator iter = ImageIO.getImageWritersByFormatName("jpeg");
+        ImageWriter writer = (ImageWriter) iter.next();
+        ImageWriteParam iwp = writer.getDefaultWriteParam();
+        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        iwp.setCompressionQuality(quality);
+        FileImageOutputStream output = new FileImageOutputStream(outputFile);
+        writer.setOutput(output);
+        IIOImage image = new IIOImage(img, null, null);
+        try {
+            writer.write(null, image, iwp);
+        } catch (IOException e) {
+            throw new IOException("Unable to save image file: " + outputFile);
+        } finally {
+            if (writer != null) {
+                writer.dispose();
+            }
+            if (output != null) {
+                output.close();
+            }
+        }
+    }
+
     private static File createDir(File parent, String name) throws IOException {
         assert (parent.isDirectory());
         File result = new File(parent + File.separator + name);

@@ -211,6 +211,7 @@ public class Controller {
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_SKYBOX_PREVIEW);
 
         boolean surpressOptimalisationEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC_WITH_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_FLAT_TO_ZOOMIFY);
@@ -219,6 +220,7 @@ public class Controller {
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_CUBIC_TO_RESIZED_CUBIC);
 
         boolean ignoreTileSizeEqui = aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)
+                || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC_WITH_PREVIEW)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX)
                 || aggstngs.ge.getSelectedCommand().equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_SKYBOX_PREVIEW);
 
@@ -279,6 +281,8 @@ public class Controller {
                     generateOpCTDZC(taskData);
                 } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC)) {
                     generateOpETC(taskData);
+                } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_CUBIC_WITH_PREVIEW)) {
+                    generateOpETCSB(taskData);
                 } else if (selection.equals(GESettings.COMMAND_EQUIRECTANGULAR_TO_DEEPZOOM_CUBIC)) {
                     generateOpETDZC(taskData);
                 } else if (selection.equals(GESettings.COMMAND_CUBIC_TO_ZOOMIFY_CUBIC)) {
@@ -378,10 +382,10 @@ public class Controller {
 
             if (taskDataEquirectangular.requiresFilling()) {
                 taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
-                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, resDir)));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, resDir, false)));
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
             } else {
-                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, resDir)));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, resDir, false)));
             }
 
             taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getFront() + ".tif", outputDir, taskData.getNewCubeSize())));
@@ -402,12 +406,69 @@ public class Controller {
 
             if (taskDataEquirectangular.requiresFilling()) {
                 taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
-                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, outputDir)));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, outputDir, false)));
                 taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
             } else {
-                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, outputDir)));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, outputDir, false)));
             }
         }
+    }
+
+    //Equirectangular to cubic with preview
+    private void generateOpETCSB(TaskData taskData) {
+        Image image = taskData.getPanorama().getImages().get(0);
+        TaskDataEquirectangular taskDataEquirectangular = (TaskDataEquirectangular) taskData;
+
+        String nameWithoutExtension = image.path.substring(image.path.lastIndexOf(File.separator) + 1, image.path.lastIndexOf('.'));
+        String tmpFilePath = aggstngs.ge.getTmpDir() + File.separator + nameWithoutExtension + ".tif";
+        String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + nameWithoutExtension);
+        String cubeFileRes = aggstngs.ge.getTmpDir() + File.separator + "res" + File.separator + nameWithoutExtension;
+        String previewInput = outputDir + File.separator + nameWithoutExtension;
+
+        if (taskData.cubeSizeChanged()) {
+
+            String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
+
+            if (taskDataEquirectangular.requiresFilling()) {
+                taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, resDir, false)));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
+            } else {
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, resDir, false)));
+            }
+
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getFront() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getRight() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getBack() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getLeft() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getUp() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+            taskData.operations.add(new Operation(Operation.TYPE_RES, generateArgsRES(cubeFileRes + aggstngs.ge.naming.getDown() + ".tif", outputDir, taskData.getNewCubeSize(), true)));
+
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getFront() + ".tif"}));
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getRight() + ".tif"}));
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getBack() + ".tif"}));
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getLeft() + ".tif"}));
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getUp() + ".tif"}));
+            taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{cubeFileRes + aggstngs.ge.naming.getDown() + ".tif"}));
+
+        } else {
+
+            if (taskDataEquirectangular.requiresFilling()) {
+                taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, outputDir, true)));
+                taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
+            } else {
+                taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, outputDir, true)));
+            }
+        }
+
+        String[] input = new String[]{previewInput + aggstngs.ge.naming.getFront() + ".jpg",
+            previewInput + aggstngs.ge.naming.getRight() + ".jpg",
+            previewInput + aggstngs.ge.naming.getBack() + ".jpg",
+            previewInput + aggstngs.ge.naming.getLeft() + ".jpg",
+            previewInput + aggstngs.ge.naming.getUp() + ".jpg",
+            previewInput + aggstngs.ge.naming.getDown() + ".jpg"};
+        taskData.operations.add(new Operation(Operation.TYPE_SB, generateArgsSBM(input, outputDir, true)));
     }
 
     //Equirectangular to DeepZoom cubic
@@ -423,10 +484,10 @@ public class Controller {
         if (taskDataEquirectangular.requiresFilling()) {
             String tmpFilePath = aggstngs.ge.getTmpDir() + File.separator + nameWithoutExtension + ".tif";
             taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir(), false)));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
         } else {
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir(), false)));
         }
 
         if (taskData.cubeSizeChanged()) {
@@ -506,10 +567,10 @@ public class Controller {
         if (taskDataEquirectangular.requiresFilling()) {
             String tmpFilePath = aggstngs.ge.getTmpDir() + File.separator + nameWithoutExtension + ".tif";
             taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir(), false)));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
         } else {
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir(), false)));
         }
 
         new File(outputDir).mkdir();
@@ -581,10 +642,10 @@ public class Controller {
         if (taskDataEquirectangular.requiresFilling()) {
             String tmpFilePath = aggstngs.ge.getTmpDir() + File.separator + nameWithoutExtension + ".tif";
             taskData.operations.add(new Operation(Operation.TYPE_ERF, generateArgsERF(image.path, aggstngs.ge.getTmpDir(), taskDataEquirectangular.getFov(), taskDataEquirectangular.getOffset())));
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(tmpFilePath, aggstngs.ge.getTmpDir(), false)));
             taskData.operations.add(new Operation(Operation.TYPE_DEL, new String[]{tmpFilePath}));
         } else {
-            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir())));
+            taskData.operations.add(new Operation(Operation.TYPE_EC, generateArgsEC(image.path, aggstngs.ge.getTmpDir(), false)));
         }
 
         new File(outputDir).mkdir();
@@ -719,7 +780,7 @@ public class Controller {
     private void generateOpCTSB(TaskData taskData, boolean previewOnly) {
         String nameWithoutExtension = taskData.getPanorama().getImages().get(0).path.substring(taskData.getPanorama().getImages().get(0).path.lastIndexOf(File.separator) + 1, taskData.getPanorama().getImages().get(0).path.lastIndexOf('_'));
         String resDir = aggstngs.ge.getTmpDir() + File.separator + "res";
-        String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + nameWithoutExtension);        
+        String outputDir = getOutputFolderName(aggstngs.ge.getOutputDir() + File.separator + "skybox_" + nameWithoutExtension);
         int newCubeSize = taskData.getNewCubeSize();
         if (newCubeSize * 3 > 8000) {
             newCubeSize = 2666;
@@ -772,6 +833,25 @@ public class Controller {
 
     private String[] generateArgsRES(String input, String output, int width) {
         ArrayList tmpArgsRES = new ArrayList();
+        tmpArgsRES.add("-simpleoutput");
+        tmpArgsRES.add("-width");
+        tmpArgsRES.add(Integer.toString(width));
+        tmpArgsRES.add("-outputdir");
+        tmpArgsRES.add(output);
+        tmpArgsRES.add(input);
+        String[] argsRES = new String[tmpArgsRES.size()];
+        tmpArgsRES.toArray(argsRES);
+        return argsRES;
+    }
+
+    private String[] generateArgsRES(String input, String output, int width, boolean outputJpg) {
+        ArrayList tmpArgsRES = new ArrayList();
+        if (outputJpg) {
+            tmpArgsRES.add("-outputformat");
+            tmpArgsRES.add("jpg");
+            tmpArgsRES.add("-quality");
+            tmpArgsRES.add(Float.toString(aggstngs.ec.getQuality()));
+        }
         tmpArgsRES.add("-simpleoutput");
         tmpArgsRES.add("-width");
         tmpArgsRES.add(Integer.toString(width));
@@ -851,8 +931,14 @@ public class Controller {
         return argsSBM;
     }
 
-    private String[] generateArgsEC(String input, String output) {
+    private String[] generateArgsEC(String input, String output, boolean outputJpg) {
         ArrayList tmpArgsEC = new ArrayList();
+        if (outputJpg) {
+            tmpArgsEC.add("-outputformat");
+            tmpArgsEC.add("jpg");
+            tmpArgsEC.add("-quality");
+            tmpArgsEC.add(Float.toString(aggstngs.ec.getQuality()));
+        }
         tmpArgsEC.add("-verbose");
         tmpArgsEC.add("-simpleoutput");
         tmpArgsEC.add("-naming");
@@ -914,6 +1000,7 @@ public class Controller {
 
                 aggstngs.ec.setWallOverlap(prop.getProperty(ECSettings.VALUE_WALL_OVERLAP));
                 aggstngs.ec.setInterpolation(prop.getProperty(ECSettings.VALUE_INTERPOLATION));
+                aggstngs.ec.setQuality(prop.getProperty(ECSettings.VALUE_QUALITY));
                 aggstngs.ec.setJarDir(prop.getProperty(ECSettings.VALUE_JAR_DIR));
 
                 aggstngs.ge.setTmpDir(prop.getProperty(GESettings.VALUE_TMP_DIR));
@@ -992,7 +1079,9 @@ public class Controller {
         if (aggstngs.ec.interpolationChanged()) {
             prop.put(ECSettings.VALUE_INTERPOLATION, aggstngs.ec.getInterpolation());
         }
-
+        if (aggstngs.ec.qualityChanged()) {
+            prop.put(ECSettings.VALUE_QUALITY, aggstngs.ec.getQuality());
+        }
         if (aggstngs.ec.jarDirChanged()) {
             prop.put(ECSettings.VALUE_JAR_DIR, aggstngs.ec.getJarDir());
         }

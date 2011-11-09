@@ -423,8 +423,8 @@ private void jButtonEquiApplyChangesActionPerformed(java.awt.event.ActionEvent e
         }
                 
         
-        jTextFieldCubeSize.setEditable(currentTaskData.checkBoxEnabled);
-        jTextFieldTileSize.setEditable(currentTaskData.checkBoxEnabled);
+        jTextFieldCubeSize.setEditable(currentTaskData.checkBoxEnabled && currentTaskData.showCubeSize);
+        jTextFieldTileSize.setEditable(currentTaskData.checkBoxEnabled && currentTaskData.showTizeSize);
         jRadioButtonCustom.setEnabled(currentTaskData.checkBoxEnabled);
         jRadioButtonAutosize.setEnabled(currentTaskData.checkBoxEnabled);
     }

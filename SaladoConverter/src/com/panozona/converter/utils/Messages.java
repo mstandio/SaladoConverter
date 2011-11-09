@@ -8,6 +8,7 @@ public class Messages {
     public final static String EC_WALL_OVERLAP_ERROR = "Invalid EquirectangularToCubic Overlap value";
     public final static String EC_INTERPOLATION_ERROR = "Invalid EquirectangularToCubic Interpolation value";
     public final static String EC_JAR_DIR_ERROR = "Invalid EquirectangularToCubic *.jar directory";
+    public final static String EC_QUALITY_ERROR = "Invalid EquirectangularToCubic Quality value";
     public final static String DZT_TILE_OVERLAP_ERROR = "Invalid DeepZoomTiler Tile overlap value";
     public final static String DZT_QUALITY_ERROR = "Invalid DeepZoomTiler Quality value";
     public final static String DZT_TILESIZE_ERROR = "Invalid DeepZoomTiler Tile size value";
